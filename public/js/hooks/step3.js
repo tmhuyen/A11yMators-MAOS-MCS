@@ -58,58 +58,58 @@ export function init(root, store) {
   };
 }
 
-// export function validate(root) {
-//   const fields = [
-//     [
-//       "cs_legalname",
-//       "f-cs-legalname",
-//       "Confirm business legal name matches MAA and MCN",
-//     ],
-//     [
-//       "cs_relgroup",
-//       "f-cs-relgroup",
-//       "Confirm Relationship Group is valid and belongs to the client",
-//     ],
-//     [
-//       "cs_signatories",
-//       "f-cs-signatories",
-//       "Confirm signatory customer numbers are correct",
-//     ],
-//     [
-//       "cs_accpricing",
-//       "f-cs-accpricing",
-//       "Confirm Account Details/Pricing are complete and docs provided",
-//     ],
-//     [
-//       "cs_ebanking",
-//       "f-cs-ebanking",
-//       "Confirm Electronic Banking Services reviewed and section completed",
-//     ],
-//     [
-//       "cs_bsb",
-//       "f-cs-bsb",
-//       "Confirm eligible BSB is provided for account setup",
-//     ],
-//     [
-//       "cs_kycsection",
-//       "f-cs-kycsection",
-//       "Confirm KYC section completed and dated",
-//     ],
-//     ["cs_followup", "f-cs-followup", "Confirm final follow-up call completed"],
-//   ];
-//   const errs = [];
-//   fields.forEach(([name, fieldId, msg]) => {
-//     const checked = root.querySelector(`input[name="${name}"]:checked`);
-//     if (!checked) {
-//       const first = root.querySelector(`input[name="${name}"]`);
-//       setError(root, fieldId, msg, first);
-//       errs.push({ id: fieldId, text: msg });
-//     } else {
-//       clearError(root, fieldId, checked);
-//     }
-//   });
-//   return errs;
-// }
+export function validate(root) {
+  const fields = [
+    [
+      "cs_legalname",
+      "f-cs-legalname",
+      "Confirm business legal name matches MAA and MCN",
+    ],
+    [
+      "cs_relgroup",
+      "f-cs-relgroup",
+      "Confirm Relationship Group is valid and belongs to the client",
+    ],
+    [
+      "cs_signatories",
+      "f-cs-signatories",
+      "Confirm signatory customer numbers are correct",
+    ],
+    [
+      "cs_accpricing",
+      "f-cs-accpricing",
+      "Confirm Account Details/Pricing are complete and docs provided",
+    ],
+    [
+      "cs_ebanking",
+      "f-cs-ebanking",
+      "Confirm Electronic Banking Services reviewed and section completed",
+    ],
+    [
+      "cs_bsb",
+      "f-cs-bsb",
+      "Confirm eligible BSB is provided for account setup",
+    ],
+    [
+      "cs_kycsection",
+      "f-cs-kycsection",
+      "Confirm KYC section completed and dated",
+    ],
+    ["cs_followup", "f-cs-followup", "Confirm final follow-up call completed"],
+  ];
+  const errs = [];
+  fields.forEach(([name, fieldId, msg]) => {
+    const checked = root.querySelector(`input[name="${name}"]:checked`);
+    if (!checked) {
+      const first = root.querySelector(`input[name="${name}"]`);
+      setError(root, fieldId, msg, first);
+      errs.push({ id: fieldId, text: msg });
+    } else {
+      clearError(root, fieldId, checked);
+    }
+  });
+  return errs;
+}
 
 export function collect(root, store) {
   const names = [

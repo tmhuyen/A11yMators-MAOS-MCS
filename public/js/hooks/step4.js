@@ -62,89 +62,89 @@ export function init(root, store) {
   });
 }
 
-// export function validate(root) {
-//   const errs = [];
+export function validate(root) {
+  const errs = [];
 
-//   const legalName = root.querySelector("#legalName");
-//   if (!legalName.value.trim()) {
-//     setError(
-//       root,
-//       "f-legal-name",
-//       "Enter the business full legal name",
-//       legalName
-//     );
-//     errs.push({
-//       id: "f-legal-name",
-//       text: "Enter the business full legal name",
-//     });
-//   } else clearError(root, "f-legal-name", legalName);
+  const legalName = root.querySelector("#legalName");
+  if (!legalName.value.trim()) {
+    setError(
+      root,
+      "f-legal-name",
+      "Enter the business full legal name",
+      legalName
+    );
+    errs.push({
+      id: "f-legal-name",
+      text: "Enter the business full legal name",
+    });
+  } else clearError(root, "f-legal-name", legalName);
 
-//   const mcn = root.querySelector("#mcn");
-//   if (!validMcn(mcn.value)) {
-//     setError(root, "f-mcn", "Enter a 9-digit MCN", mcn);
-//     errs.push({ id: "f-mcn", text: "Enter a 9-digit MCN" });
-//   } else clearError(root, "f-mcn", mcn);
+  const mcn = root.querySelector("#mcn");
+  if (!validMcn(mcn.value)) {
+    setError(root, "f-mcn", "Enter a 9-digit MCN", mcn);
+    errs.push({ id: "f-mcn", text: "Enter a 9-digit MCN" });
+  } else clearError(root, "f-mcn", mcn);
 
-//   const abnAcn = root.querySelector("#abnAcn");
-//   if (!validAbnAcn(abnAcn.value)) {
-//     setError(
-//       root,
-//       "f-abnacn",
-//       "Enter a valid ABN (11 digits) or ACN (9 digits)",
-//       abnAcn
-//     );
-//     errs.push({
-//       id: "f-abnacn",
-//       text: "Enter a valid ABN (11 digits) or ACN (9 digits)",
-//     });
-//   } else clearError(root, "f-abnacn", abnAcn);
+  const abnAcn = root.querySelector("#abnAcn");
+  if (!validAbnAcn(abnAcn.value)) {
+    setError(
+      root,
+      "f-abnacn",
+      "Enter a valid ABN (11 digits) or ACN (9 digits)",
+      abnAcn
+    );
+    errs.push({
+      id: "f-abnacn",
+      text: "Enter a valid ABN (11 digits) or ACN (9 digits)",
+    });
+  } else clearError(root, "f-abnacn", abnAcn);
 
-//   const relNo = root.querySelector("#relNo");
-//   if (!relNo.value.trim()) {
-//     setError(root, "f-rel-no", "Enter the Relationship Group Number", relNo);
-//     errs.push({ id: "f-rel-no", text: "Enter the Relationship Group Number" });
-//   } else clearError(root, "f-rel-no", relNo);
+  const relNo = root.querySelector("#relNo");
+  if (!relNo.value.trim()) {
+    setError(root, "f-rel-no", "Enter the Relationship Group Number", relNo);
+    errs.push({ id: "f-rel-no", text: "Enter the Relationship Group Number" });
+  } else clearError(root, "f-rel-no", relNo);
 
-//   const relName = root.querySelector("#relName");
-//   if (!relName.value.trim()) {
-//     setError(root, "f-rel-name", "Enter the Relationship Group Name", relName);
-//     errs.push({ id: "f-rel-name", text: "Enter the Relationship Group Name" });
-//   } else clearError(root, "f-rel-name", relName);
+  const relName = root.querySelector("#relName");
+  if (!relName.value.trim()) {
+    setError(root, "f-rel-name", "Enter the Relationship Group Name", relName);
+    errs.push({ id: "f-rel-name", text: "Enter the Relationship Group Name" });
+  } else clearError(root, "f-rel-name", relName);
 
-//   const contactName = root.querySelector("#contactName");
-//   if (!contactName.value.trim()) {
-//     setError(root, "f-contact-name", "Enter the contact name", contactName);
-//     errs.push({ id: "f-contact-name", text: "Enter the contact name" });
-//   } else clearError(root, "f-contact-name", contactName);
+  const contactName = root.querySelector("#contactName");
+  if (!contactName.value.trim()) {
+    setError(root, "f-contact-name", "Enter the contact name", contactName);
+    errs.push({ id: "f-contact-name", text: "Enter the contact name" });
+  } else clearError(root, "f-contact-name", contactName);
 
-//   const contactNumber = root.querySelector("#contactNumber");
-//   if (!phoneRe.test(contactNumber.value.trim())) {
-//     setError(
-//       root,
-//       "f-contact-number",
-//       "Enter a valid contact number",
-//       contactNumber
-//     );
-//     errs.push({ id: "f-contact-number", text: "Enter a valid contact number" });
-//   } else clearError(root, "f-contact-number", contactNumber);
+  const contactNumber = root.querySelector("#contactNumber");
+  if (!phoneRe.test(contactNumber.value.trim())) {
+    setError(
+      root,
+      "f-contact-number",
+      "Enter a valid contact number",
+      contactNumber
+    );
+    errs.push({ id: "f-contact-number", text: "Enter a valid contact number" });
+  } else clearError(root, "f-contact-number", contactNumber);
 
-//   const emails = root.querySelector("#emails");
-//   const list = parseEmails(emails.value);
-//   if (list.length === 0 || !list.every((e) => emailRe.test(e))) {
-//     setError(
-//       root,
-//       "f-emails",
-//       "Enter at least one valid email (one per line)",
-//       emails
-//     );
-//     errs.push({
-//       id: "f-emails",
-//       text: "Enter at least one valid email (one per line)",
-//     });
-//   } else clearError(root, "f-emails", emails);
+  const emails = root.querySelector("#emails");
+  const list = parseEmails(emails.value);
+  if (list.length === 0 || !list.every((e) => emailRe.test(e))) {
+    setError(
+      root,
+      "f-emails",
+      "Enter at least one valid email (one per line)",
+      emails
+    );
+    errs.push({
+      id: "f-emails",
+      text: "Enter at least one valid email (one per line)",
+    });
+  } else clearError(root, "f-emails", emails);
 
-//   return errs;
-// }
+  return errs;
+}
 
 export function collect(root, store) {
   const payload = {

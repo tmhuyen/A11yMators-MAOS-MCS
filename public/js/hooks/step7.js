@@ -170,181 +170,181 @@ export function init(root, store) {
   });
 }
 
-// export function validate(root) {
-//   var errs = [];
+export function validate(root) {
+  var errs = [];
 
-//   // validate a panel only if visible
-//   function requireVisible(panelId, checks) {
-//     var p = root.querySelector("#" + panelId);
-//     if (!p || p.classList.contains("hidden")) return;
-//     for (var i = 0; i < checks.length; i++) {
-//       var ck = checks[i];
-//       var wrapId = ck[0],
-//         type = ck[1],
-//         key = ck[2],
-//         msg = ck[3],
-//         extra = ck[4];
-//       if (type === "radio") {
-//         var v = getRadio(root, key);
-//         if (!v) {
-//           setErr(root, wrapId, msg);
-//           errs.push({ id: wrapId, text: msg });
-//         } else {
-//           clearErr(root, wrapId);
-//         }
-//         if (extra && extra.depValue && v === extra.depValue) {
-//           var el = root.querySelector(extra.sel);
-//           var has = el && el.value && el.value.trim().length > 0;
-//           if (!has) {
-//             setErr(root, wrapId, extra.msg);
-//             errs.push({ id: wrapId, text: extra.msg });
-//           }
-//         }
-//       }
-//     }
-//   }
+  // validate a panel only if visible
+  function requireVisible(panelId, checks) {
+    var p = root.querySelector("#" + panelId);
+    if (!p || p.classList.contains("hidden")) return;
+    for (var i = 0; i < checks.length; i++) {
+      var ck = checks[i];
+      var wrapId = ck[0],
+        type = ck[1],
+        key = ck[2],
+        msg = ck[3],
+        extra = ck[4];
+      if (type === "radio") {
+        var v = getRadio(root, key);
+        if (!v) {
+          setErr(root, wrapId, msg);
+          errs.push({ id: wrapId, text: msg });
+        } else {
+          clearErr(root, wrapId);
+        }
+        if (extra && extra.depValue && v === extra.depValue) {
+          var el = root.querySelector(extra.sel);
+          var has = el && el.value && el.value.trim().length > 0;
+          if (!has) {
+            setErr(root, wrapId, extra.msg);
+            errs.push({ id: wrapId, text: extra.msg });
+          }
+        }
+      }
+    }
+  }
 
-//   // accounts
-//   requireVisible("accCCA", [
-//     ["accCCA", "radio", "cca_fee", "Choose one CCA fee code"],
-//     ["accCCA", "radio", "cca_rate", "Choose one CCA interest rate code"],
-//   ]);
-//   requireVisible("accBIA", [
-//     ["accBIA", "radio", "bia_fee", "Choose one BIA fee code"],
-//   ]);
-//   requireVisible("accBCA", [
-//     ["accBCA", "radio", "bca_fee", "Choose one BCA fee code"],
-//   ]);
-//   requireVisible("accBCM", [
-//     [
-//       "accBCM",
-//       "radio",
-//       "bcm_rate",
-//       "Choose BCM rate option",
-//       {
-//         depValue: "negotiated",
-//         sel: "#bcm_margin",
-//         msg: "Enter margin for negotiated pricing",
-//       },
-//     ],
-//   ]);
-//   requireVisible("accTD", [
-//     ["accTD", "radio", "td_rate", "Choose TD rate option"],
-//   ]);
+  // accounts
+  requireVisible("accCCA", [
+    ["accCCA", "radio", "cca_fee", "Choose one CCA fee code"],
+    ["accCCA", "radio", "cca_rate", "Choose one CCA interest rate code"],
+  ]);
+  requireVisible("accBIA", [
+    ["accBIA", "radio", "bia_fee", "Choose one BIA fee code"],
+  ]);
+  requireVisible("accBCA", [
+    ["accBCA", "radio", "bca_fee", "Choose one BCA fee code"],
+  ]);
+  requireVisible("accBCM", [
+    [
+      "accBCM",
+      "radio",
+      "bcm_rate",
+      "Choose BCM rate option",
+      {
+        depValue: "negotiated",
+        sel: "#bcm_margin",
+        msg: "Enter margin for negotiated pricing",
+      },
+    ],
+  ]);
+  requireVisible("accTD", [
+    ["accTD", "radio", "td_rate", "Choose TD rate option"],
+  ]);
 
-//   // statement cycle required if any account panel is visible
-//   var anyAccVisible = ["accCCA", "accBIA", "accBCA", "accBCM", "accTD"].some(
-//     function (id) {
-//       var n = root.querySelector("#" + id);
-//       return n && !n.classList.contains("hidden");
-//     }
-//   );
-//   if (anyAccVisible) {
-//     var sc = getRadio(root, "stmt_cycle");
-//     if (!sc) {
-//       setErr(root, "accStatement", "Select a statement cycle");
-//       errs.push({ id: "accStatement", text: "Select a statement cycle" });
-//     } else clearErr(root, "accStatement");
-//   } else {
-//     clearErr(root, "accStatement");
-//   }
+  // statement cycle required if any account panel is visible
+  var anyAccVisible = ["accCCA", "accBIA", "accBCA", "accBCM", "accTD"].some(
+    function (id) {
+      var n = root.querySelector("#" + id);
+      return n && !n.classList.contains("hidden");
+    }
+  );
+  if (anyAccVisible) {
+    var sc = getRadio(root, "stmt_cycle");
+    if (!sc) {
+      setErr(root, "accStatement", "Select a statement cycle");
+      errs.push({ id: "accStatement", text: "Select a statement cycle" });
+    } else clearErr(root, "accStatement");
+  } else {
+    clearErr(root, "accStatement");
+  }
 
-//   // Electronic Access
-//   requireVisible("eaNABC", [
-//     ["eaNABC", "radio", "nabc_users", "Choose user option (All or Nominated)"],
-//     [
-//       "eaNABC",
-//       "radio",
-//       "nabc_services",
-//       "Choose service option (All or Nominated)",
-//     ],
-//   ]);
-//   var nabcShown =
-//     root.querySelector("#eaNABC") &&
-//     !root.querySelector("#eaNABC").classList.contains("hidden");
-//   if (nabcShown) {
-//     if (getRadio(root, "nabc_users") === "nominated") {
-//       var ul = root.querySelector("#nabc_users_list");
-//       if (!ul || !ul.value.trim()) {
-//         setErr(root, "eaNABC", "List nominated users for NAB Connect");
-//         errs.push({
-//           id: "eaNABC",
-//           text: "List nominated users for NAB Connect",
-//         });
-//       }
-//     }
-//     if (getRadio(root, "nabc_services") === "nominated") {
-//       var sl = root.querySelector("#nabc_services_list");
-//       if (!sl || !sl.value.trim()) {
-//         setErr(root, "eaNABC", "Specify nominated services for NAB Connect");
-//         errs.push({
-//           id: "eaNABC",
-//           text: "Specify nominated services for NAB Connect",
-//         });
-//       }
-//     }
-//   }
+  // Electronic Access
+  requireVisible("eaNABC", [
+    ["eaNABC", "radio", "nabc_users", "Choose user option (All or Nominated)"],
+    [
+      "eaNABC",
+      "radio",
+      "nabc_services",
+      "Choose service option (All or Nominated)",
+    ],
+  ]);
+  var nabcShown =
+    root.querySelector("#eaNABC") &&
+    !root.querySelector("#eaNABC").classList.contains("hidden");
+  if (nabcShown) {
+    if (getRadio(root, "nabc_users") === "nominated") {
+      var ul = root.querySelector("#nabc_users_list");
+      if (!ul || !ul.value.trim()) {
+        setErr(root, "eaNABC", "List nominated users for NAB Connect");
+        errs.push({
+          id: "eaNABC",
+          text: "List nominated users for NAB Connect",
+        });
+      }
+    }
+    if (getRadio(root, "nabc_services") === "nominated") {
+      var sl = root.querySelector("#nabc_services_list");
+      if (!sl || !sl.value.trim()) {
+        setErr(root, "eaNABC", "Specify nominated services for NAB Connect");
+        errs.push({
+          id: "eaNABC",
+          text: "Specify nominated services for NAB Connect",
+        });
+      }
+    }
+  }
 
-//   var ibShown =
-//     root.querySelector("#eaIB") &&
-//     !root.querySelector("#eaIB").classList.contains("hidden");
-//   if (ibShown) {
-//     var ib = root.querySelector("#ib_users");
-//     if (!ib || !ib.value.trim()) {
-//       setErr(root, "eaIB", "Provide NAB ID / name(s) & access level");
-//       errs.push({
-//         id: "eaIB",
-//         text: "Provide NAB ID / name(s) & access level",
-//       });
-//     } else clearErr(root, "eaIB");
-//   }
+  var ibShown =
+    root.querySelector("#eaIB") &&
+    !root.querySelector("#eaIB").classList.contains("hidden");
+  if (ibShown) {
+    var ib = root.querySelector("#ib_users");
+    if (!ib || !ib.value.trim()) {
+      setErr(root, "eaIB", "Provide NAB ID / name(s) & access level");
+      errs.push({
+        id: "eaIB",
+        text: "Provide NAB ID / name(s) & access level",
+      });
+    } else clearErr(root, "eaIB");
+  }
 
-//   var txShown =
-//     root.querySelector("#eaDLRTX") &&
-//     !root.querySelector("#eaDLRTX").classList.contains("hidden");
-//   if (txShown) {
-//     var m1 = root.querySelector("#dlr_tx_mailbox");
-//     var s1 = root.querySelector("#dlr_tx_services");
-//     if (!m1 || !m1.value.trim() || !s1 || !s1.value.trim()) {
-//       setErr(root, "eaDLRTX", "Enter mailbox name and services");
-//       errs.push({ id: "eaDLRTX", text: "Enter mailbox name and services" });
-//     } else clearErr(root, "eaDLRTX");
-//   }
+  var txShown =
+    root.querySelector("#eaDLRTX") &&
+    !root.querySelector("#eaDLRTX").classList.contains("hidden");
+  if (txShown) {
+    var m1 = root.querySelector("#dlr_tx_mailbox");
+    var s1 = root.querySelector("#dlr_tx_services");
+    if (!m1 || !m1.value.trim() || !s1 || !s1.value.trim()) {
+      setErr(root, "eaDLRTX", "Enter mailbox name and services");
+      errs.push({ id: "eaDLRTX", text: "Enter mailbox name and services" });
+    } else clearErr(root, "eaDLRTX");
+  }
 
-//   var tdShown =
-//     root.querySelector("#eaDLRTD") &&
-//     !root.querySelector("#eaDLRTD").classList.contains("hidden");
-//   if (tdShown) {
-//     var m2 = root.querySelector("#dlr_td_mailbox");
-//     if (!m2 || !m2.value.trim()) {
-//       setErr(root, "eaDLRTD", "Enter mailbox name for Term Deposits");
-//       errs.push({
-//         id: "eaDLRTD",
-//         text: "Enter mailbox name for Term Deposits",
-//       });
-//     } else clearErr(root, "eaDLRTD");
-//   }
+  var tdShown =
+    root.querySelector("#eaDLRTD") &&
+    !root.querySelector("#eaDLRTD").classList.contains("hidden");
+  if (tdShown) {
+    var m2 = root.querySelector("#dlr_td_mailbox");
+    if (!m2 || !m2.value.trim()) {
+      setErr(root, "eaDLRTD", "Enter mailbox name for Term Deposits");
+      errs.push({
+        id: "eaDLRTD",
+        text: "Enter mailbox name for Term Deposits",
+      });
+    } else clearErr(root, "eaDLRTD");
+  }
 
-//   var readdShown =
-//     root.querySelector("#eaReAdd") &&
-//     !root.querySelector("#eaReAdd").classList.contains("hidden");
-//   if (readdShown) {
-//     var ru = getRadio(root, "readd_users");
-//     if (!ru) {
-//       setErr(root, "eaReAdd", "Select users to be re-added");
-//       errs.push({ id: "eaReAdd", text: "Select users to be re-added" });
-//     }
-//     if (ru === "nominated") {
-//       var rl = root.querySelector("#readd_users_list");
-//       if (!rl || !rl.value.trim()) {
-//         setErr(root, "eaReAdd", "Specify nominated users or IDs");
-//         errs.push({ id: "eaReAdd", text: "Specify nominated users or IDs" });
-//       }
-//     }
-//   }
+  var readdShown =
+    root.querySelector("#eaReAdd") &&
+    !root.querySelector("#eaReAdd").classList.contains("hidden");
+  if (readdShown) {
+    var ru = getRadio(root, "readd_users");
+    if (!ru) {
+      setErr(root, "eaReAdd", "Select users to be re-added");
+      errs.push({ id: "eaReAdd", text: "Select users to be re-added" });
+    }
+    if (ru === "nominated") {
+      var rl = root.querySelector("#readd_users_list");
+      if (!rl || !rl.value.trim()) {
+        setErr(root, "eaReAdd", "Specify nominated users or IDs");
+        errs.push({ id: "eaReAdd", text: "Specify nominated users or IDs" });
+      }
+    }
+  }
 
-//   return errs;
-// }
+  return errs;
+}
 
 export function collect(root, store) {
   var payload = {

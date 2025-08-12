@@ -109,41 +109,41 @@ export function init(root, store) {
   });
 }
 
-// export function validate(root) {
-//   const errs = [];
-//   setListError(root, "");
+export function validate(root) {
+  const errs = [];
+  setListError(root, "");
 
-//   const rows = getRows(root);
-//   let completed = 0;
+  const rows = getRows(root);
+  let completed = 0;
 
-//   rows.forEach((row) => {
-//     const idx = row.getAttribute("data-index");
-//     const name = row.querySelector(`#auth-${idx}-name`)?.value.trim() || "";
-//     const number = row.querySelector(`#auth-${idx}-number`)?.value.trim() || "";
+  rows.forEach((row) => {
+    const idx = row.getAttribute("data-index");
+    const name = row.querySelector(`#auth-${idx}-name`)?.value.trim() || "";
+    const number = row.querySelector(`#auth-${idx}-number`)?.value.trim() || "";
 
-//     if (!name && !number) {
-//       setRowError(row, "This row is empty — remove it or fill in both fields.");
-//       errs.push({
-//         id: row.id,
-//         text: "Remove or complete the empty authorised person row.",
-//       });
-//       return;
-//     }
-//     if (!name || !number) {
-//       setRowError(row, "Please fill in both Name and Customer Number.");
-//       errs.push({ id: row.id, text: "Fill in both Name and Customer Number." });
-//       return;
-//     }
-//     completed++;
-//   });
+    if (!name && !number) {
+      setRowError(row, "This row is empty — remove it or fill in both fields.");
+      errs.push({
+        id: row.id,
+        text: "Remove or complete the empty authorised person row.",
+      });
+      return;
+    }
+    if (!name || !number) {
+      setRowError(row, "Please fill in both Name and Customer Number.");
+      errs.push({ id: row.id, text: "Fill in both Name and Customer Number." });
+      return;
+    }
+    completed++;
+  });
 
-//   if (completed === 0) {
-//     setListError(root, "Add at least one authorised person.");
-//     errs.push({ id: "authList", text: "Add at least one authorised person." });
-//   }
+  if (completed === 0) {
+    setListError(root, "Add at least one authorised person.");
+    errs.push({ id: "authList", text: "Add at least one authorised person." });
+  }
 
-//   return errs;
-// }
+  return errs;
+}
 
 export function collect(root, store) {
   const people = getRows(root)
