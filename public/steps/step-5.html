@@ -1,0 +1,25 @@
+<h2 class="section-title">Authorised Person Details</h2>
+<p class="hint">
+  Insert details of those persons authorised to
+  <strong>Open/Close/Amend</strong> and/or <strong>Transact</strong> on
+  accounts, as listed on the MAA.
+</p>
+
+<div class="section-card field" id="authList">
+  <div class="grid-2" style="font-weight: 600; margin-bottom: 8px">
+    <div>Name of the authorised person</div>
+    <div>Customer Number</div>
+  </div>
+
+  <div id="authRows"></div>
+
+  <div class="mt-16">
+    <button type="button" id="addRowBtn" class="btn btn-secondary">
+      Add person
+    </button>
+  </div>
+
+  <div class="error-text mt-16" id="authListErr">
+    <span class="icon" aria-hidden="true"></span><span></span>
+  </div>
+</div>

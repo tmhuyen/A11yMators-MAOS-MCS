@@ -1,0 +1,139 @@
+<h2 class="section-title">Banker Details</h2>
+
+<!-- Primary / required -->
+<div class="section-card">
+  <h3 class="subsection-title">Primary Banker</h3>
+
+  <div class="grid-2">
+    <div class="field" id="f-p-name">
+      <label class="label" for="p_name"
+        >Banker Name <span class="req">*</span></label
+      >
+      <input id="p_name" class="input" />
+      <div class="error-text" id="pNameErr">
+        <span class="icon" aria-hidden="true"></span><span></span>
+      </div>
+    </div>
+
+    <div class="field" id="f-p-title">
+      <label class="label" for="p_title"
+        >Banker Position Title <span class="req">*</span></label
+      >
+      <input id="p_title" class="input" />
+      <div class="error-text" id="pTitleErr">
+        <span class="icon" aria-hidden="true"></span><span></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="field" id="f-p-email">
+      <label class="label" for="p_email"
+        >Banker Email <span class="req">*</span></label
+      >
+      <input id="p_email" class="input" type="email" autocomplete="email" />
+      <div class="error-text" id="pEmailErr">
+        <span class="icon" aria-hidden="true"></span><span></span>
+      </div>
+    </div>
+
+    <div class="field" id="f-p-phone">
+      <label class="label" for="p_phone"
+        >Contact Phone Number <span class="req">*</span></label
+      >
+      <input id="p_phone" class="input" inputmode="tel" autocomplete="tel" />
+      <div class="hint">Digits, spaces, +, ( ) and - are allowed.</div>
+      <div class="error-text" id="pPhoneErr">
+        <span class="icon" aria-hidden="true"></span><span></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="field" id="f-p-buid">
+      <label class="label" for="p_buid"
+        >Banker BUID <span class="req">*</span></label
+      >
+      <input id="p_buid" class="input" />
+      <div class="hint">Alphanumeric (4–10 chars).</div>
+      <div class="error-text" id="pBuidErr">
+        <span class="icon" aria-hidden="true"></span><span></span>
+      </div>
+    </div>
+
+    <div class="field" id="f-p-bsb">
+      <label class="label" for="p_bsb"
+        >BSB to be setup accounts under <span class="req">*</span></label
+      >
+      <input id="p_bsb" class="input" inputmode="numeric" maxlength="6" />
+      <div class="hint">6 digits.</div>
+      <div class="error-text" id="pBsbErr">
+        <span class="icon" aria-hidden="true"></span><span></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="field" id="f-p-osa">
+      <label class="label" for="p_osa"
+        >Banker OSA <span class="req">*</span></label
+      >
+      <input id="p_osa" class="input" />
+      <div class="error-text" id="pOsaErr">
+        <span class="icon" aria-hidden="true"></span><span></span>
+      </div>
+    </div>
+
+    <div class="field" id="f-p-td">
+      <label class="label" for="p_td"
+        >TD Disposals Account Number <span class="req">*</span></label
+      >
+      <input id="p_td" class="input" inputmode="numeric" />
+      <div class="hint">Digits only (6–16).</div>
+      <div class="error-text" id="pTdErr">
+        <span class="icon" aria-hidden="true"></span><span></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Secondary / optional -->
+<div class="section-card mt-24">
+  <h3 class="subsection-title">Secondary Banker Contact Details</h3>
+
+  <div class="grid-2">
+    <div class="field" id="f-s-name">
+      <label class="label" for="s_name">Banker Name</label>
+      <input id="s_name" class="input" />
+      <div class="error-text" id="sNameErr">
+        <span class="icon" aria-hidden="true"></span><span></span>
+      </div>
+    </div>
+
+    <div class="field" id="f-s-title">
+      <label class="label" for="s_title">Banker Position Title</label>
+      <input id="s_title" class="input" />
+      <div class="error-text" id="sTitleErr">
+        <span class="icon" aria-hidden="true"></span><span></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="field" id="f-s-email">
+      <label class="label" for="s_email">Banker Email</label>
+      <input id="s_email" class="input" type="email" />
+      <div class="error-text" id="sEmailErr">
+        <span class="icon" aria-hidden="true"></span><span></span>
+      </div>
+    </div>
+
+    <div class="field" id="f-s-phone">
+      <label class="label" for="s_phone">Contact Phone Number</label>
+      <input id="s_phone" class="input" inputmode="tel" />
+      <div class="error-text" id="sPhoneErr">
+        <span class="icon" aria-hidden="true"></span><span></span>
+      </div>
+    </div>
+  </div>
+</div>

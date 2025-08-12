@@ -1,0 +1,449 @@
+<h2 class="section-title">Account Details / Electronic Access</h2>
+
+<!-- ========== Account Type Pickers (only visible at first) ========== -->
+<h3 class="subsection-title mt-16">Account Type</h3>
+<p class="hint">Select the account type(s) applicable for the client.</p>
+
+<div class="section-card" id="accountTypes">
+  <div class="checkbox">
+    <input
+      id="acc_cca"
+      name="acc_cca"
+      type="checkbox"
+      aria-controls="accCCA"
+      aria-expanded="false"
+    />
+    <label for="acc_cca" class="label-text"
+      ><strong>Corporate Cheque Account (CCA)</strong></label
+    >
+  </div>
+  <div class="checkbox mt-8">
+    <input
+      id="acc_bia"
+      name="acc_bia"
+      type="checkbox"
+      aria-controls="accBIA"
+      aria-expanded="false"
+    />
+    <label for="acc_bia" class="label-text"
+      ><strong>Business Interest Account (BIA)</strong></label
+    >
+  </div>
+  <div class="checkbox mt-8">
+    <input
+      id="acc_bca"
+      name="acc_bca"
+      type="checkbox"
+      aria-controls="accBCA"
+      aria-expanded="false"
+    />
+    <label for="acc_bca" class="label-text"
+      ><strong>Business Everyday Account (BCA)</strong></label
+    >
+  </div>
+  <div class="checkbox mt-8">
+    <input
+      id="acc_bcm"
+      name="acc_bcm"
+      type="checkbox"
+      aria-controls="accBCM"
+      aria-expanded="false"
+    />
+    <label for="acc_bcm" class="label-text"
+      ><strong>Business Cash Maximiser (BCM)</strong></label
+    >
+  </div>
+  <div class="checkbox mt-8">
+    <input
+      id="acc_td"
+      name="acc_td"
+      type="checkbox"
+      aria-controls="accTD"
+      aria-expanded="false"
+    />
+    <label for="acc_td" class="label-text"
+      ><strong>Term Deposit (TD)</strong></label
+    >
+  </div>
+</div>
+
+<!-- ========== Details: each is hidden until its checkbox is ticked ========== -->
+
+<!-- CCA -->
+<div class="section-card field acc-details hidden" id="accCCA">
+  <div class="label">Corporate Cheque Account (CCA) – Details</div>
+  <div class="grid-3 mt-12">
+    <div class="field">
+      <div class="label">Fee code options <span class="req">*</span></div>
+      <div class="choices mt-8" role="radiogroup" aria-label="CCA fee code">
+        <label class="choice"
+          ><input type="radio" name="cca_fee" value="H" /> Standard fees
+          (H)</label
+        >
+        <label class="choice"
+          ><input type="radio" name="cca_fee" value="E" /> All fees exempted
+          (E)</label
+        >
+        <label class="choice"
+          ><input type="radio" name="cca_fee" value="ASF" /> Only ASF fee
+          exempted</label
+        >
+        <label class="choice"
+          ><input type="radio" name="cca_fee" value="U" /> Fee code (U)</label
+        >
+        <label class="choice"
+          ><input type="radio" name="cca_fee" value="S" /> Fee code (S)</label
+        >
+      </div>
+      <div class="error-text" id="ccaFeeErr">
+        <span class="icon" aria-hidden="true"></span><span></span>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="label">
+        Interest rate code to apply <span class="req">*</span>
+      </div>
+      <div
+        class="choices mt-8"
+        role="radiogroup"
+        aria-label="CCA interest code"
+      >
+        <label class="choice"
+          ><input type="radio" name="cca_rate" value="KA" /> KA – Deposit
+          reference rate</label
+        >
+        <label class="choice"
+          ><input type="radio" name="cca_rate" value="CN" /> CN – RBA cash rate
+          – Negotiated</label
+        >
+        <label class="choice"
+          ><input type="radio" name="cca_rate" value="CC" /> CC – RBA cash rate
+          – Standard</label
+        >
+      </div>
+      <div class="error-text" id="ccaRateErr">
+        <span class="icon" aria-hidden="true"></span><span></span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="label" for="cca_margin">Rate margins (if applicable)</label>
+      <input id="cca_margin" name="cca_margin" class="input" />
+    </div>
+  </div>
+</div>
+
+<!-- BIA -->
+<div class="section-card field acc-details hidden" id="accBIA">
+  <div class="label">Business Interest Account (BIA) – Details</div>
+  <div class="field mt-12">
+    <div class="label">Fee code options <span class="req">*</span></div>
+    <div class="choices mt-8" role="radiogroup" aria-label="BIA fee code">
+      <label class="choice"
+        ><input type="radio" name="bia_fee" value="H" /> Standard fees</label
+      >
+      <label class="choice"
+        ><input type="radio" name="bia_fee" value="E" /> All fees
+        exempted</label
+      >
+    </div>
+    <div class="error-text" id="biaFeeErr">
+      <span class="icon" aria-hidden="true"></span><span></span>
+    </div>
+  </div>
+</div>
+
+<!-- BCA -->
+<div class="section-card field acc-details hidden" id="accBCA">
+  <div class="label">Business Everyday Account (BCA) – Details</div>
+  <div class="field mt-12">
+    <div class="label">Fee code options <span class="req">*</span></div>
+    <div class="choices mt-8" role="radiogroup" aria-label="BCA fee code">
+      <label class="choice"
+        ><input type="radio" name="bca_fee" value="0" /> $0 monthly fee</label
+      >
+      <label class="choice"
+        ><input type="radio" name="bca_fee" value="10" /> $10 monthly fee</label
+      >
+      <label class="choice"
+        ><input type="radio" name="bca_fee" value="E" /> All fees
+        exempted</label
+      >
+    </div>
+    <div class="error-text" id="bcaFeeErr">
+      <span class="icon" aria-hidden="true"></span><span></span>
+    </div>
+  </div>
+</div>
+
+<!-- BCM -->
+<div class="section-card field acc-details hidden" id="accBCM">
+  <div class="label">Business Cash Maximiser (BCM) – Details</div>
+  <div class="field mt-12">
+    <div class="label">
+      Interest rate / codes to apply <span class="req">*</span>
+    </div>
+    <div class="choices mt-8" role="radiogroup" aria-label="BCM interest">
+      <label class="choice"
+        ><input type="radio" name="bcm_rate" value="standard" /> Standard BCM
+        rates</label
+      >
+      <label class="choice"
+        ><input type="radio" name="bcm_rate" value="negotiated" /> Negotiated
+        BCM pricing</label
+      >
+    </div>
+    <label class="label mt-12" for="bcm_margin"
+      >Rate margins (Negotiated only)</label
+    >
+    <input id="bcm_margin" name="bcm_margin" class="input" />
+    <div class="error-text" id="bcmRateErr">
+      <span class="icon" aria-hidden="true"></span><span></span>
+    </div>
+  </div>
+</div>
+
+<!-- TD -->
+<div class="section-card field acc-details hidden" id="accTD">
+  <div class="label">Term Deposit (TD) – Details</div>
+  <div class="field mt-12">
+    <div class="label">
+      Interest rate / codes to apply <span class="req">*</span>
+    </div>
+    <div class="choices mt-8" role="radiogroup" aria-label="TD interest">
+      <label class="choice"
+        ><input type="radio" name="td_rate" value="weekly" /> MAOS Weekly TD
+        Rates</label
+      >
+      <label class="choice"
+        ><input type="radio" name="td_rate" value="negotiated" /> Negotiated TD
+        Rates</label
+      >
+    </div>
+    <div class="error-text" id="tdRateErr">
+      <span class="icon" aria-hidden="true"></span><span></span>
+    </div>
+  </div>
+</div>
+
+<!-- Statement Cycle (shown only when any account selected) -->
+<div class="section-card field acc-details hidden" id="accStatement">
+  <div class="label">Statement cycle <span class="req">*</span></div>
+  <div class="choices mt-8" role="radiogroup" aria-label="Statement cycle">
+    <label class="choice"
+      ><input type="radio" name="stmt_cycle" value="monthly" /> Monthly</label
+    >
+    <label class="choice"
+      ><input type="radio" name="stmt_cycle" value="quarterly" />
+      Quarterly</label
+    >
+    <label class="choice"
+      ><input type="radio" name="stmt_cycle" value="half-yearly" /> Half
+      yearly</label
+    >
+  </div>
+  <div class="error-text" id="stmtErr">
+    <span class="icon" aria-hidden="true"></span><span></span>
+  </div>
+</div>
+<!-- ===== Electronic Access (checkbox-only first) ===== -->
+<h3 class="subsection-title mt-24">Electronic Access</h3>
+<p class="hint">Tick a platform to show and complete its details.</p>
+
+<div class="section-card" id="eaTypes">
+  <div class="checkbox">
+    <input
+      id="ea_nabc"
+      name="ea_nabc"
+      type="checkbox"
+      aria-controls="eaNABC"
+      aria-expanded="false"
+    /><label for="ea_nabc" class="label-text"
+      ><strong>NAB Connect</strong></label
+    >
+  </div>
+  <div class="checkbox mt-8">
+    <input
+      id="ea_ib"
+      name="ea_ib"
+      type="checkbox"
+      aria-controls="eaIB"
+      aria-expanded="false"
+    /><label for="ea_ib" class="label-text"
+      ><strong>Internet Banking</strong></label
+    >
+  </div>
+  <div class="checkbox mt-8">
+    <input
+      id="ea_dlr_tx"
+      name="ea_dlr_tx"
+      type="checkbox"
+      aria-controls="eaDLRTX"
+      aria-expanded="false"
+    /><label for="ea_dlr_tx" class="label-text"
+      ><strong>Direct Link Reporting (Transaction accounts)</strong></label
+    >
+  </div>
+  <div class="checkbox mt-8">
+    <input
+      id="ea_dlr_td"
+      name="ea_dlr_td"
+      type="checkbox"
+      aria-controls="eaDLRTD"
+      aria-expanded="false"
+    /><label for="ea_dlr_td" class="label-text"
+      ><strong>Direct Link Reporting (Term Deposits)</strong></label
+    >
+  </div>
+  <div class="checkbox mt-8">
+    <input
+      id="ea_dsi"
+      name="ea_dsi"
+      type="checkbox"
+      aria-controls="eaDSI"
+      aria-expanded="false"
+    /><label for="ea_dsi" class="label-text"
+      ><strong>Data Share Integration</strong></label
+    >
+  </div>
+  <div class="checkbox mt-8">
+    <input
+      id="readd"
+      name="readd"
+      type="checkbox"
+      aria-controls="eaReAdd"
+      aria-expanded="false"
+    /><label for="readd" class="label-text"
+      ><strong>Re-adding closed accounts to NAB Connect</strong> (Online
+      statements only)</label
+    >
+  </div>
+</div>
+
+<!-- EA detail panels (hidden by default) -->
+
+<!-- NAB Connect -->
+<div class="section-card field acc-details hidden" id="eaNABC">
+  <div class="grid-3">
+    <div class="field">
+      <label class="label" for="nabc_meid">NAB Connect MEID/Site ID</label>
+      <input id="nabc_meid" name="nabc_meid" class="input" />
+      <div class="error-text" id="nabcMeidErr">
+        <span class="icon" aria-hidden="true"></span><span></span>
+      </div>
+    </div>
+    <div class="field">
+      <div class="label">Users to be added</div>
+      <div class="choices mt-8">
+        <label class="choice"
+          ><input type="radio" name="nabc_users" value="all" /> All users</label
+        >
+        <label class="choice"
+          ><input type="radio" name="nabc_users" value="nominated" /> Nominated
+          users</label
+        >
+      </div>
+      <textarea
+        id="nabc_users_list"
+        class="input mt-8"
+        rows="2"
+        placeholder="List names or user IDs (when nominated users)"
+      ></textarea>
+      <div class="error-text" id="nabcUsersErr">
+        <span class="icon" aria-hidden="true"></span><span></span>
+      </div>
+    </div>
+    <div class="field">
+      <div class="label">Services to be added</div>
+      <div class="choices mt-8">
+        <label class="choice"
+          ><input type="radio" name="nabc_services" value="all" /> All
+          services</label
+        >
+        <label class="choice"
+          ><input type="radio" name="nabc_services" value="nominated" />
+          Nominated services</label
+        >
+      </div>
+      <textarea
+        id="nabc_services_list"
+        class="input mt-8"
+        rows="2"
+        placeholder="Specify nominated services"
+      ></textarea>
+      <div class="error-text" id="nabcServicesErr">
+        <span class="icon" aria-hidden="true"></span><span></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Internet Banking -->
+<div class="section-card field acc-details hidden" id="eaIB">
+  <label class="label" for="ib_users"
+    >Provide NAB ID / Name of user(s) to be added with Access level (Full/View
+    only)</label
+  >
+  <textarea id="ib_users" class="input" rows="2"></textarea>
+  <div class="error-text" id="ibErr">
+    <span class="icon" aria-hidden="true"></span><span></span>
+  </div>
+</div>
+
+<!-- Direct Link Reporting – Tx -->
+<div class="section-card field acc-details hidden" id="eaDLRTX">
+  <div class="grid-2">
+    <div class="field">
+      <label class="label" for="dlr_tx_mailbox">Mailbox Name</label
+      ><input id="dlr_tx_mailbox" class="input" />
+    </div>
+    <div class="field">
+      <label class="label" for="dlr_tx_services">Services to be added</label
+      ><input id="dlr_tx_services" class="input" />
+    </div>
+  </div>
+  <div class="error-text" id="dlrTxErr">
+    <span class="icon" aria-hidden="true"></span><span></span>
+  </div>
+</div>
+
+<!-- Direct Link Reporting – TD -->
+<div class="section-card field acc-details hidden" id="eaDLRTD">
+  <label class="label" for="dlr_td_mailbox">Mailbox Name</label>
+  <input id="dlr_td_mailbox" class="input" />
+  <div class="error-text" id="dlrTdErr">
+    <span class="icon" aria-hidden="true"></span><span></span>
+  </div>
+</div>
+
+<!-- Data Share Integration -->
+<div class="section-card field acc-details hidden" id="eaDSI">
+  <div class="hint">
+    If your customer wishes to implement Data Share Integration, engage the
+    Direct Link team. They will provide the required details to MAOS Operations.
+  </div>
+</div>
+
+<!-- Re-adding closed accounts -->
+<div class="section-card field acc-details hidden" id="eaReAdd">
+  <div class="label">Users to be re-added</div>
+  <div class="choices mt-8">
+    <label class="choice"
+      ><input type="radio" name="readd_users" value="all" /> All users to be
+      added</label
+    >
+    <label class="choice"
+      ><input type="radio" name="readd_users" value="nominated" /> Nominated
+      users</label
+    >
+  </div>
+  <input
+    id="readd_users_list"
+    class="input mt-8"
+    placeholder="Names or user IDs (when nominated)"
+  />
+  <div class="error-text" id="readdErr">
+    <span class="icon" aria-hidden="true"></span><span></span>
+  </div>
+</div>

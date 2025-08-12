@@ -1,0 +1,177 @@
+<h2 class="section-title">Master Customer Number (MCN)</h2>
+
+<!-- Q1: Industry dropdown -->
+<div class="field" id="f-industry">
+  <label class="label" for="industry"
+    >What is the industry classification of the new client?
+    <span class="req">*</span></label
+  >
+  <select id="industry" name="industry" class="select" required>
+    <option value="" selected disabled>Choose an industry</option>
+    <option>Legal</option>
+    <option>External Administration</option>
+    <option>Real Estate/Settlement Agents</option>
+    <option>Strata</option>
+    <option>Accounting</option>
+  </select>
+  <div class="error-text" id="industryErr">
+    <span class="icon" aria-hidden="true"></span><span></span>
+  </div>
+</div>
+
+<!-- Q2 -->
+<div class="field" id="f-kyc">
+  <div class="label">
+    Is the master customer KYC/AML compliant? <span class="req">*</span>
+  </div>
+  <div class="status status--info mt-16">
+    All KYC/AML requirements are completed for the Master Customer with all
+    information attached in Siebel and KYC status of Master Customer Number is
+    up-to-date in eBOS.
+  </div>
+  <div class="choices mt-16" role="radiogroup" aria-label="KYC compliant">
+    <label class="choice"
+      ><input type="radio" name="kyc" value="Yes" required /> Yes</label
+    >
+    <label class="choice"
+      ><input type="radio" name="kyc" value="No" /> No</label
+    >
+  </div>
+  <div class="error-text" id="kycErr">
+    <span class="icon" aria-hidden="true"></span><span></span>
+  </div>
+</div>
+
+<!-- Q3 -->
+<div class="field" id="f-indReflect">
+  <div class="label">
+    Does eBOS industry match the client’s industry? <span class="req">*</span>
+  </div>
+  <div class="status status--info mt-16">
+    Industry classification of MCN in eBOS must correctly reflect the client’s
+    industry and fall under one of: External Administration, Real
+    Estate/Settlement Agents, Legal, Strata (WA only), or Accounting.
+  </div>
+  <div class="choices mt-16" role="radiogroup" aria-label="Industry reflects">
+    <label class="choice"
+      ><input type="radio" name="ind_reflect" value="Yes" required /> Yes</label
+    >
+    <label class="choice"
+      ><input type="radio" name="ind_reflect" value="No" /> No</label
+    >
+  </div>
+  <div class="error-text" id="indReflectErr">
+    <span class="icon" aria-hidden="true"></span><span></span>
+  </div>
+</div>
+
+<!-- Q4 -->
+<div class="field" id="f-company">
+  <div class="label">
+    Do company name, address and ABN/ACN match eBOS and MAA/MAOS summary?
+    <span class="req">*</span>
+  </div>
+  <div class="status status--info mt-16">
+    Company/Business name, Registered address, and ABN/ACN for the MCN must be
+    correct, up-to-date in eBOS, and match the details provided on the MAA/MAOS
+    customer summary.
+  </div>
+  <div class="choices mt-16" role="radiogroup" aria-label="Company matches">
+    <label class="choice"
+      ><input type="radio" name="company_match" value="Yes" required />
+      Yes</label
+    >
+    <label class="choice"
+      ><input type="radio" name="company_match" value="No" /> No</label
+    >
+  </div>
+  <div class="error-text" id="companyErr">
+    <span class="icon" aria-hidden="true"></span><span></span>
+  </div>
+</div>
+
+<!-- Q5 -->
+<div class="field" id="f-buid">
+  <div class="label">
+    Are banker details and BUIDs correct in eBOS? <span class="req">*</span>
+  </div>
+  <div class="status status--info mt-16">
+    If the BUID falls under Small Business, contact
+    <em>maos.product.enquiries@nab.com.au</em> to confirm eligibility to be
+    onboarded to MAOS before proceeding.
+  </div>
+  <div class="choices mt-16" role="radiogroup" aria-label="BUID correct">
+    <label class="choice"
+      ><input type="radio" name="buid_correct" value="Yes" required />
+      Yes</label
+    >
+    <label class="choice"
+      ><input type="radio" name="buid_correct" value="No" /> No</label
+    >
+    <label class="choice"
+      ><input type="radio" name="buid_correct" value="N/A" /> N/A</label
+    >
+  </div>
+  <div class="error-text" id="buidErr">
+    <span class="icon" aria-hidden="true"></span><span></span>
+  </div>
+</div>
+
+<!-- Q6 -->
+<div class="field" id="f-related">
+  <div class="label">
+    Are related entities and beneficial owners up to date on the MCN?
+    <span class="req">*</span>
+  </div>
+  <div class="status status--info mt-16">
+    KYC related entities must be up to date and all beneficial owners added on
+    the MCN in eBOS.
+  </div>
+  <div
+    class="choices mt-16"
+    role="radiogroup"
+    aria-label="Related entities updated"
+  >
+    <label class="choice"
+      ><input type="radio" name="related_updated" value="Yes" required />
+      Yes</label
+    >
+    <label class="choice"
+      ><input type="radio" name="related_updated" value="No" /> No</label
+    >
+  </div>
+  <div class="error-text" id="relatedErr">
+    <span class="icon" aria-hidden="true"></span><span></span>
+  </div>
+</div>
+
+<!-- Q7 -->
+<div class="field" id="f-letter">
+  <div class="label">
+    For Accounting industry: has a Trust Account request letter been uploaded in
+    Siebel? <span class="req">*</span>
+  </div>
+  <div class="status status--info mt-16">
+    A “Letter requesting to open a Trust Account” must be uploaded under the MCN
+    in Siebel (applicable to clients in the Accounting industry).
+  </div>
+  <div
+    class="choices mt-16"
+    role="radiogroup"
+    aria-label="Trust letter uploaded"
+  >
+    <label class="choice"
+      ><input type="radio" name="trust_letter" value="Yes" required />
+      Yes</label
+    >
+    <label class="choice"
+      ><input type="radio" name="trust_letter" value="No" /> No</label
+    >
+    <label class="choice"
+      ><input type="radio" name="trust_letter" value="N/A" /> N/A</label
+    >
+  </div>
+  <div class="error-text" id="letterErr">
+    <span class="icon" aria-hidden="true"></span><span></span>
+  </div>
+</div>

@@ -1,0 +1,57 @@
+<h2 class="section-title">KYC Details</h2>
+
+<div class="grid-2">
+  <div class="field" id="f-apra">
+    <label class="label" for="apraCode"
+      >APRA Code <span class="req">*</span></label
+    >
+    <input id="apraCode" name="apraCode" class="input" />
+    <div class="error-text" id="apraErr">
+      <span class="icon" aria-hidden="true"></span><span></span>
+    </div>
+  </div>
+
+  <div class="field" id="f-industry-class">
+    <label class="label" for="industryClass"
+      >Industry Class Code <span class="req">*</span></label
+    >
+    <input id="industryClass" name="industryClass" class="input" />
+    <div class="error-text" id="industryClassErr">
+      <span class="icon" aria-hidden="true"></span><span></span>
+    </div>
+  </div>
+</div>
+
+<div class="field" id="f-orgtype">
+  <label class="label" for="orgType"
+    >Organisation Type <span class="req">*</span></label
+  >
+  <input id="orgType" name="orgType" class="input" />
+  <div class="error-text" id="orgTypeErr">
+    <span class="icon" aria-hidden="true"></span><span></span>
+  </div>
+</div>
+
+<div class="field" id="f-kyc-confirm">
+  <div class="checkbox">
+    <input id="kycConfirm" name="kycConfirm" type="checkbox" />
+    <label for="kycConfirm" class="label-text">
+      <strong>I confirm</strong> all customer identification requirements have
+      been completed in accordance with General Manual Policy for both the
+      Business Profile and associated individuals and that Business search
+      documents have been attached in Siebel under the business’ main profile.
+      <span class="req">*</span>
+    </label>
+  </div>
+  <div class="error-text" id="kycConfirmErr">
+    <span class="icon" aria-hidden="true"></span><span></span>
+  </div>
+</div>
+
+<div class="field" id="f-kyc-date">
+  <label class="label" for="kycDate">Date <span class="req">*</span></label>
+  <input id="kycDate" name="kycDate" type="date" class="input-date" />
+  <div class="error-text" id="kycDateErr">
+    <span class="icon" aria-hidden="true"></span><span></span>
+  </div>
+</div>

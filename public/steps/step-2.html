@@ -1,0 +1,192 @@
+<h2 class="section-title">Master Account Authority (MAA)</h2>
+
+<div class="field" id="f-maa-current">
+  <div class="label">
+    Is the current version of the MAA completed by the client and submitted with
+    this summary? <span class="req">*</span>
+  </div>
+  <div class="status status--info mt-16">
+    The latest MAA must be completed by the client and submitted together with
+    the MAOS customer summary.
+  </div>
+  <div
+    class="choices mt-16"
+    role="radiogroup"
+    aria-label="Current MAA completed"
+  >
+    <label class="choice"
+      ><input type="radio" name="maa_current" value="Yes" required /> Yes</label
+    >
+    <label class="choice"
+      ><input type="radio" name="maa_current" value="No" /> No</label
+    >
+  </div>
+  <div class="error-text" id="maaCurrentErr">
+    <span class="icon" aria-hidden="true"></span><span></span>
+  </div>
+</div>
+
+<div class="field" id="f-maa-mandatory">
+  <div class="label">
+    Are all mandatory details completed and matching eBOS?
+    <span class="req">*</span>
+  </div>
+  <div class="status status--info mt-16">
+    Company/Business legal name, address, and contact name(s)/number(s) must be
+    completed on the MAA and match eBOS.
+  </div>
+  <div
+    class="choices mt-16"
+    role="radiogroup"
+    aria-label="Mandatory details match"
+  >
+    <label class="choice"
+      ><input type="radio" name="maa_mandatory" value="Yes" required />
+      Yes</label
+    >
+    <label class="choice"
+      ><input type="radio" name="maa_mandatory" value="No" /> No</label
+    >
+  </div>
+  <div class="error-text" id="maaMandatoryErr">
+    <span class="icon" aria-hidden="true"></span><span></span>
+  </div>
+</div>
+
+<div class="field" id="f-maa-min-auth">
+  <div class="label">
+    Is the minimum number of authorised persons met with appropriate authority?
+    <span class="req">*</span>
+  </div>
+  <div class="status status--info mt-16">
+    Ensure at least the minimum number of authorised persons (anyone/any two)
+    has the appropriate authority as specified on the MAA.
+  </div>
+  <div
+    class="choices mt-16"
+    role="radiogroup"
+    aria-label="Minimum authorised persons"
+  >
+    <label class="choice"
+      ><input type="radio" name="maa_min_auth" value="Yes" required />
+      Yes</label
+    >
+    <label class="choice"
+      ><input type="radio" name="maa_min_auth" value="No" /> No</label
+    >
+  </div>
+  <div class="error-text" id="maaMinAuthErr">
+    <span class="icon" aria-hidden="true"></span><span></span>
+  </div>
+</div>
+
+<div class="field" id="f-maa-ebobs">
+  <div class="label">
+    Do all signatories have an eBOS profile set up with KYC/AML completed?
+    <span class="req">*</span>
+  </div>
+  <div class="status status--info mt-16">
+    All signatories must have eBOS profiles and completed KYC/AML. Create new
+    profiles where required and send completed Specimen Signature Cards to the
+    SVS team.
+  </div>
+  <div
+    class="choices mt-16"
+    role="radiogroup"
+    aria-label="Signatories have eBOS"
+  >
+    <label class="choice"
+      ><input type="radio" name="maa_ebobs" value="Yes" required /> Yes</label
+    >
+    <label class="choice"
+      ><input type="radio" name="maa_ebobs" value="No" /> No</label
+    >
+  </div>
+  <div class="error-text" id="maaEbobsErr">
+    <span class="icon" aria-hidden="true"></span><span></span>
+  </div>
+</div>
+
+<div class="field" id="f-maa-sections">
+  <div class="label">
+    Have the Authorisations and Customer Declaration & Signature sections been
+    fully completed? <span class="req">*</span>
+  </div>
+  <div class="status status--info mt-16">
+    The Authorisations and Customer Declaration and Signature sections of the
+    MAA must be completed, with the relevant tick boxes selected as applicable.
+  </div>
+  <div class="choices mt-16" role="radiogroup" aria-label="Sections completed">
+    <label class="choice"
+      ><input type="radio" name="maa_sections" value="Yes" required />
+      Yes</label
+    >
+    <label class="choice"
+      ><input type="radio" name="maa_sections" value="No" /> No</label
+    >
+  </div>
+  <div class="error-text" id="maaSectionsErr">
+    <span class="icon" aria-hidden="true"></span><span></span>
+  </div>
+</div>
+
+<div class="field" id="f-maa-signed">
+  <div class="label">
+    Is the MAA dated & signed by the correct authorised persons under AAC
+    policy? <span class="req">*</span>
+  </div>
+  <div class="status status--info mt-16">
+    Verify in line with AAC Policy and Corporations Act s127:
+    <ul class="mt-16">
+      <li>
+        If the company/trustee has 2+ directors → at least 2 directors must
+        sign.
+      </li>
+      <li>If there is 1 Director and 1 Company Secretary → both must sign.</li>
+      <li>
+        If Sole Director without Company Secretary → Sole Director must sign.
+      </li>
+    </ul>
+  </div>
+  <div
+    class="choices mt-16"
+    role="radiogroup"
+    aria-label="MAA dated and signed"
+  >
+    <label class="choice"
+      ><input type="radio" name="maa_signed" value="Yes" required /> Yes</label
+    >
+    <label class="choice"
+      ><input type="radio" name="maa_signed" value="No" /> No</label
+    >
+  </div>
+  <div class="error-text" id="maaSignedErr">
+    <span class="icon" aria-hidden="true"></span><span></span>
+  </div>
+</div>
+
+<div class="field" id="f-maa-callback">
+  <div class="label">
+    Has the callback process verified the signatories (esp. for digital/inserted
+    signatures)? <span class="req">*</span>
+  </div>
+  <div class="status status--info mt-16">
+    Follow the callback process to verify signatories where signatures are
+    digitally inserted or copy-pasted.
+  </div>
+  <div class="choices mt-16" role="radiogroup" aria-label="Callback completed">
+    <label class="choice"
+      ><input type="radio" name="maa_callback" value="Yes" required />
+      Yes</label
+    >
+    <label class="choice"
+      ><input type="radio" name="maa_callback" value="No" /> No</label
+    >
+    <label class="choice"
+      ><input type="radio" name="maa_callback" value="N/A" /> N/A</label
+    >
+  </div>
+  <div class="error-text" id="maaCallbackErr">
+    <span class="icon" aria-hidden="true"></span><span></span>
+  </div>
+</div>

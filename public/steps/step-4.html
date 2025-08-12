@@ -1,0 +1,131 @@
+<h2 class="section-title">Master Customer Details</h2>
+
+<div class="field" id="f-legal-name">
+  <label class="label" for="legalName"
+    >Business full legal name <span class="req">*</span></label
+  >
+  <input
+    id="legalName"
+    name="legalName"
+    class="input"
+    autocomplete="organization"
+    required
+  />
+  <div class="hint">
+    Include any trading names; must match the MAA and Master Customer profile.
+  </div>
+  <div class="error-text" id="legalNameErr">
+    <span class="icon" aria-hidden="true"></span><span></span>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="field" id="f-mcn">
+    <label class="label" for="mcn"
+      >Master Customer Number (MCN) <span class="req">*</span></label
+    >
+    <input
+      id="mcn"
+      name="mcn"
+      class="input"
+      inputmode="numeric"
+      maxlength="9"
+      required
+    />
+    <div class="hint">9 digits.</div>
+    <div class="error-text" id="mcnErr">
+      <span class="icon" aria-hidden="true"></span><span></span>
+    </div>
+  </div>
+
+  <div class="field" id="f-abnacn">
+    <label class="label" for="abnAcn">ABN/ACN <span class="req">*</span></label>
+    <input
+      id="abnAcn"
+      name="abnAcn"
+      class="input"
+      inputmode="numeric"
+      required
+    />
+    <div class="hint">ABN = 11 digits, or ACN = 9 digits.</div>
+    <div class="error-text" id="abnAcnErr">
+      <span class="icon" aria-hidden="true"></span><span></span>
+    </div>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="field" id="f-rel-no">
+    <label class="label" for="relNo"
+      >Relationship Group Number <span class="req">*</span></label
+    >
+    <input id="relNo" name="relNo" class="input" />
+    <div class="error-text" id="relNoErr">
+      <span class="icon" aria-hidden="true"></span><span></span>
+    </div>
+  </div>
+
+  <div class="field" id="f-rel-name">
+    <label class="label" for="relName"
+      >Relationship Group Name <span class="req">*</span></label
+    >
+    <input id="relName" name="relName" class="input" />
+    <div class="error-text" id="relNameErr">
+      <span class="icon" aria-hidden="true"></span><span></span>
+    </div>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="field" id="f-contact-name">
+    <label class="label" for="contactName"
+      >Contact Name <span class="req">*</span></label
+    >
+    <input
+      id="contactName"
+      name="contactName"
+      class="input"
+      autocomplete="name"
+    />
+    <div class="error-text" id="contactNameErr">
+      <span class="icon" aria-hidden="true"></span><span></span>
+    </div>
+  </div>
+
+  <div class="field" id="f-contact-number">
+    <label class="label" for="contactNumber"
+      >Contact Number <span class="req">*</span></label
+    >
+    <input
+      id="contactNumber"
+      name="contactNumber"
+      class="input"
+      inputmode="tel"
+      autocomplete="tel"
+    />
+    <div class="hint">Digits, spaces, +, ( ) and - are allowed.</div>
+    <div class="error-text" id="contactNumberErr">
+      <span class="icon" aria-hidden="true"></span><span></span>
+    </div>
+  </div>
+</div>
+
+<div class="field" id="f-emails">
+  <label class="label" for="emails"
+    >Email address(es) <span class="req">*</span></label
+  >
+  <textarea
+    id="emails"
+    name="emails"
+    class="input"
+    rows="3"
+    placeholder="one.address@example.com&#10;another@example.com"
+  ></textarea>
+  <div class="hint">
+    List all authorised emails (one per line) to add to the client distribution
+    list.
+  </div>
+  <div class="error-text" id="emailsErr">
+    <span class="icon" aria-hidden="true"></span><span></span>
+  </div>
+</div>

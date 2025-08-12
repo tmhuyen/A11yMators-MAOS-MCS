@@ -1,0 +1,214 @@
+<h2 class="section-title">Customer Summary</h2>
+
+<div class="field" id="f-cs-legalname">
+  <div class="label">
+    Does the business full legal name (incl. trading names) match the MAA and
+    the MCN? <span class="req">*</span>
+  </div>
+  <div class="status status--info mt-16">
+    Business full legal name provided includes any trading names and matches the
+    MAA and the MCN records.
+  </div>
+  <div
+    class="choices mt-16"
+    role="radiogroup"
+    aria-label="Business name matches"
+  >
+    <label class="choice"
+      ><input type="radio" name="cs_legalname" value="Yes" required />
+      Yes</label
+    >
+    <label class="choice"
+      ><input type="radio" name="cs_legalname" value="No" /> No</label
+    >
+  </div>
+  <div class="error-text" id="csLegalnameErr">
+    <span class="icon" aria-hidden="true"></span><span></span>
+  </div>
+</div>
+
+<div class="field" id="f-cs-relgroup">
+  <div class="label">
+    Is the Relationship Group Name & Number valid and for the client being
+    onboarded? <span class="req">*</span>
+  </div>
+  <div class="status status--info mt-16">
+    Relationship Group Name and Number must be provided, valid and belong to the
+    client.
+  </div>
+  <div
+    class="choices mt-16"
+    role="radiogroup"
+    aria-label="Relationship group valid"
+  >
+    <label class="choice"
+      ><input type="radio" name="cs_relgroup" value="Yes" required /> Yes</label
+    >
+    <label class="choice"
+      ><input type="radio" name="cs_relgroup" value="No" /> No</label
+    >
+  </div>
+  <div class="error-text" id="csRelgroupErr">
+    <span class="icon" aria-hidden="true"></span><span></span>
+  </div>
+</div>
+
+<div class="field" id="f-cs-signatories">
+  <div class="label">
+    Are the customer numbers for all signatories on the MAA correct and for the
+    nominated signatories? <span class="req">*</span>
+  </div>
+  <div class="status status--info mt-16">
+    Customer number(s) for all signatories listed on the MAA must be provided,
+    correct, and belong to the nominated signatories per eBOS.
+    <em>
+      For Corporate &amp; Institutional clients, check the Power BI (IDV) report
+      and ensure all signatories are listed.</em
+    >
+  </div>
+  <div
+    class="choices mt-16"
+    role="radiogroup"
+    aria-label="Signatory numbers correct"
+  >
+    <label class="choice"
+      ><input type="radio" name="cs_signatories" value="Yes" required />
+      Yes</label
+    >
+    <label class="choice"
+      ><input type="radio" name="cs_signatories" value="No" /> No</label
+    >
+  </div>
+  <div class="error-text" id="csSignatoriesErr">
+    <span class="icon" aria-hidden="true"></span><span></span>
+  </div>
+</div>
+
+<div class="field" id="f-cs-accpricing">
+  <div class="label">
+    Are Account Details/Pricing completed (fees, rates/margins) and pricing docs
+    provided where applicable? <span class="req">*</span>
+  </div>
+  <div class="status status--info mt-16">
+    All mandatory details of the Account Details/Pricing table are provided for
+    each nominated account and pricing documents are attached where applicable.
+  </div>
+  <div
+    class="choices mt-16"
+    role="radiogroup"
+    aria-label="Account pricing complete"
+  >
+    <label class="choice"
+      ><input type="radio" name="cs_accpricing" value="Yes" required />
+      Yes</label
+    >
+    <label class="choice"
+      ><input type="radio" name="cs_accpricing" value="No" /> No</label
+    >
+  </div>
+  <div class="error-text" id="csAccpricingErr">
+    <span class="icon" aria-hidden="true"></span><span></span>
+  </div>
+</div>
+
+<div class="field" id="f-cs-ebanking">
+  <div class="label">
+    Have Electronic Banking Services been reviewed and the section completed
+    accordingly? <span class="req">*</span>
+  </div>
+  <div class="status status--info mt-16">
+    Engage with relevant teams (e.g., NAB Connect amendments, Direct Link team)
+    to set up MEIDs, mailboxes, user IDs and services by submitting required
+    documentation.
+  </div>
+  <div
+    class="choices mt-16"
+    role="radiogroup"
+    aria-label="Electronic banking reviewed"
+  >
+    <label class="choice"
+      ><input type="radio" name="cs_ebanking" value="Yes" required /> Yes</label
+    >
+    <label class="choice"
+      ><input type="radio" name="cs_ebanking" value="No" /> No</label
+    >
+  </div>
+  <div class="error-text" id="csEbankingErr">
+    <span class="icon" aria-hidden="true"></span><span></span>
+  </div>
+</div>
+
+<div class="field" id="f-cs-bsb">
+  <div class="label">
+    Is the BSB for the account setup provided and eligible to open accounts?
+    <span class="req">*</span>
+  </div>
+  <div class="status status--info mt-16">
+    Ensure the BSB for Account to be set up is provided and eligible to open
+    accounts.
+  </div>
+  <div class="choices mt-16" role="radiogroup" aria-label="BSB eligible">
+    <label class="choice"
+      ><input type="radio" name="cs_bsb" value="Yes" required /> Yes</label
+    >
+    <label class="choice"
+      ><input type="radio" name="cs_bsb" value="No" /> No</label
+    >
+  </div>
+  <div class="error-text" id="csBsbErr">
+    <span class="icon" aria-hidden="true"></span><span></span>
+  </div>
+</div>
+
+<div class="field" id="f-cs-kycsection">
+  <div class="label">
+    Is the KYC section of the Master Customer Summary completed and dated?
+    <span class="req">*</span>
+  </div>
+  <div class="status status--info mt-16">
+    KYC details section of the Master Customer Summary must be fully completed
+    and dated.
+  </div>
+  <div
+    class="choices mt-16"
+    role="radiogroup"
+    aria-label="KYC section completed"
+  >
+    <label class="choice"
+      ><input type="radio" name="cs_kycsection" value="Yes" required />
+      Yes</label
+    >
+    <label class="choice"
+      ><input type="radio" name="cs_kycsection" value="No" /> No</label
+    >
+  </div>
+  <div class="error-text" id="csKycsectionErr">
+    <span class="icon" aria-hidden="true"></span><span></span>
+  </div>
+</div>
+
+<div class="field" id="f-cs-followup">
+  <div class="label">
+    Was a final follow-up call done to ensure the customer is comfortable using
+    the service? <span class="req">*</span>
+  </div>
+  <div class="status status--info mt-16">
+    Perform a final follow-up call to confirm the customer understands and is
+    comfortable to use the service.
+  </div>
+  <div
+    class="choices mt-16"
+    role="radiogroup"
+    aria-label="Final follow up call"
+  >
+    <label class="choice"
+      ><input type="radio" name="cs_followup" value="Yes" required /> Yes</label
+    >
+    <label class="choice"
+      ><input type="radio" name="cs_followup" value="No" /> No</label
+    >
+  </div>
+  <div class="error-text" id="csFollowupErr">
+    <span class="icon" aria-hidden="true"></span><span></span>
+  </div>
+</div>
