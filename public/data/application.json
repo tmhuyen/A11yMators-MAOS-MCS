@@ -1,0 +1,102 @@
+{
+  "step1": {
+    "industry": "Legal",
+    "kyc": "Yes",
+    "ind_reflect": "No",
+    "company_match": "Yes",
+    "buid_correct": "N/A",
+    "related_updated": "Yes",
+    "trust_letter": "N/A"
+  },
+  "step2": {
+    "maa_current": "Yes",
+    "maa_mandatory": "Yes",
+    "maa_min_auth": "No",
+    "maa_ebobs": "Yes",
+    "maa_sections": "No",
+    "maa_signed": "Yes",
+    "maa_callback": "No"
+  },
+  "step3": {
+    "cs_legalname": "Yes",
+    "cs_relgroup": "No",
+    "cs_signatories": "Yes",
+    "cs_accpricing": "No",
+    "cs_ebanking": "Yes",
+    "cs_bsb": "Yes",
+    "cs_kycsection": "No",
+    "cs_followup": "Yes"
+  },
+  "step4": {
+    "legalName": "treter",
+    "mcn": "123456789",
+    "abnAcn": "12345678901",
+    "relNo": "2343244",
+    "relName": "erwer",
+    "contactName": "rwer",
+    "contactNumber": "+44365843929",
+    "emails": "abc@gmail.com"
+  },
+  "step5": {
+    "people": [
+      {
+        "name": "fgfdfg",
+        "number": "1244324"
+      }
+    ]
+  },
+  "step6": {
+    "apraCode": "423423",
+    "industryClass": "34234",
+    "orgType": "efsfsd",
+    "kycConfirm": true,
+    "kycDate": "2025-08-23"
+  },
+  "step7": {
+    "acc_cca": true,
+    "acc_bia": false,
+    "acc_bca": false,
+    "acc_bcm": true,
+    "acc_td": false,
+    "cca_fee": "H",
+    "cca_rate": "CC",
+    "cca_margin": "",
+    "bia_fee": "",
+    "bca_fee": "",
+    "bcm_rate": "standard",
+    "bcm_margin": "",
+    "td_rate": "",
+    "stmt_cycle": "quarterly",
+    "ea_nabc": true,
+    "ea_ib": true,
+    "ea_dlr_tx": false,
+    "ea_dlr_td": false,
+    "ea_dsi": false,
+    "readd": false,
+    "nabc_meid": "42342334235",
+    "nabc_users": "all",
+    "nabc_users_list": "",
+    "nabc_services": "all",
+    "nabc_services_list": "",
+    "ib_users": "1243432423",
+    "dlr_tx_mailbox": "",
+    "dlr_tx_services": "",
+    "dlr_td_mailbox": "",
+    "readd_users": "",
+    "readd_users_list": ""
+  },
+  "step8": {
+    "p_name": "fdfasdf",
+    "p_title": "4324234",
+    "p_email": "tranuyen721@gmail.com",
+    "p_phone": "+44365843929",
+    "p_buid": "4534534",
+    "p_bsb": "234234",
+    "p_osa": "423425",
+    "p_td": "5435345346",
+    "s_name": "asfdf",
+    "s_title": "safdf",
+    "s_email": "abc@gmail.com",
+    "s_phone": "+44365843929"
+  }
+}

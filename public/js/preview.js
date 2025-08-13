@@ -134,3 +134,73 @@ async function loadAll() {
   }
 }
 window.addEventListener("DOMContentLoaded", loadAll);
+
+
+/* Lock all form controls in preview without graying them out */
+(function () {
+  function lockPreview(container) {
+    const root =
+      container ||
+      document.querySelector('#step-container') ||  // preview.html dùng id này
+      document.querySelector('main') ||
+      document.body;
+
+    if (!root || root.dataset.previewLocked === '1') return;
+    root.dataset.previewLocked = '1';
+    root.classList.add('keep-colors'); // CSS giữ nguyên màu
+
+    // 1) Khóa control hiện có
+    freeze(root);
+
+    // 2) Chặn mọi thao tác thay đổi (cho Tab/Ctrl+C/Ctrl+A)
+    const blocker = (e) => {
+      const t = e.target;
+      if (!t || !root.contains(t) || !t.matches?.('input,textarea,select')) return;
+
+      if (e.type === 'keydown') {
+        const k = e.key;
+        if (k === 'Tab' || k === 'Shift') return;
+        if ((e.ctrlKey || e.metaKey) && ['a','c','A','C'].includes(k)) return;
+      }
+      e.preventDefault(); e.stopImmediatePropagation();
+    };
+    ['beforeinput','input','change','click','mousedown','pointerdown','keydown']
+      .forEach(type => document.addEventListener(type, blocker, { capture: true }));
+
+    // 3) Theo dõi nội dung merge động (steps 1–4 chèn vào sau)
+    const mo = new MutationObserver(muts => {
+      muts.forEach(m => m.addedNodes?.forEach(n => {
+        if (n.nodeType === 1 && root.contains(n)) freeze(n);
+      }));
+    });
+    mo.observe(root, { childList: true, subtree: true });
+
+    function freeze(scope) {
+      // text-like -> readOnly (giữ style)
+      scope.querySelectorAll('input:not([type]),input[type="text"],input[type="email"],input[type="tel"],input[type="number"],input[type="date"],textarea')
+        .forEach(el => {
+          el.readOnly = true;
+          el.setAttribute('aria-readonly','true');
+          ['beforeinput','paste','drop'].forEach(ev =>
+            el.addEventListener(ev, e => e.preventDefault(), { capture:true })
+          );
+        });
+
+      // checkbox/radio/select -> KHÔNG disabled (khỏi xám), chỉ “niêm phong”
+      scope.querySelectorAll('input[type="checkbox"],input[type="radio"],select')
+        .forEach(el => {
+          el.setAttribute('data-locked','1');
+          el.setAttribute('aria-disabled','true');
+        });
+
+      // tắt contenteditable nếu có
+      scope.querySelectorAll('[contenteditable=""],[contenteditable="true"]').forEach(el =>
+        el.setAttribute('contenteditable','false')
+      );
+    }
+  }
+
+  // Khóa ngay khi DOM sẵn sàng; MO sẽ bắt phần nội dung merge sau đó
+  window.addEventListener('DOMContentLoaded', () => lockPreview());
+})();
+
