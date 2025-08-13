@@ -7,9 +7,10 @@ import * as s5 from "./hooks/step5.js";
 import * as s6 from "./hooks/step6.js";
 import * as s7 from "./hooks/step7.js";
 import * as s8 from "./hooks/step8.js";
+import * as s9 from "./hooks/step9.js";
 
-const hooks = { 1: s1, 2: s2, 3: s3, 4: s4, 5: s5, 6: s6, 7: s7, 8: s8 };
-const TOTAL = 8; // set to your actual number of steps
+const hooks = { 1: s1, 2: s2, 3: s3, 4: s4, 5: s5, 6: s6, 7: s7, 8: s8, 9: s9 };
+const TOTAL = 9; // set to your actual number of steps
 let step = 1;
 
 const container = document.getElementById("step-container");
@@ -88,7 +89,6 @@ function showErrors(messages) {
   }
 }
 
-
 prevBtn.addEventListener("click", async () => {
   if (step > 1) {
     step--;
@@ -121,10 +121,7 @@ nextBtn.addEventListener("click", async () => {
       step++;
       await loadStep(step);
     } else {
-      console.log("[submit] FINAL PAYLOAD:", store.data);
-      statusEl.className = "status status--success mt-16";
-      statusEl.textContent =
-        "Submitted successfully (demo). Check console for payload.";
+      // already on step 9; nothing else
     }
   } catch (e) {
     console.error("[next] click handler crashed:", e);

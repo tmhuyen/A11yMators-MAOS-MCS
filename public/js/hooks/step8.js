@@ -55,79 +55,79 @@ export function init(root, store) {
   });
 }
 
-export function validate(root) {
-  var errs = [];
+// export function validate(root) {
+//   var errs = [];
 
-  // Primary (all required)
-  var p_name = (root.querySelector("#p_name") || {}).value || "";
-  var p_title = (root.querySelector("#p_title") || {}).value || "";
-  var p_email = (root.querySelector("#p_email") || {}).value || "";
-  var p_phone = (root.querySelector("#p_phone") || {}).value || "";
-  var p_buid = (root.querySelector("#p_buid") || {}).value || "";
-  var p_bsb = (root.querySelector("#p_bsb") || {}).value || "";
-  var p_osa = (root.querySelector("#p_osa") || {}).value || "";
-  var p_td = (root.querySelector("#p_td") || {}).value || "";
+//   // Primary (all required)
+//   var p_name = (root.querySelector("#p_name") || {}).value || "";
+//   var p_title = (root.querySelector("#p_title") || {}).value || "";
+//   var p_email = (root.querySelector("#p_email") || {}).value || "";
+//   var p_phone = (root.querySelector("#p_phone") || {}).value || "";
+//   var p_buid = (root.querySelector("#p_buid") || {}).value || "";
+//   var p_bsb = (root.querySelector("#p_bsb") || {}).value || "";
+//   var p_osa = (root.querySelector("#p_osa") || {}).value || "";
+//   var p_td = (root.querySelector("#p_td") || {}).value || "";
 
-  if (!p_name.trim()) {
-    setError(root, "f-p-name", "Enter banker name");
-    errs.push({ id: "f-p-name", text: "Enter banker name" });
-  }
-  if (!p_title.trim()) {
-    setError(root, "f-p-title", "Enter banker position title");
-    errs.push({ id: "f-p-title", text: "Enter banker position title" });
-  }
-  if (!emailRe.test(p_email.trim())) {
-    setError(root, "f-p-email", "Enter a valid email");
-    errs.push({ id: "f-p-email", text: "Enter a valid email" });
-  }
-  if (!phoneRe.test(p_phone.trim())) {
-    setError(root, "f-p-phone", "Enter a valid phone number");
-    errs.push({ id: "f-p-phone", text: "Enter a valid phone number" });
-  }
-  if (!buidRe.test(p_buid.trim())) {
-    setError(root, "f-p-buid", "Enter a valid BUID (4–10 letters/numbers)");
-    errs.push({ id: "f-p-buid", text: "Enter a valid BUID" });
-  }
-  if (!bsbRe.test(p_bsb.trim())) {
-    setError(root, "f-p-bsb", "Enter a 6-digit BSB");
-    errs.push({ id: "f-p-bsb", text: "Enter a 6-digit BSB" });
-  }
-  if (!p_osa.trim()) {
-    setError(root, "f-p-osa", "Enter Banker OSA");
-    errs.push({ id: "f-p-osa", text: "Enter Banker OSA" });
-  }
-  if (!tdRe.test(p_td.trim())) {
-    setError(
-      root,
-      "f-p-td",
-      "Enter a valid TD Disposals Account Number (6–16 digits)"
-    );
-    errs.push({
-      id: "f-p-td",
-      text: "Enter a valid TD Disposals Account Number",
-    });
-  }
+//   if (!p_name.trim()) {
+//     setError(root, "f-p-name", "Enter banker name");
+//     errs.push({ id: "f-p-name", text: "Enter banker name" });
+//   }
+//   if (!p_title.trim()) {
+//     setError(root, "f-p-title", "Enter banker position title");
+//     errs.push({ id: "f-p-title", text: "Enter banker position title" });
+//   }
+//   if (!emailRe.test(p_email.trim())) {
+//     setError(root, "f-p-email", "Enter a valid email");
+//     errs.push({ id: "f-p-email", text: "Enter a valid email" });
+//   }
+//   if (!phoneRe.test(p_phone.trim())) {
+//     setError(root, "f-p-phone", "Enter a valid phone number");
+//     errs.push({ id: "f-p-phone", text: "Enter a valid phone number" });
+//   }
+//   if (!buidRe.test(p_buid.trim())) {
+//     setError(root, "f-p-buid", "Enter a valid BUID (4–10 letters/numbers)");
+//     errs.push({ id: "f-p-buid", text: "Enter a valid BUID" });
+//   }
+//   if (!bsbRe.test(p_bsb.trim())) {
+//     setError(root, "f-p-bsb", "Enter a 6-digit BSB");
+//     errs.push({ id: "f-p-bsb", text: "Enter a 6-digit BSB" });
+//   }
+//   if (!p_osa.trim()) {
+//     setError(root, "f-p-osa", "Enter Banker OSA");
+//     errs.push({ id: "f-p-osa", text: "Enter Banker OSA" });
+//   }
+//   if (!tdRe.test(p_td.trim())) {
+//     setError(
+//       root,
+//       "f-p-td",
+//       "Enter a valid TD Disposals Account Number (6–16 digits)"
+//     );
+//     errs.push({
+//       id: "f-p-td",
+//       text: "Enter a valid TD Disposals Account Number",
+//     });
+//   }
 
-  // Secondary (optional; validate only if filled)
-  var s_name = (root.querySelector("#s_name") || {}).value || "";
-  var s_title = (root.querySelector("#s_title") || {}).value || "";
-  var s_email = (root.querySelector("#s_email") || {}).value || "";
-  var s_phone = (root.querySelector("#s_phone") || {}).value || "";
+//   // Secondary (optional; validate only if filled)
+//   var s_name = (root.querySelector("#s_name") || {}).value || "";
+//   var s_title = (root.querySelector("#s_title") || {}).value || "";
+//   var s_email = (root.querySelector("#s_email") || {}).value || "";
+//   var s_phone = (root.querySelector("#s_phone") || {}).value || "";
 
-  if (s_email.trim() && !emailRe.test(s_email.trim())) {
-    setError(root, "f-s-email", "Enter a valid email");
-    errs.push({ id: "f-s-email", text: "Secondary: enter a valid email" });
-  }
-  if (s_phone.trim() && !phoneRe.test(s_phone.trim())) {
-    setError(root, "f-s-phone", "Enter a valid phone number");
-    errs.push({
-      id: "f-s-phone",
-      text: "Secondary: enter a valid phone number",
-    });
-  }
+//   if (s_email.trim() && !emailRe.test(s_email.trim())) {
+//     setError(root, "f-s-email", "Enter a valid email");
+//     errs.push({ id: "f-s-email", text: "Secondary: enter a valid email" });
+//   }
+//   if (s_phone.trim() && !phoneRe.test(s_phone.trim())) {
+//     setError(root, "f-s-phone", "Enter a valid phone number");
+//     errs.push({
+//       id: "f-s-phone",
+//       text: "Secondary: enter a valid phone number",
+//     });
+//   }
 
-  return errs;
-}
+//   return errs;
+// }
 
 export function collect(root, store) {
   var data = {
@@ -175,5 +175,5 @@ export function collect(root, store) {
   };
 
   store.set("step8", data);
-  for (var k in data) store.data[k] = data[k];
+
 }

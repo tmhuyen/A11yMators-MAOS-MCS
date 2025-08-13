@@ -64,74 +64,74 @@ export function init(root, store) {
   });
 }
 
-export function validate(root) {
-  const errs = [];
+// export function validate(root) {
+//   const errs = [];
 
-  // 1) Industry required
-  const industrySel = root.querySelector("#industry");
-  if (!industrySel || !industrySel.value) {
-    setError(
-      root,
-      "f-industry",
-      "Choose an industry",
-      industrySel || undefined
-    );
-    errs.push({ id: "f-industry", text: "Choose an industry" });
-  } else {
-    clearError(root, "f-industry", industrySel);
-  }
+//   // 1) Industry required
+//   const industrySel = root.querySelector("#industry");
+//   if (!industrySel || !industrySel.value) {
+//     setError(
+//       root,
+//       "f-industry",
+//       "Choose an industry",
+//       industrySel || undefined
+//     );
+//     errs.push({ id: "f-industry", text: "Choose an industry" });
+//   } else {
+//     clearError(root, "f-industry", industrySel);
+//   }
 
-  // 2) Required radios
-  const requiredGroups = [
-    ["kyc", "Confirm KYC/AML compliance"],
-    ["ind_reflect", "Confirm eBOS industry matches client’s industry"],
-    ["company_match", "Confirm company details match eBOS/MAA"],
-    ["buid_correct", "Confirm banker details and BUIDs are correct"],
-    [
-      "related_updated",
-      "Confirm related entities and beneficial owners are up to date",
-    ],
-  ];
+//   // 2) Required radios
+//   const requiredGroups = [
+//     ["kyc", "Confirm KYC/AML compliance"],
+//     ["ind_reflect", "Confirm eBOS industry matches client’s industry"],
+//     ["company_match", "Confirm company details match eBOS/MAA"],
+//     ["buid_correct", "Confirm banker details and BUIDs are correct"],
+//     [
+//       "related_updated",
+//       "Confirm related entities and beneficial owners are up to date",
+//     ],
+//   ];
 
-  requiredGroups.forEach(([name, message]) => {
-    const checked = root.querySelector(`input[name="${name}"]:checked`);
-    if (!checked) {
-      const first = root.querySelector(`input[name="${name}"]`);
-      setError(root, FIELD_MAP[name], message, first || undefined);
-      errs.push({ id: FIELD_MAP[name], text: message });
-    } else {
-      clearError(root, FIELD_MAP[name], checked);
-    }
-  });
+//   requiredGroups.forEach(([name, message]) => {
+//     const checked = root.querySelector(`input[name="${name}"]:checked`);
+//     if (!checked) {
+//       const first = root.querySelector(`input[name="${name}"]`);
+//       setError(root, FIELD_MAP[name], message, first || undefined);
+//       errs.push({ id: FIELD_MAP[name], text: message });
+//     } else {
+//       clearError(root, FIELD_MAP[name], checked);
+//     }
+//   });
 
-  // 3) Trust letter required only when industry = Accounting
-  const needLetter = industrySel?.value === "Accounting";
-  const letterChecked = root.querySelector(
-    `input[name="trust_letter"]:checked`
-  );
-  if (needLetter) {
-    if (!letterChecked || letterChecked.value === "N/A") {
-      const first = root.querySelector(`input[name="trust_letter"]`);
-      setError(
-        root,
-        FIELD_MAP.trust_letter,
-        "Confirm Trust Account letter status (required for Accounting)",
-        first || undefined
-      );
-      errs.push({
-        id: FIELD_MAP.trust_letter,
-        text: "Confirm Trust Account letter status (required for Accounting)",
-      });
-    } else {
-      clearError(root, FIELD_MAP.trust_letter, letterChecked);
-    }
-  } else {
-    // Not Accounting → allow any selection (including none)
-    if (letterChecked) clearError(root, FIELD_MAP.trust_letter, letterChecked);
-  }
+//   // 3) Trust letter required only when industry = Accounting
+//   const needLetter = industrySel?.value === "Accounting";
+//   const letterChecked = root.querySelector(
+//     `input[name="trust_letter"]:checked`
+//   );
+//   if (needLetter) {
+//     if (!letterChecked || letterChecked.value === "N/A") {
+//       const first = root.querySelector(`input[name="trust_letter"]`);
+//       setError(
+//         root,
+//         FIELD_MAP.trust_letter,
+//         "Confirm Trust Account letter status (required for Accounting)",
+//         first || undefined
+//       );
+//       errs.push({
+//         id: FIELD_MAP.trust_letter,
+//         text: "Confirm Trust Account letter status (required for Accounting)",
+//       });
+//     } else {
+//       clearError(root, FIELD_MAP.trust_letter, letterChecked);
+//     }
+//   } else {
+//     // Not Accounting → allow any selection (including none)
+//     if (letterChecked) clearError(root, FIELD_MAP.trust_letter, letterChecked);
+//   }
 
-  return errs;
-}
+//   return errs;
+// }
 
 export function collect(root, store) {
   const payload = {
@@ -149,5 +149,5 @@ export function collect(root, store) {
       root.querySelector('input[name="trust_letter"]:checked')?.value || "",
   };
   store.set("step1", payload);
-  Object.assign(store.data, payload);
+
 }

@@ -59,49 +59,49 @@ export function init(root, store) {
     cb.addEventListener("change", () => clearError(root, "f-kyc-confirm", cb));
 }
 
-export function validate(root) {
-  const errs = [];
+// export function validate(root) {
+//   const errs = [];
 
-  const apra = root.querySelector("#apraCode");
-  if (!apra.value.trim()) {
-    setError(root, "f-apra", "Enter the APRA Code", apra);
-    errs.push({ id: "f-apra", text: "Enter the APRA Code" });
-  } else clearError(root, "f-apra", apra);
+//   const apra = root.querySelector("#apraCode");
+//   if (!apra.value.trim()) {
+//     setError(root, "f-apra", "Enter the APRA Code", apra);
+//     errs.push({ id: "f-apra", text: "Enter the APRA Code" });
+//   } else clearError(root, "f-apra", apra);
 
-  const ind = root.querySelector("#industryClass");
-  if (!ind.value.trim()) {
-    setError(root, "f-industry-class", "Enter the Industry Class Code", ind);
-    errs.push({
-      id: "f-industry-class",
-      text: "Enter the Industry Class Code",
-    });
-  } else clearError(root, "f-industry-class", ind);
+//   const ind = root.querySelector("#industryClass");
+//   if (!ind.value.trim()) {
+//     setError(root, "f-industry-class", "Enter the Industry Class Code", ind);
+//     errs.push({
+//       id: "f-industry-class",
+//       text: "Enter the Industry Class Code",
+//     });
+//   } else clearError(root, "f-industry-class", ind);
 
-  const org = root.querySelector("#orgType");
-  if (!org.value.trim()) {
-    setError(root, "f-orgtype", "Enter the Organisation Type", org);
-    errs.push({ id: "f-orgtype", text: "Enter the Organisation Type" });
-  } else clearError(root, "f-orgtype", org);
+//   const org = root.querySelector("#orgType");
+//   if (!org.value.trim()) {
+//     setError(root, "f-orgtype", "Enter the Organisation Type", org);
+//     errs.push({ id: "f-orgtype", text: "Enter the Organisation Type" });
+//   } else clearError(root, "f-orgtype", org);
 
-  const cb = root.querySelector("#kycConfirm");
-  if (!cb.checked) {
-    setError(root, "f-kyc-confirm", "You must confirm the KYC declaration", cb);
-    errs.push({
-      id: "f-kyc-confirm",
-      text: "You must confirm the KYC declaration",
-    });
-  } else clearError(root, "f-kyc-confirm", cb);
+//   const cb = root.querySelector("#kycConfirm");
+//   if (!cb.checked) {
+//     setError(root, "f-kyc-confirm", "You must confirm the KYC declaration", cb);
+//     errs.push({
+//       id: "f-kyc-confirm",
+//       text: "You must confirm the KYC declaration",
+//     });
+//   } else clearError(root, "f-kyc-confirm", cb);
 
-  const dateEl = root.querySelector("#kycDate");
-  if (!dateEl.value) {
-    setError(root, "f-kyc-date", "Select the date", dateEl);
-    errs.push({ id: "f-kyc-date", text: "Select the date" });
-  } else {
-    clearError(root, "f-kyc-date", dateEl);
-  }
+//   const dateEl = root.querySelector("#kycDate");
+//   if (!dateEl.value) {
+//     setError(root, "f-kyc-date", "Select the date", dateEl);
+//     errs.push({ id: "f-kyc-date", text: "Select the date" });
+//   } else {
+//     clearError(root, "f-kyc-date", dateEl);
+//   }
 
-  return errs;
-}
+//   return errs;
+// }
 
 export function collect(root, store) {
   const payload = {
@@ -112,5 +112,5 @@ export function collect(root, store) {
     kycDate: root.querySelector("#kycDate")?.value || "", // yyyy-mm-dd
   };
   store.set("step6", payload);
-  Object.assign(store.data, payload);
+
 }

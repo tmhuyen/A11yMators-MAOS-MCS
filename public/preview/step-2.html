@@ -1,0 +1,168 @@
+<div id="step-2" class="step" style="padding-top:8px">
+
+  <!-- ====== STYLES CHO PAGE 2 (riêng) ====== -->
+  <style>
+    /* thanh tiêu đề đen như PDF */
+    .secbar {
+      margin: 12px 0 6px;
+      background: #1f2937; /* gần với pdf */
+      color: #fff;
+      font-weight: 700;
+      padding: 6px 10px;
+      font-size: 12px;
+    }
+    .hint { font-size: 12px; color: #111; margin: 4px 0 8px; }
+    .label { font-weight: 700; font-size: 12px; display: block; margin-bottom: 4px; }
+    .required-star { color:#b91c1c; font-weight:700; }
+
+    /* grid 2 cột */
+    .row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 14px;
+      margin-bottom: 8px;
+    }
+    .field { display:block; }
+    .input, textarea.input {
+      width: 100%; border: 1px solid #cbd5e1; min-height: 28px; padding: 6px 8px; font-size: 12px;
+      background:#fff;
+    }
+
+    /* bảng Authorised Person như PDF */
+    table.auth {
+      width: 100%; border-collapse: collapse; background:#fff; font-size:12px;
+      border:1px solid #cbd5e1;
+    }
+    table.auth thead th {
+      background:#1f2937; color:#fff; font-weight:700; text-align:left; padding:6px 8px;
+      border-right:1px solid #1f2937;
+    }
+    table.auth thead th.num { width: 30px; padding:0; }
+    table.auth tbody td {
+      border-top:1px solid #e5e7eb; border-right:1px solid #e5e7eb; padding:0;
+    }
+    table.auth tbody td.num {
+      width:30px; text-align:center;  padding:4px 0; border-right:1px solid #e5e7eb;
+    }
+    table.auth tbody td > input {
+      width:100%; border:0; padding:6px 8px; font-size:12px;
+    }
+
+    /* block KYC */
+    .kyc-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    .checkbox-item { display:flex; gap:8px; align-items:flex-start; font-size:12px; }
+  </style>
+
+  <!-- ====== MASTER CUSTOMER DETAILS ====== -->
+  <div class="secbar">Master Customer Details</div>
+  <div class="hint">Business full legal name (include any trading names and matches both the MAA and Master Customer profile)<span class="required-star"> *</span></div>
+  <input id="businessName" class="input" placeholder="">
+
+  <div class="row-2" style="margin-top: 10px;">
+    <div class="field">
+      <label class="label">Master Customer Number (MCN)<span class="required-star"> *</span></label>
+      <input id="mcn" class="input" placeholder="">
+    </div>
+    <div class="field">
+      <label class="label">ABN/ACN<span class="required-star"> *</span></label>
+      <input id="abn" class="input" placeholder="">
+    </div>
+  </div>
+
+  <div class="row-2">
+    <div class="field">
+      <label class="label">Relationship Group Number<span class="required-star"> *</span></label>
+      <input id="rgNumber" class="input" placeholder="">
+    </div>
+    <div class="field">
+      <label class="label">Relationship Group Name<span class="required-star"> *</span></label>
+      <input id="rgName" class="input" placeholder="">
+    </div>
+  </div>
+
+  <div class="row-2">
+    <div class="field">
+      <label class="label">Contact Name<span class="required-star"> *</span></label>
+      <input id="contactName" class="input" placeholder="">
+    </div>
+    <div class="field">
+      <label class="label">Contact Number<span class="required-star"> *</span></label>
+      <input id="contactNumber" class="input" placeholder="">
+    </div>
+  </div>
+
+  <div class="field" style="margin-bottom:10px">
+    <label class="label">Email address<span class="required-star"> *</span> <span style="font-weight:400">(List all authorised email addresses, that need to be added to the client email distribution list)</span></label>
+    <textarea id="emails" class="input" rows="3" placeholder=""></textarea>
+  </div>
+
+  <!-- ====== AUTHORISED PERSON DETAILS ====== -->
+  <div class="secbar">Authorised Person Details</div>
+  <p class="hint" style="margin-top:6px">
+    Insert details of those persons authorised to <strong>Open/Close/Amend</strong> and/or <strong>Transact</strong> on accounts, as listed on the MAA.
+  </p>
+
+  <table class="auth" aria-label="Authorised persons">
+    <thead>
+      <tr>
+        <th class="num"></th>
+        <th>Name of the authorised person</th>
+        <th style="width:220px">Customer Number</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- 15 dòng trống đánh số 1..15 -->
+      <!-- dùng HTML thuần để canh đúng như mẫu PDF -->
+      <tr><td class="num">1.</td><td><input /></td><td><input /></td></tr>
+      <tr><td class="num">2.</td><td><input /></td><td><input /></td></tr>
+      <tr><td class="num">3.</td><td><input /></td><td><input /></td></tr>
+      <tr><td class="num">4.</td><td><input /></td><td><input /></td></tr>
+      <tr><td class="num">5.</td><td><input /></td><td><input /></td></tr>
+      <tr><td class="num">6.</td><td><input /></td><td><input /></td></tr>
+      <tr><td class="num">7.</td><td><input /></td><td><input /></td></tr>
+      <tr><td class="num">8.</td><td><input /></td><td><input /></td></tr>
+      <tr><td class="num">9.</td><td><input /></td><td><input /></td></tr>
+      <tr><td class="num">10.</td><td><input /></td><td><input /></td></tr>
+      <tr><td class="num">11.</td><td><input /></td><td><input /></td></tr>
+      <tr><td class="num">12.</td><td><input /></td><td><input /></td></tr>
+      <tr><td class="num">13.</td><td><input /></td><td><input /></td></tr>
+      <tr><td class="num">14.</td><td><input /></td><td><input /></td></tr>
+      <tr><td class="num">15.</td><td><input /></td><td><input /></td></tr>
+    </tbody>
+  </table>
+
+  <!-- ====== KYC DETAILS ====== -->
+  <div class="secbar" style="margin-top:12px">KYC Details</div>
+
+  <div class="kyc-row" style="margin:8px 0">
+    <div class="field">
+      <label class="label">APRA Code<span class="required-star"> *</span></label>
+      <input id="apra" class="input" placeholder="">
+    </div>
+    <div class="field">
+      <label class="label">Industry Class Code<span class="required-star"> *</span></label>
+      <input id="industryCode" class="input" placeholder="">
+    </div>
+  </div>
+
+  <div class="field" style="margin-bottom:8px">
+    <label class="label">Organisation Type<span class="required-star"> *</span></label>
+    <input id="orgType" class="input" placeholder="">
+  </div>
+
+  <div class="field" style="margin-top:6px">
+    <label class="checkbox-item">
+      <input type="checkbox" id="kyc_confirmation" />
+      <span>
+        <span class="required-star"> *</span>
+        I confirm all customer identification requirements have been completed in accordance with General Manual Policy for both the Business Profile and associated individuals and that Business search documents have been attached in Siebel under the business' main profile.
+      </span>
+    </label>
+  </div>
+
+  <div class="field" style="margin-top:8px">
+    <label class="label">Date<span class="required-star"> *</span></label>
+    <input type="date" id="kycDate" class="input" style="width:160px">
+  </div>
+
+</div>

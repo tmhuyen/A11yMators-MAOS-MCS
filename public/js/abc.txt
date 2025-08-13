@@ -1,0 +1,37 @@
+index.html
+css/
+|_ styles.css
+data/
+js/
+|_ app.js
+|_ store.js
+|_ preview.js
+|_ hooks/
+|  |_ step1.js
+|  |_ step2.js
+|  |_ step3.js
+|  |_ step4.js
+|  |_ step5.js
+|  |_ step6.js
+|  |_ step7.js
+|  |_ step8.js
+|_ utils/
+|  |_ a11y.js
+|  |_ dom.js
+|_ preview/
+    |_ application.json
+    |_ preview.html
+    |_ step-1.html
+    |_ step-2.html
+    |_ step-3.html
+    |_ step-4.html
+steps/
+|_ step-1.html
+|_ step-2.html
+|_ step-3.html
+|_ step-4.html
+|_ step-5.html
+|_ step-6.html
+|_ step-7.html
+|_ step-8.html
+|_ step-9.html

@@ -57,57 +57,57 @@ export function init(root, store) {
   };
 }
 
-export function validate(root) {
-  const fields = [
-    [
-      "maa_current",
-      "f-maa-current",
-      "Confirm the current MAA is completed and submitted",
-    ],
-    [
-      "maa_mandatory",
-      "f-maa-mandatory",
-      "Confirm mandatory details are completed and match eBOS",
-    ],
-    [
-      "maa_min_auth",
-      "f-maa-min-auth",
-      "Confirm minimum authorised persons with correct authority",
-    ],
-    [
-      "maa_ebobs",
-      "f-maa-ebobs",
-      "Confirm signatories have eBOS profiles and KYC/AML completed",
-    ],
-    [
-      "maa_sections",
-      "f-maa-sections",
-      "Confirm Authorisations & Declarations sections are completed",
-    ],
-    [
-      "maa_signed",
-      "f-maa-signed",
-      "Confirm MAA is dated and signed per AAC policy",
-    ],
-    [
-      "maa_callback",
-      "f-maa-callback",
-      "Confirm callback verification of signatories",
-    ],
-  ];
-  const errs = [];
-  fields.forEach(([name, fieldId, msg]) => {
-    const checked = root.querySelector(`input[name="${name}"]:checked`);
-    if (!checked) {
-      const first = root.querySelector(`input[name="${name}"]`);
-      setError(root, fieldId, msg, first);
-      errs.push({ id: fieldId, text: msg });
-    } else {
-      clearError(root, fieldId, checked);
-    }
-  });
-  return errs;
-}
+// export function validate(root) {
+//   const fields = [
+//     [
+//       "maa_current",
+//       "f-maa-current",
+//       "Confirm the current MAA is completed and submitted",
+//     ],
+//     [
+//       "maa_mandatory",
+//       "f-maa-mandatory",
+//       "Confirm mandatory details are completed and match eBOS",
+//     ],
+//     [
+//       "maa_min_auth",
+//       "f-maa-min-auth",
+//       "Confirm minimum authorised persons with correct authority",
+//     ],
+//     [
+//       "maa_ebobs",
+//       "f-maa-ebobs",
+//       "Confirm signatories have eBOS profiles and KYC/AML completed",
+//     ],
+//     [
+//       "maa_sections",
+//       "f-maa-sections",
+//       "Confirm Authorisations & Declarations sections are completed",
+//     ],
+//     [
+//       "maa_signed",
+//       "f-maa-signed",
+//       "Confirm MAA is dated and signed per AAC policy",
+//     ],
+//     [
+//       "maa_callback",
+//       "f-maa-callback",
+//       "Confirm callback verification of signatories",
+//     ],
+//   ];
+//   const errs = [];
+//   fields.forEach(([name, fieldId, msg]) => {
+//     const checked = root.querySelector(`input[name="${name}"]:checked`);
+//     if (!checked) {
+//       const first = root.querySelector(`input[name="${name}"]`);
+//       setError(root, fieldId, msg, first);
+//       errs.push({ id: fieldId, text: msg });
+//     } else {
+//       clearError(root, fieldId, checked);
+//     }
+//   });
+//   return errs;
+// }
 
 export function collect(root, store) {
   const names = [
@@ -124,5 +124,5 @@ export function collect(root, store) {
     payload[n] = root.querySelector(`input[name="${n}"]:checked`)?.value || "";
   });
   store.set("step2", payload);
-  Object.assign(store.data, payload);
+
 }

@@ -1,0 +1,89 @@
+<div id="step-4" class="step" style="padding-top:8px">
+  <style>
+    .secbar{
+      margin:12px 0 6px;background:#1f2937;color:#fff;font-weight:700;
+      padding:6px 10px;font-size:12px;
+    }
+    .checkbox-item{display:flex;gap:8px;align-items:flex-start;font-size:12px}
+    .row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px;margin-bottom:8px}
+    .label{font-weight:700;font-size:12px;display:block;margin-bottom:4px}
+    .input{width:100%;border:1px solid #cbd5e1;min-height:28px;padding:6px 8px;font-size:12px;background:#fff}
+    .callout{
+      border:1px solid #9ca3af;background:#f3f4f6;padding:8px 10px;margin-bottom:10px;
+      display:grid;grid-template-columns:1fr 1fr;gap:8px 14px;font-size:12px
+    }
+    .callout .full{grid-column:1 / -1}
+  </style>
+
+  
+
+  <!-- Banker Details -->
+  <div class="secbar">Banker Details</div>
+  <div class="row-2">
+    <div>
+      <label class="label">Banker Name <span style="color:#b91c1c;font-weight:700">*</span></label>
+      <input class="input" id="bankerName">
+    </div>
+    <div>
+      <label class="label">Banker Position Title <span style="color:#b91c1c;font-weight:700">*</span></label>
+      <input class="input" id="bankerPosition">
+    </div>
+  </div>
+
+  <div class="row-2">
+    <div>
+      <label class="label">Banker Email <span style="color:#b91c1c;font-weight:700">*</span></label>
+      <input class="input" id="bankerEmail" type="email">
+    </div>
+    <div>
+      <label class="label">Contact Phone Number <span style="color:#b91c1c;font-weight:700">*</span></label>
+      <input class="input" id="bankerPhone">
+    </div>
+  </div>
+
+  <div class="row-2">
+    <div>
+      <label class="label">Banker BUID <span style="color:#b91c1c;font-weight:700">*</span></label>
+      <input class="input" id="bankerBuid">
+    </div>
+    <div>
+      <label class="label">BSB to be setup accounts under <span style="color:#b91c1c;font-weight:700">*</span></label>
+      <input class="input" id="bankerBsb">
+    </div>
+  </div>
+
+  <div class="row-2">
+    <div>
+      <label class="label">Banker OSA <span style="color:#b91c1c;font-weight:700">*</span></label>
+      <input class="input" id="bankerOsa">
+    </div>
+    <div>
+      <label class="label">TD Disposals Account Number <span style="color:#b91c1c;font-weight:700">*</span></label>
+      <input class="input" id="tdDisposalsAcct">
+    </div>
+  </div>
+
+  <!-- Secondary Banker Contact Details -->
+  <div class="secbar">Secondary Banker Contact Details</div>
+  <div class="row-2">
+    <div>
+      <label class="label">Banker Name</label>
+      <input class="input" id="secBankerName">
+    </div>
+    <div>
+      <label class="label">Banker Position Title</label>
+      <input class="input" id="secBankerPosition">
+    </div>
+  </div>
+
+  <div class="row-2">
+    <div>
+      <label class="label">Banker Email</label>
+      <input class="input" id="secBankerEmail" type="email">
+    </div>
+    <div>
+      <label class="label">Contact Phone Number</label>
+      <input class="input" id="secBankerPhone">
+    </div>
+  </div>
+</div>

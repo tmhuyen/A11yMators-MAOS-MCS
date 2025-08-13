@@ -1,0 +1,51 @@
+<link rel="stylesheet" href="../css/preview.css" />
+<script defer src="../js/preview.js"></script>
+<script defer src="../js/load_json_to_forms.js"></script>
+
+
+<section aria-labelledby="complete-title">
+  <h2 id="complete-title" class="section-title">All done 🎉</h2>
+  <p class="mt-8">
+    Your data has been saved locally. What would you like to do next?
+  </p>
+  <div
+    class="mt-24 grid"
+    style="gap: 12px; grid-template-columns: repeat(3, minmax(0, 1fr))"
+  >
+    <!-- <button class="btn" id="btn-preview" type="button">Preview PDF</button>
+    <button class="btn btn--primary" id="btn-generate" type="button">
+      Generate PDF
+    </button> -->
+    <!-- Nút mở preview -->
+    <button id="btnPreview" class="btn">Preview Master Customer Summary</button>
+
+    <!-- Modal hiển thị preview.html bằng iframe -->
+    <dialog id="previewModal" aria-label="MAOS Preview">
+      <div class="pv-header">
+        <div class="pv-title">
+          Master Customer Summary — Preview (Read only)
+        </div>
+        <button id="closePreview" class="pv-close" aria-label="Close">✕</button>
+      </div>
+      <iframe
+        id="previewFrame"
+        src=""
+        title="MAOS Preview"
+        referrerpolicy="no-referrer"
+      ></iframe>
+    </dialog>
+    <button id="generatePdfBtn" type="button" class="btn primary">
+      Generate PDF
+    </button>
+    <button class="btn btn--ghost" id="btn-export" type="button">
+      Export JSON
+    </button>
+  </div>
+
+  <div class="mt-24">
+    <p class="text-muted">
+      Tip: “Preview PDF” opens a print‑friendly preview. “Generate PDF” opens
+      your browser’s print dialog so you can save as PDF.
+    </p>
+  </div>
+</section>
