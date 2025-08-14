@@ -41,7 +41,7 @@
           <label class="checkbox-item"><input type="checkbox" /> <strong>CC</strong> – RBA cash rate – Standard.</label>
         </div>
         <div style="margin:6px 0 2px 0;"><strong>** Rate Margins</strong> to apply:</div>
-        <textarea class="input" rows="4"></textarea>
+        <textarea class="input" rows="4" id="cca_margin"></textarea>
       </div>
     </div>
 
@@ -84,7 +84,7 @@
           <label class="checkbox-item"><input type="checkbox" /> Negotiated BCM pricing</label>
         </div>
         <div style="margin:6px 0 2px 0;">Rate Margins to apply (for Negotiated pricing only)</div>
-        <textarea class="input" rows="2"></textarea>
+        <textarea class="input" rows="2" id="bcm_margin"></textarea>
           <div style="margin-top:4px">Negotiated BCM pricing is available subject to the current negotiated BCM pricing framework. Product Pricing Application (PPA) confirmation must be provided for this option.</div>
       </div>
     </div>
@@ -129,25 +129,25 @@
       </div>
       <div style="border-right:1px solid var(--border);padding:8px;">
         <div><strong>NAB Connect MEID/Site ID:</strong></div>
-        <input class="input" style="margin:4px 0;">
+        <input class="input" style="margin:4px 0;" id="nabc_meid">
         <div style="margin-top:6px;">Users to be added</div>
         <div class="checkbox-group" style="gap:12px;margin:4px 0;">
-          <label class="checkbox-item"><input type="checkbox" /> All Users</label><strong> OR </strong>
-          <label class="checkbox-item"><input type="checkbox" /> Nominated users</label>
+          <label class="checkbox-item"><input type="checkbox" id="nabc_user_all" /> All Users</label><strong> OR </strong>
+          <label class="checkbox-item"><input type="checkbox" id="nabc_user_nominated"/> Nominated users</label>
         </div>
         <div>(Please list below)</div>
-        <textarea class="input" rows="3"></textarea>
+        <textarea class="input" rows="3" id="nabc_users_list"></textarea>
       </div>
       <div style="padding:8px;">
         <div class="checkbox-group" style="flex-direction:column;gap:6px;margin:2px 0;">
           <strong> Services to be added:</strong>
           <div class="checkbox-group" style="gap:12px;margin:4px 0;">
-          <label class="checkbox-item"><input type="checkbox" /> All Users</label><strong> OR </strong>
-          <label class="checkbox-item"><input type="checkbox" /> Nominated users</label>
+          <label class="checkbox-item"><input type="checkbox" id="nabc_service_all"/> All Users</label><strong> OR </strong>
+          <label class="checkbox-item"><input type="checkbox" id="nabc_service_nominated"/> Nominated users</label>
         </div>
         </div>
         <div>- Please specify below</div>
-        <textarea class="input" rows="4"></textarea>
+        <textarea class="input" rows="4" id="nabc_services_list"></textarea>
       </div>
     </div>
 
@@ -157,7 +157,7 @@
       </div>
       <div style="padding:6px 8px;grid-column:2/4;">
         <div><strong>Provide NAB ID/Name of user(s) to be added with Access Level (Full/View only)</strong></div>
-        <textarea class="input" rows="3"></textarea>
+        <textarea class="input" rows="3" id="ib-users"></textarea>
       </div>
     </div>
 
@@ -167,11 +167,11 @@
       </div>
       <div style="border-right:1px solid var(--border);padding:8px;">
         <div><strong>Mailbox Name</strong></div>
-        <input class="input">
+        <input class="input" id="dlr_tx_mailbox">
       </div>
       <div style="padding:8px;">
         <div><strong>Services to be added:</strong></div>
-       <input class="input">
+       <input class="input" id="dlr_tx_services">
       </div>
     </div>
 
@@ -181,7 +181,7 @@
       </div>
       <div style="padding:6px 8px;grid-column:2/4;">
         <div><strong>Mailbox Name</strong></div>
-        <textarea class="input" rows="3"></textarea>
+        <textarea class="input" rows="3" id="dlr_td_mailbox"></textarea>
       </div>
     </div>
 
@@ -205,10 +205,10 @@
       <div style="padding:6px 8px;grid-column:2/4;">
         <div><strong>Users to be re-added:</strong></div>
         <div class="checkbox-group" style="gap:12px;margin:4px 0;">
-          <label class="checkbox-item"><input type="checkbox" /> All users to be added</label><strong> OR </strong>
-          <label class="checkbox-item"><input type="checkbox" /> Nominated users – Please specify names or user IDs</label>
+          <label class="checkbox-item"><input type="checkbox" id="readd_users_all" /> All users to be added</label><strong> OR </strong>
+          <label class="checkbox-item"><input type="checkbox" id="readd_users_nominated"/> Nominated users – Please specify names or user IDs</label>
         </div>
-        <textarea class="input" rows="3"></textarea>
+        <textarea class="input" rows="3" id="readd_users_list"></textarea>
       </div>
         
     </div>

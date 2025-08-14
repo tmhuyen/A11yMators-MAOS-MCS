@@ -1,102 +1,137 @@
 {
+  "meta": {
+    "generatedAt": "2025-08-14T11:06:44",
+    "sample": true,
+    "notes": "MAOS – Master Customer Summary preview"
+  },
   "step1": {
-    "industry": "Legal",
-    "kyc": "Yes",
-    "ind_reflect": "No",
-    "company_match": "Yes",
-    "buid_correct": "N/A",
-    "related_updated": "Yes",
-    "trust_letter": "N/A"
+    "industry": "Accounting",
+    "kyc": true,
+    "ind_reflect": true,
+    "company_match": true,
+    "buid_correct": true,
+    "related_updated": true,
+    "trust_letter": true,
+    "trust_letter_na": false
   },
   "step2": {
-    "maa_current": "Yes",
-    "maa_mandatory": "Yes",
-    "maa_min_auth": "No",
-    "maa_ebobs": "Yes",
-    "maa_sections": "No",
-    "maa_signed": "Yes",
-    "maa_callback": "No"
+    "maa_current": true,
+    "maa_mandatory": true,
+    "maa_min_auth": true,
+    "maa_ebobs": true,
+    "maa_sections": true,
+    "maa_signed": true,
+    "callback_followed": true,
+    "callback_letter_na": true
   },
   "step3": {
-    "cs_legalname": "Yes",
-    "cs_relgroup": "No",
-    "cs_signatories": "Yes",
-    "cs_accpricing": "No",
-    "cs_ebanking": "Yes",
-    "cs_bsb": "Yes",
-    "cs_kycsection": "No",
-    "cs_followup": "Yes"
+    "cs_legalname": true,
+    "cs_relgroup": true,
+    "cs_signatories": true,
+    "cs_accpricing": true,
+    "cs_ebanking": true,
+    "cs_bsb": true,
+    "cs_kycsection": true,
+    "cs_followup": true
   },
   "step4": {
-    "legalName": "treter",
-    "mcn": "123456789",
-    "abnAcn": "12345678901",
-    "relNo": "2343244",
-    "relName": "erwer",
-    "contactName": "rwer",
-    "contactNumber": "+44365843929",
-    "emails": "abc@gmail.com"
+    "legalName": "ACME Trust Services Pty Ltd",
+    "mcn": "MCN-482713",
+    "abnAcn": "ACN 123 456 789",
+    "relNo": "RG-009854",
+    "relName": "ACME Corporate Group",
+    "contactName": "Jane Nguyen",
+    "contactNumber": "+61 3 9000 1234",
+    "emails": "ops@acme.com\nfinance@acme.com"
   },
   "step5": {
     "people": [
       {
-        "name": "fgfdfg",
-        "number": "1244324"
+        "name": "Michael Tran",
+        "number": "CUST10001"
+      },
+      {
+        "name": "Sarah Lee",
+        "number": "CUST10002"
+      },
+      {
+        "name": "David Chen",
+        "number": "CUST10003"
+      },
+      {
+        "name": "Emily Wong",
+        "number": "CUST10004"
+      },
+      {
+        "name": "John Park",
+        "number": "CUST10005"
+      },
+      {
+        "name": "Anna Kim",
+        "number": "CUST10006"
+      },
+      {
+        "name": "Peter Ho",
+        "number": "CUST10007"
+      },
+      {
+        "name": "Linda Pham",
+        "number": "CUST10008"
+      },
+      {
+        "name": "Tom Nguyen",
+        "number": "CUST10009"
+      },
+      {
+        "name": "Rachel Wu",
+        "number": "CUST10010"
       }
     ]
   },
   "step6": {
-    "apraCode": "423423",
-    "industryClass": "34234",
-    "orgType": "efsfsd",
+    "apraCode": "APRA-345",
+    "industryClass": "82910 – Business Administrative Services",
+    "orgType": "Proprietary Company",
     "kycConfirm": true,
-    "kycDate": "2025-08-23"
+    "kycDate": "2025-08-14"
   },
   "step7": {
     "acc_cca": true,
     "acc_bia": false,
     "acc_bca": false,
-    "acc_bcm": true,
+    "acc_bcm": false,
     "acc_td": false,
     "cca_fee": "H",
-    "cca_rate": "CC",
-    "cca_margin": "",
-    "bia_fee": "",
-    "bca_fee": "",
-    "bcm_rate": "standard",
-    "bcm_margin": "",
-    "td_rate": "",
-    "stmt_cycle": "quarterly",
+    "cca_rate": "KA",
+    "cca_margin": "Apply KA. For CN negotiated, add +0.10% as per PPA 2025-08-01",
+    "bcm_rate": "Negotiated",
+    "bcm_margin": "Negotiate +0.05% above standard BCM rate",
+    "stmt_cycle": "monthly",
     "ea_nabc": true,
-    "ea_ib": true,
-    "ea_dlr_tx": false,
-    "ea_dlr_td": false,
-    "ea_dsi": false,
-    "readd": false,
-    "nabc_meid": "42342334235",
+    "nabc_meid": "MEID-ACME-01",
     "nabc_users": "all",
     "nabc_users_list": "",
-    "nabc_services": "all",
-    "nabc_services_list": "",
-    "ib_users": "1243432423",
-    "dlr_tx_mailbox": "",
-    "dlr_tx_services": "",
-    "dlr_td_mailbox": "",
-    "readd_users": "",
-    "readd_users_list": ""
+    "nabc_services": "nominated",
+    "nabc_services_list": "Payments; Direct Credit; View Statements",
+    "ib_users": "Alice Tran – Full Access\nBob Pham – View Only",
+    "dlr_tx_mailbox": "ACME-TX-01",
+    "dlr_tx_services": "TXN_REPORT_DAILY",
+    "dlr_td_mailbox": "ACME-TD-01",
+    "readd_users": "nominated",
+    "readd_users_list": "Michael Tran (NABID12345); Sarah Lee (NABID67890)"
   },
   "step8": {
-    "p_name": "fdfasdf",
-    "p_title": "4324234",
-    "p_email": "tranuyen721@gmail.com",
-    "p_phone": "+44365843929",
-    "p_buid": "4534534",
-    "p_bsb": "234234",
-    "p_osa": "423425",
-    "p_td": "5435345346",
-    "s_name": "asfdf",
-    "s_title": "safdf",
-    "s_email": "abc@gmail.com",
-    "s_phone": "+44365843929"
+    "p_name": "Iris Le",
+    "p_title": "Manager",
+    "p_email": "iris.le@nab.com.au",
+    "p_phone": "+61 3 9999 0000",
+    "p_buid": "BUID-7788",
+    "p_bsb": "083-001",
+    "p_osa": "OSA-5566",
+    "p_td": "12345678",
+    "s_name": "Yun Tran",
+    "s_title": "Associate RM",
+    "s_email": "yun.tran@nab.com.au",
+    "s_phone": "+61 3 9999 0001"
   }
 }
