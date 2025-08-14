@@ -174,18 +174,24 @@
     Follow the callback process to verify signatories where signatures are
     digitally inserted or copy-pasted.
   </div>
-  <div class="choices mt-16" role="radiogroup" aria-label="Callback completed">
-    <label class="choice"
-      ><input type="radio" name="maa_callback" value="Yes" required />
-      Yes</label
-    >
-    <label class="choice"
-      ><input type="radio" name="maa_callback" value="No" /> No</label
-    >
-    <label class="choice"
-      ><input type="radio" name="maa_callback" value="N/A" /> N/A</label
-    >
+
+  <!-- Changed to checkbox group -->
+  <div
+    class="choices mt-16"
+    role="group"
+    aria-labelledby="maa-callback-group-label"
+  >
+
+    <label class="choice">
+      <input type="checkbox" name="maa_callback[]" value="Yes" />
+      Yes
+    </label>
+    <label class="choice">
+      <input type="checkbox" name="maa_callback[]" value="N/A" />
+      N/A
+    </label>
   </div>
+
   <div class="error-text" id="maaCallbackErr">
     <span class="icon" aria-hidden="true"></span><span></span>
   </div>

@@ -1,97 +1,81 @@
 <link rel="stylesheet" href="../css/preview.css" />
 
-
 <section aria-labelledby="complete-title">
   <h2 id="complete-title" class="section-title">All done 🎉</h2>
   <p class="mt-8">
     Your data has been saved locally. What would you like to do next?
   </p>
-  <div
-    class="mt-24 grid"
-    style="gap: 12px; grid-template-columns: repeat(3, minmax(0, 1fr))"
-  >
-    <!-- <button class="btn" id="btn-preview" type="button">Preview PDF</button>
-    <button class="btn btn--primary" id="btn-generate" type="button">
-      Generate PDF
-    </button> -->
-    <!-- Nút mở preview -->
-    <button id="btnPreview" class="btn">Preview Master Customer Summary</button>
+  <div class="actions__extras">
+    <button id="btnPreview" class="btn" type="button">
+      Preview Master Customer Summary
+    </button>
+    <button class="btn btn--ghost" id="btn-export" type="button">
+      Export JSON
+    </button>
+    <p class="text-muted" id="tip" style="margin: 0">
+      Tip: “Preview PDF” opens a print-friendly preview. “Generate PDF” opens
+      your browser’s print dialog so you can save as PDF.
+    </p>
+  </div>
+  <!-- Preview modal -->
+  <dialog id="previewModal" aria-label="MAOS Preview">
+    <div class="pv-header">
+      <div class="pv-title">Master Customer Summary — Preview (Read only)</div>
 
-    <!-- Modal hiển thị preview.html bằng iframe -->
-    <dialog id="previewModal" aria-label="MAOS Preview">
-      <div class="pv-header">
-        <div class="pv-title">
-          Master Customer Summary — Preview (Read only)
-        </div>
+      <button id="generatePdfBtn" type="button" class="btn primary">
+        Generate PDF
+      </button>
 
-        <button id="generatePdfBtn" type="button" class="btn primary">
-          Generate PDF
-        </button>
-        
-        // handle generate PDF
-        <script src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js"></script>
-        <script>
-          document.getElementById('generatePdfBtn').addEventListener('click', async () => {
-            const iframe = document.getElementById('previewFrame');
+      <script src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js"></script>
+      <script>
+        document
+          .getElementById("generatePdfBtn")
+          .addEventListener("click", async () => {
+            const iframe = document.getElementById("previewFrame");
             if (!iframe || !iframe.contentDocument) {
-              alert('Preview not loaded.');
+              alert("Preview not loaded.");
               return;
             }
-            // Clone the preview.html content
             const doc = iframe.contentDocument.documentElement.cloneNode(true);
-
-            // Ensure accessibility: set lang, title, and ARIA attributes if missing
-            if (!doc.hasAttribute('lang')) doc.setAttribute('lang', 'en');
-            if (!doc.querySelector('title')) {
-              const title = doc.ownerDocument.createElement('title');
-              title.textContent = 'Master Customer Summary Preview';
-              doc.querySelector('head').appendChild(title);
+            if (!doc.hasAttribute("lang")) doc.setAttribute("lang", "en");
+            if (!doc.querySelector("title")) {
+              const title = doc.ownerDocument.createElement("title");
+              title.textContent = "Master Customer Summary Preview";
+              doc.querySelector("head").appendChild(title);
             }
-
-            // Remove scripts for security
-            doc.querySelectorAll('script').forEach(s => s.remove());
-
-            // Create a container to render
-            const container = document.createElement('div');
+            doc.querySelectorAll("script").forEach((s) => s.remove());
+            const container = document.createElement("div");
             container.appendChild(doc);
-
-            // Use html2pdf to generate accessible PDF
             html2pdf()
               .set({
                 margin: 0.5,
-                filename: 'Master-Customer-Summary.pdf',
+                filename: "Master-Customer-Summary.pdf",
                 html2canvas: { scale: 2, useCORS: true },
-                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
-                pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+                jsPDF: {
+                  unit: "in",
+                  format: "a4",
+                  orientation: "portrait",
+                },
+                pagebreak: { mode: ["avoid-all", "css", "legacy"] },
               })
               .from(container)
               .save();
           });
-        </script>
+      </script>
 
+      <button id="closePreview" class="pv-close" aria-label="Close">✕</button>
+    </div>
 
-        <button id="closePreview" class="pv-close" aria-label="Close">✕</button>
-      </div>
-      <iframe
-        id="previewFrame"
-        src=""
-        title="MAOS Preview"
-        referrerpolicy="no-referrer"
-      ></iframe>
-    </dialog>
-    
-    <button class="btn btn--ghost" id="btn-export" type="button">
-      Export JSON
-    </button>
-  </div>
+    <iframe
+      id="previewFrame"
+      src=""
+      title="MAOS Preview"
+      referrerpolicy="no-referrer"
+    ></iframe>
+  </dialog>
 
-  <div class="mt-24">
-    <p class="text-muted">
-      Tip: “Preview PDF” opens a print‑friendly preview. “Generate PDF” opens
-      your browser’s print dialog so you can save as PDF.
-    </p>
-  </div>
+  <!-- Scripts -->
+  
+  <script type="module" src="./js/preview.js"></script>
+  <script type="module" src="./js/load_json_to_forms.js"></script>
 </section>
-
-<script type="module" src="../js/preview.js"></script>
-<script src="../js/load_json_to_forms.js"></script>

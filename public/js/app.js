@@ -19,7 +19,11 @@ const nextBtn = document.getElementById("nextBtn");
 const progressEl = document.getElementById("progressFill");
 const errorSummary = document.getElementById("errorSummary");
 const statusEl = document.getElementById("status");
+const stepIndicator = document.getElementById("stepIndicator");
 
+function setStepIndicator(n) {
+  if (stepIndicator) stepIndicator.textContent = `Step ${n} of ${TOTAL}`;
+}
 // put near top of app.js
 function ensureErrorSummary() {
   let el = document.getElementById("errorSummary");
@@ -41,6 +45,90 @@ function setProgress() {
   progressEl.style.width = `${Math.round((step / TOTAL) * 100)}%`;
 }
 
+// Turn .status.status--info into tooltip icons
+function convertStatusesToTooltips(root = document) {
+  root.querySelectorAll(".field").forEach((field) => {
+    const status = field.querySelector(".status.status--info");
+    if (!status) return;
+
+    const labelEl =
+      field.querySelector(".label") || field.querySelector("label");
+    if (!labelEl) {
+      status.remove();
+      return;
+    }
+
+    const tipText = status.textContent.replace(/\s+/g, " ").trim();
+    if (!tipText) {
+      status.remove();
+      return;
+    }
+
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "info-btn";
+    btn.setAttribute("aria-label", tipText);
+    btn.textContent = "i";
+
+    labelEl.appendChild(document.createTextNode(" "));
+    labelEl.appendChild(btn);
+    status.remove();
+  });
+}
+
+function convertYesNoToButtonGroups(root = document) {
+  root.querySelectorAll('.choices[role="radiogroup"]').forEach((choices) => {
+    const radios = [...choices.querySelectorAll('input[type="radio"]')];
+    if (radios.length !== 2) return; // Only Yes/No
+    const labels = radios.map((r) => r.value.trim().toLowerCase());
+    if (!labels.includes("yes") || !labels.includes("no")) return;
+
+    // Hide original choices visually
+    choices.classList.add("visually-hidden");
+    choices.setAttribute("aria-hidden", "true");
+
+    const yesRadio = radios.find((r) => r.value.toLowerCase() === "yes");
+    const noRadio = radios.find((r) => r.value.toLowerCase() === "no");
+
+    // Create button group
+    const group = document.createElement("div");
+    group.className = "btn-group";
+    group.setAttribute("role", "group");
+    group.setAttribute("aria-label", choices.getAttribute("aria-label") || "");
+
+    const yesBtn = document.createElement("button");
+    yesBtn.type = "button";
+    yesBtn.className = "btn-option";
+    yesBtn.textContent = "Yes";
+
+    const noBtn = document.createElement("button");
+    noBtn.type = "button";
+    noBtn.className = "btn-option";
+    noBtn.textContent = "No";
+
+    function update(selected) {
+      yesBtn.setAttribute("aria-pressed", String(selected === "yes"));
+      noBtn.setAttribute("aria-pressed", String(selected === "no"));
+      yesRadio.checked = selected === "yes";
+      noRadio.checked = selected === "no";
+      (selected === "yes" ? yesRadio : noRadio).dispatchEvent(
+        new Event("change", { bubbles: true })
+      );
+    }
+
+    yesBtn.addEventListener("click", () => update("yes"));
+    noBtn.addEventListener("click", () => update("no"));
+
+    // Initialize from radio state
+    update(yesRadio.checked ? "yes" : "no");
+
+    group.appendChild(yesBtn);
+    group.appendChild(noBtn);
+
+    choices.parentElement.insertBefore(group, choices);
+  });
+}
+
 async function loadStep(n) {
   const url = `./steps/step-${n}.html`;
   try {
@@ -50,8 +138,12 @@ async function loadStep(n) {
     }
     const html = await res.text();
     container.innerHTML = html;
+    updateStepUI(n);
     container.focus({ preventScroll: true });
     setProgress();
+    convertStatusesToTooltips(container);
+    convertYesNoToButtonGroups(container);
+    setStepIndicator(n);
     hooks[n]?.init?.(container, store);
     updateButtons();
     console.log(`[router] loaded step ${n}`);
@@ -89,10 +181,42 @@ function showErrors(messages) {
   }
 }
 
+function updateStepUI(currentStep) {
+  const btnPreview = document.getElementById("btnPreview");
+  const btnExport = document.getElementById("btn-export");
+  const tip = document.getElementById("tip");
+  const prevBtn = document.getElementById("prevBtn");
+  const nextBtn = document.getElementById("nextBtn");
+
+  if (currentStep === 8) {
+    nextBtn.textContent = "Submit";
+  }
+  if (currentStep === 9) {
+    prevBtn.style.display = "none";
+    nextBtn.style.display = "none";
+  } else {
+  }
+}
+
 prevBtn.addEventListener("click", async () => {
-  if (step > 1) {
-    step--;
-    await loadStep(step);
+  try {
+    // Save whatever the user has on this step before going back (no validation on prev)
+    hooks[step]?.collect?.(container, store);
+
+    // Clear any visible errors
+    showErrors(null);
+
+    if (step > 1) {
+      step--;
+      await loadStep(step);
+      const nextBtn = document.getElementById("nextBtn");
+      nextBtn.style.display = "inline-block"; // loadStep already calls updateStepUI() + updateButtons() + setProgress()
+      // No need to call updateStepUI(step) here again
+    }
+  } catch (e) {
+    console.error("[prev] click handler crashed:", e);
+    statusEl.className = "status status--error mt-16";
+    statusEl.textContent = `Something went wrong: ${e?.message || e}`;
   }
 });
 
@@ -120,6 +244,7 @@ nextBtn.addEventListener("click", async () => {
     if (step < TOTAL) {
       step++;
       await loadStep(step);
+      updateStepUI(step);
     } else {
       // already on step 9; nothing else
     }

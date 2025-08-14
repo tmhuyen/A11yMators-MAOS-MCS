@@ -328,40 +328,48 @@ h2.section-title {
    Radio / Checkbox
    (uses native inputs + accent-color for great a11y)
 ============================ */
-input[type="radio"],
-input[type="checkbox"] {
-  accent-color: var(--brand-red);
-  width: 18px;
-  height: 18px;
-}
 
 /* Chip-style labels for radios/checkboxes */
+/* --- Step 1 custom radio style --- */
+/* Stack the radio options vertically (no side‑by‑side wrap) */
 .choices {
   display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
+  flex-direction: column; /* <- was row */
+  gap: 12px; /* space between cards */
 }
+
+/* Full‑width card so long text never collides */
 .choice {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 12px;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background: #fff;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px 16px;
+  width: 100%; /* take full line */
+  box-sizing: border-box;
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
   font-weight: 600;
   cursor: pointer;
+  border: none;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
 }
+
+.choice input[type="radio"] {
+  accent-color: var(--brand-red);
+  width: 20px;
+  height: 20px;
+  margin: 2px 0 0 0; /* nudge down a bit */
+  flex-shrink: 0;
+}
+
 .choice:hover {
-  border-color: #cfd5dc;
+  background: var(--surface-alt);
 }
+
 .choice:has(input:checked) {
-  /* modern browsers */
-  border-color: var(--brand-red);
   background: var(--brand-red-50);
-}
-.choice input {
-  margin: 0;
+  box-shadow: 0 0 0 2px var(--brand-red);
 }
 
 /* Group container for stacked radios with text underneath */
@@ -492,19 +500,52 @@ textarea:focus {
 }
 /* ============== Checkbox ============== */
 input[type="checkbox"] {
-  accent-color: var(--brand-red); /* native, accessible */
-  width: 18px;
-  height: 18px;
+  /* keep native checkbox for a11y, just size + theme */
+  accent-color: var(--brand-red);
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  margin: 0; /* we'll manage spacing on the label */
 }
+
+/* The label acts as a card */
 .checkbox {
   display: flex;
-  gap: 10px;
   align-items: flex-start;
+  gap: 10px;
+  padding: 14px 16px;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  transition: background 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
+
+.checkbox:hover {
+  background: var(--surface-alt);
+}
+
+/* Selected state mirrors .choice radios */
+.checkbox:has(input:checked) {
+  background: var(--brand-red-50);
+  box-shadow: 0 0 0 2px var(--brand-red);
+  border-color: var(--brand-red);
+}
+
+/* Keyboard focus: show focus on the whole card when the input is focused */
+.checkbox:has(input:focus-visible) {
+  outline: 3px solid transparent;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--focus) 35%, transparent);
+}
+
+/* Text inside the card */
 .checkbox .label-text {
   line-height: 1.4;
 }
-
 /* ============== Date picker ============== */
 .input-date {
   width: 100%;
@@ -545,3 +586,177 @@ input[type="checkbox"] {
   margin-top: 12px;
 }
 
+/* ===== Info tooltip on label (uses aria-label) ===== */
+.info-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  margin-left: 6px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--info);
+  color: #fff;
+  font: 700 12px/1 "Segoe UI", Roboto, Arial, sans-serif;
+  cursor: pointer;
+  vertical-align: middle;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+}
+.info-btn:focus-visible {
+  outline: 3px solid transparent;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--focus) 35%, transparent);
+}
+.info-btn::after {
+  content: attr(aria-label);
+  position: absolute;
+  left: 0;
+  top: calc(100% + 10px);
+  transform: translateX(-15%);
+  max-width: min(420px, 80vw);
+  background: var(--ink-900);
+  color: #fff;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: var(--small);
+  line-height: 1.4;
+  box-shadow: var(--shadow-md);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+  white-space: normal;
+  z-index: 20;
+}
+.info-btn::before {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 100%;
+  border: 6px solid transparent;
+  border-top-color: var(--ink-900);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+.info-btn:hover::after,
+.info-btn:focus-visible::after,
+.info-btn:hover::before,
+.info-btn:focus-visible::before {
+  opacity: 1;
+}
+.label,
+.label * {
+  position: relative;
+}
+
+/* ===== Toggle (replaces Yes/No radios) ===== */
+/* ==== Tooltip icon on labels (reads from aria-label) ==== */
+.info-btn {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  margin-left: 6px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--info);
+  color: #fff;
+  font: 700 12px/1 "Segoe UI", Roboto, Arial, sans-serif;
+  cursor: pointer;
+  vertical-align: middle;
+  box-shadow: var(--shadow-sm);
+}
+.info-btn:focus-visible {
+  outline: 3px solid transparent;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--focus) 35%, transparent);
+}
+.info-btn::after {
+  content: attr(aria-label);
+  position: absolute;
+  left: 0;
+  top: calc(100% + 10px);
+  transform: translateX(-15%);
+  max-width: min(420px, 80vw);
+  background: var(--ink-900);
+  color: #fff;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: var(--small);
+  line-height: 1.4;
+  box-shadow: var(--shadow-md);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+  white-space: normal;
+  z-index: 20;
+}
+.info-btn::before {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 100%;
+  border: 6px solid transparent;
+  border-top-color: var(--ink-900);
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.info-btn:hover::after,
+.info-btn:focus-visible::after,
+.info-btn:hover::before,
+.info-btn:focus-visible::before {
+  opacity: 1;
+}
+.label,
+.label * {
+  position: relative;
+}
+
+/* ==== Toggle (replaces Yes/No radios visually) ==== */
+/* Hide original radios but keep for screen readers & form */
+.visually-hidden {
+  position: absolute !important;
+  left: -9999px !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* Button group wrapper */
+.btn-group {
+  display: inline-flex;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+/* Individual button option */
+.btn-option {
+  flex: 1;
+  padding: 8px 16px;
+  background: #fff;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.15s, color 0.15s;
+}
+
+.btn-option + .btn-option {
+  border-left: 1px solid var(--border);
+}
+
+/* Selected state */
+.btn-option[aria-pressed="true"] {
+  background: var(--brand-red);
+  color: #fff;
+}
+
+/* Hover state */
+.btn-option:hover {
+  background: var(--brand-red-50);
+}
+
+/* Keyboard focus */
+.btn-option:focus-visible {
+  outline: 3px solid transparent;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--focus) 35%, transparent);
+}

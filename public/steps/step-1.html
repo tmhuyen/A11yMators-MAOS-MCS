@@ -1,3 +1,13 @@
+<style>
+  .req {
+    font-weight: bold;
+    color: #d32f2f;
+  }
+  .label {
+    font-weight: bold;
+  }
+</style>
+
 <h2 class="section-title">Master Customer Number (MCN)</h2>
 
 <!-- Q1: Industry dropdown -->
@@ -14,7 +24,7 @@
     <option>Strata</option>
     <option>Accounting</option>
   </select>
-  <div class="error-text" id="industryErr">
+  <div class="error-text" id="industryErr"></div>
     <span class="icon" aria-hidden="true"></span><span></span>
   </div>
 </div>
@@ -100,22 +110,26 @@
     <em>maos.product.enquiries@nab.com.au</em> to confirm eligibility to be
     onboarded to MAOS before proceeding.
   </div>
-  <div class="choices mt-16" role="radiogroup" aria-label="BUID correct">
-    <label class="choice"
-      ><input type="radio" name="buid_correct" value="Yes" required />
-      Yes</label
-    >
-    <label class="choice"
-      ><input type="radio" name="buid_correct" value="No" /> No</label
-    >
-    <label class="choice"
-      ><input type="radio" name="buid_correct" value="N/A" /> N/A</label
-    >
+
+  <!-- Use a group (not radiogroup) for checkboxes -->
+  <div class="choices mt-16" role="group" aria-labelledby="buid-group-label">
+
+    <label class="choice">
+      <input type="checkbox" name="buid_correct[]" value="Yes">
+      Yes
+    </label>
+
+    <label class="choice">
+      <input type="checkbox" name="buid_correct[]" value="N/A">
+      N/A
+    </label>
   </div>
+
   <div class="error-text" id="buidErr">
     <span class="icon" aria-hidden="true"></span><span></span>
   </div>
 </div>
+
 
 <!-- Q6 -->
 <div class="field" id="f-related">
@@ -155,23 +169,23 @@
     A “Letter requesting to open a Trust Account” must be uploaded under the MCN
     in Siebel (applicable to clients in the Accounting industry).
   </div>
-  <div
-    class="choices mt-16"
-    role="radiogroup"
-    aria-label="Trust letter uploaded"
-  >
-    <label class="choice"
-      ><input type="radio" name="trust_letter" value="Yes" required />
-      Yes</label
-    >
-    <label class="choice"
-      ><input type="radio" name="trust_letter" value="No" /> No</label
-    >
-    <label class="choice"
-      ><input type="radio" name="trust_letter" value="N/A" /> N/A</label
-    >
+
+  <!-- Changed to checkbox group -->
+  <div class="choices mt-16" role="group" aria-labelledby="letter-group-label">
+
+    <label class="choice">
+      <input type="checkbox" name="trust_letter[]" value="Yes">
+      Yes
+    </label>
+
+    <label class="choice">
+      <input type="checkbox" name="trust_letter[]" value="N/A">
+      N/A
+    </label>
   </div>
+
   <div class="error-text" id="letterErr">
     <span class="icon" aria-hidden="true"></span><span></span>
   </div>
 </div>
+
