@@ -292,22 +292,14 @@ function loadDataForStep3() {
 
   // Statement Cycle
   if (step7.stmt_cycle) {
-    // Try to check by value attribute first
-    const cycleValue = step7.stmt_cycle;
-    let checkbox = document.querySelector(`input[type="checkbox"][name="stmt_cycle"][value="${cycleValue}"]`);
-    if (checkbox) {
-      checkbox.checked = true;
-      console.log(`Set statement cycle checkbox value "${cycleValue}" checked`);
-    } else {
-      // Fallback to previous label-based logic
-      const stmtMap = {
-        'monthly': 'Monthly',
-        'quarterly': 'Quarterly',
-        'half-yearly': 'Half yearly'
-      };
-      if (stmtMap[cycleValue]) {
-        setAccountType(stmtMap[cycleValue], true);
-      }
+    const stmtMap = {
+      'monthly': 'Monthly',
+      'quarterly': 'Quarterly',
+      'half-yearly': 'Half yearly'
+    };
+
+    if (stmtMap[step7.stmt_cycle]) {
+      setAccountType(stmtMap[step7.stmt_cycle], true);
     }
   }
 
