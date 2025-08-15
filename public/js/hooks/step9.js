@@ -1,166 +1,143 @@
-// js/hooks/step9.js
-import * as store from "../store.js";
-import * as preview from "../preview.js";
-//import { initPreviewHandler } from "../preview.js";
+const TOTAL = 4;
+const DATA_KEY = "MAOS_DRAFT_V1";
 
-/* ---------------------------
-   Singleton for submitted data
----------------------------- */
-export const SubmittedData = { value: null };
+// (tuỳ) cố gắng import store.js nếu có (để export JSON chuẩn)
+let store = null;
+try {
+  store = await import("../store.js");
+} catch { /* fallback localStorage */ }
 
-/* ---------------------------
-   Utilities
----------------------------- */
-function getAllData(storeApi = store) {
-  return typeof storeApi.toObject === "function"
-    ? storeApi.toObject()
-    : { ...storeApi.data };
+// ========= DOM =========
+const btnPreview   = document.getElementById("btnPreview");
+const btnGenerate  = document.getElementById("btnGenerate");
+const btnExport    = document.getElementById("btn-export");
+const modal        = document.getElementById("previewModal");
+const iframe       = document.getElementById("previewFrame");
+const modalGen     = document.getElementById("modalGenerate");
+const btnClose     = document.getElementById("closePreview");
+
+
+
+// ========= Helpers =========
+function setBusy(btns, busy, label = "Generating...") {
+  btns.forEach(b => {
+    if (!b) return;
+    if (busy) { b.dataset._txt = b.textContent; b.textContent = label; b.disabled = true; }
+    else { b.textContent = b.dataset._txt || b.textContent; b.disabled = false; }
+  });
 }
 
-function makePrintableHTML(data) {
-  const pretty = JSON.stringify(data, null, 2);
-  const esc = (s) =>
-    s.replace(/[<>&]/g, (m) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;" }[m]));
-  return `<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8" />
-<title>Application – Printable Preview</title>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<style>
-  :root { --ink:#111; --muted:#666; --border:#ddd; }
-  body { font: 14px/1.5 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; color: var(--ink); margin: 24px; }
-  header { margin-bottom: 16px; }
-  h1 { font-size: 20px; margin: 0 0 8px; }
-  .meta { color: var(--muted); font-size: 12px; }
-  .card { border:1px solid var(--border); border-radius: 8px; padding:16px; margin-top:16px; }
-  pre { overflow:auto; white-space:pre-wrap; word-break:break-word; }
-  @media print { .no-print { display:none !important; } body { margin: 0.5in; } }
-</style>
-</head>
-<body>
-  <header>
-    <h1>Application – Preview</h1>
-    <div class="meta">Generated: ${new Date().toLocaleString()}</div>
-    <div class="no-print" style="margin-top:8px;color:var(--muted)">This is a print-friendly preview.</div>
-  </header>
-  <section class="card">
-    <h2 style="margin:0 0 8px;font-size:16px;">Collected Data (JSON)</h2>
-    <pre><code>${esc(pretty)}</code></pre>
-  </section>
-</body>
-</html>`;
+function waitFor(condition, { interval=100, timeout=10000 } = {}) {
+  return new Promise((resolve, reject) => {
+    const t0 = Date.now();
+    (function tick(){
+      if (condition()) return resolve();
+      if (Date.now() - t0 > timeout) return reject(new Error("Timeout"));
+      setTimeout(tick, interval);
+    })();
+  });
 }
 
-function openPreview(html, autoPrint = false) {
-  const blob = new Blob([html], { type: "text/html" });
-  const url = URL.createObjectURL(blob);
-  const w = window.open(url, "_blank", "noopener,noreferrer");
-  if (!w) return;
-  if (autoPrint) {
-    const onLoad = () => {
-      w.removeEventListener("load", onLoad);
-      try {
-        w.focus();
-      } catch {}
-      try {
-        w.print();
-      } catch {}
-    };
-    w.addEventListener("load", onLoad);
+// đảm bảo modal mở và iframe đã có đủ .a4-page
+async function ensurePreviewReady() {
+  if (!modal.open) {
+    // phát sự kiện click vào nút Preview (đã được initPreview wire)
+    btnPreview?.dispatchEvent(new MouseEvent("click", { bubbles:true, cancelable:true }));
   }
+  // chờ iframe document sẵn sàng + có đủ số trang
+  await waitFor(() => {
+    const doc = iframe?.contentDocument;
+    if (!doc) return false;
+    const pages = doc.querySelectorAll(".a4-page");
+    return pages.length >= (typeof TOTAL === "number" ? TOTAL : 4);
+  }, { interval: 120, timeout: 15000 });
+  return iframe.contentDocument;
 }
 
-/* ---------------------------
-   File System Access API helpers
----------------------------- */
-async function ensureSubdir(dirHandle, name) {
-  return dirHandle.getDirectoryHandle(name, { create: true });
-}
+// ========= Generate PDF =========
+async function generateFromIframe() {
+  const targets = [btnGenerate, modalGen];
+  setBusy(targets, true);
 
-async function deleteIfExists(dirHandle, name) {
   try {
-    await dirHandle.removeEntry(name, { recursive: false });
-    return true;
-  } catch {
-    return false;
+    const doc = await ensurePreviewReady();
+    const pages = Array.from(doc.querySelectorAll(".a4-page"));
+    if (!pages.length) throw new Error("No pages in preview");
+
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ unit: "mm", format: "a4", orientation: "portrait", compress: true });
+
+    for (let i = 0; i < pages.length; i++) {
+      const el = pages[i];
+      // snapshot từng trang như ảnh để giữ y nguyên layout
+      const canvas = await html2canvas(el, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: "#ffffff",
+        scrollX: 0, scrollY: 0
+      });
+      const img = canvas.toDataURL("image/jpeg", 0.95);
+
+      // fit ảnh vào A4 full-bleed
+      const pageW = 210, pageH = 297;
+      const pxW = canvas.width, pxH = canvas.height;
+      const aspect = pxW / pxH;
+      let w = pageW, h = pageH, x = 0, y = 0;
+      if (aspect > pageW/pageH) { // ảnh "rộng" hơn
+        w = pageW; h = pageW / aspect; y = (pageH - h)/2;
+      } else {
+        h = pageH; w = pageH * aspect; x = (pageW - w)/2;
+      }
+
+      if (i > 0) pdf.addPage("a4", "portrait");
+      pdf.addImage(img, "JPEG", x, y, w, h);
+    }
+
+    pdf.save("Master-Customer-Summary.pdf");
+  } catch (e) {
+    console.error("[Generate] failed:", e);
+    alert("Generate PDF failed. Vui lòng thử lại.");
+  } finally {
+    setBusy([btnGenerate, modalGen], false);
   }
 }
 
-async function writeFile(
-  dirHandle,
-  filename,
-  contents,
-  mime = "application/json"
-) {
-  const fileHandle = await dirHandle.getFileHandle(filename, { create: true });
-  const writable = await fileHandle.createWritable();
-  await writable.write(new Blob([contents], { type: mime }));
-  await writable.close();
-  return fileHandle;
-}
-
-// Main export using FS API; overwrites if exists
-export async function exportStoreToDataFolderFSAPI(
-  filename = "application.json"
-) {
-  if (!("showDirectoryPicker" in window)) {
-    return downloadJSON(filename);
+// ========= Export JSON =========
+function getAllData() {
+  if (store && (typeof store.toObject === "function")) {
+    return store.toObject();
   }
-
-  const rootDir = await window.showDirectoryPicker({
-    id: "maos-project-root",
-    mode: "readwrite",
-    startIn: "documents",
-  });
-
-  const dataDir = await ensureSubdir(rootDir, "data");
-  const payload = JSON.stringify(getAllData(), null, 2);
-
-  await deleteIfExists(dataDir, filename);
-  await writeFile(dataDir, filename, payload, "application/json");
-
-  const status = document.getElementById("status");
-  if (status) status.textContent = `Saved to /data/${filename}`;
+  // fallback: lấy từ localStorage draft
+  try { return JSON.parse(localStorage.getItem(DATA_KEY) || "{}"); }
+  catch { return {}; }
 }
 
-// Fallback: normal download
-export function downloadJSON(filename = "application.json") {
-  const blob = new Blob([JSON.stringify(getAllData(), null, 2)], {
-    type: "application/json",
-  });
+function downloadJSON(data, filename = "application.json") {
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
+  a.href = url; a.download = filename;
   document.body.appendChild(a);
-  a.click();
-  a.remove();
+  a.click(); a.remove();
   URL.revokeObjectURL(url);
 }
 
-/* ---------------------------
-   Preview / Generate / Export wiring
----------------------------- */
+// ========= Wire 3 nút =========
+btnGenerate?.addEventListener("click", (e) => { e.preventDefault(); generateFromIframe(); });
+modalGen?.addEventListener("click", (e) => { e.preventDefault(); generateFromIframe(); });
 
-export function init() {
-  const PREVIEW_URL = "../preview/preview.html";
-  const btnPreview = document.getElementById("btnPreview");
-  const modal = document.getElementById("previewModal");
-  const iframe = document.getElementById("previewFrame");
+btnExport?.addEventListener("click", (e) => {
+  e.preventDefault();
+  const data = getAllData();
+  downloadJSON(data, "application.json");
+});
 
-  btnPreview.addEventListener("click", (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!iframe.src) iframe.src = PREVIEW_URL;
-    modal.showModal();
-  });
+// (tùy chọn) đóng modal khi ESC/backdrop đã được preview.init() xử lý.
+// Nếu muốn chắc chắn:
+const closeBtn = btnClose;
+closeBtn?.addEventListener("click", (e) => { e.preventDefault(); /* preview.js đã close */ });
+
+
+export function wireStep9Generate() {
+  generateFromIframe();
 }
-
-/* ---------------------------
-   No-op validation for Step 9
----------------------------- */
-export async function validate() {
-  return [];
-}
-export function collect() {}

@@ -154,7 +154,17 @@ async function loadStep(n) {
         Unable to load step ${n}. ${e?.message || ""}
       </div>`;
   }
+    
+  try {
+    // Wire Preview (nếu bạn đang tách bên preview.js)
+    const previewMod = await import('./preview.js');
+    previewMod.wirePreviewButtons?.();
+  } catch (e) {
+    console.error("[router] wiring step 9 failed:", e);
+  }
+
 }
+
 
 function updateButtons() {
   prevBtn.disabled = step === 1;

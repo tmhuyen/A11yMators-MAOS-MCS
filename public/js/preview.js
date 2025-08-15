@@ -3,6 +3,7 @@
 // Only mount when we are on preview.html (this page has #step-container)
 const mount = document.getElementById("step-container");
 const BASE = new URL(".", document.baseURI);
+const PREVIEW_URL = (new URL("../preview/preview.html", import.meta.url)).href;
 const TOTAL = 4;
 const FOOTER_SHORT = "7641EA1019-0325";
 const FOOTER_LONG =
@@ -46,7 +47,7 @@ async function fetchStep(n) {
 }
 // ===== Modal + Preview button on steps/step-9.html =====
 (function () {
-  const PREVIEW_URL = "../preview/preview.html";
+  //const PREVIEW_URL = "../preview/preview.html";
 
   const DATA_KEY = "MAOS_DRAFT_V1";
 
@@ -222,3 +223,50 @@ window.addEventListener("DOMContentLoaded", loadAll);
   // Khóa ngay khi DOM sẵn sàng; MO sẽ bắt phần nội dung merge sau đó
   window.addEventListener("DOMContentLoaded", () => lockPreview());
 })();
+
+
+export function wirePreviewButtons() {
+  const openBtn = document.getElementById("btnPreview");
+  const modal = document.getElementById("previewModal");
+  const closeBtn = document.getElementById("closePreview");
+  const iframe = document.getElementById("previewFrame");
+  if (!(openBtn && modal && closeBtn && iframe)) return;
+
+  const FORM_SCOPE = document.getElementById("wizard") || document;
+  const DATA_KEY = "MAOS_DRAFT_V1";
+
+  function saveDraft() {
+    const data = {};
+    FORM_SCOPE.querySelectorAll("input, textarea, select").forEach((el) => {
+      if (!el.id && !(el.type === "radio" && el.name)) return;
+      if (el.type === "checkbox") {
+        if (el.id) data[el.id] = !!el.checked;
+      } else if (el.type === "radio") {
+        if (el.checked) data[el.name] = el.value;
+      } else {
+        if (el.id) data[el.id] = el.value ?? "";
+      }
+    });
+    localStorage.setItem(DATA_KEY, JSON.stringify(data));
+  }
+
+  function openModal() {
+    saveDraft();
+    iframe.src = PREVIEW_URL;
+    modal.showModal?.();
+    document.body.style.overflow = "hidden";
+    closeBtn.focus?.();
+  }
+
+  function closeModal() {
+    modal.close?.();
+    iframe.src = "";
+    document.body.style.overflow = "";
+  }
+
+  // Tránh gắn lặp
+  openBtn.onclick = openModal;
+  closeBtn.onclick = closeModal;
+  modal.addEventListener("close", closeModal, { once: false });
+}
+
