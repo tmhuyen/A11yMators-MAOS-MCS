@@ -1,5 +1,7 @@
 // js/hooks/step9.js
 import * as store from "../store.js";
+import * as preview from "../preview.js";
+//import { initPreviewHandler } from "../preview.js";
 
 /* ---------------------------
    Singleton for submitted data
@@ -140,44 +142,18 @@ export function downloadJSON(filename = "application.json") {
 /* ---------------------------
    Preview / Generate / Export wiring
 ---------------------------- */
-export function init(root) {
-  const previewBtn = root.querySelector("#btnPreview");
-  const generateBtn = root.querySelector("#generatePdfBtn");
-  const exportBtn = root.querySelector("#btn-export");
 
-  // Preview PDF
-  previewBtn?.addEventListener("click", () => {
-    SubmittedData.value = getAllData(); // save singleton
-    const previewURL = "../preview/preview.html";
-    const w = window.open(previewURL, "_blank", "noopener,noreferrer");
-    if (!w) return;
-    const onMsg = (e) => {
-      if (e?.source === w && e.data === "PREVIEW_READY") {
-        window.removeEventListener("message", onMsg);
-        try {
-          w.postMessage("GENERATE_PDF", "*");
-        } catch {}
-      }
-    };
-    window.addEventListener("message", onMsg);
-  });
+export function init() {
+  const PREVIEW_URL = "../preview/preview.html";
+  const btnPreview = document.getElementById("btnPreview");
+  const modal = document.getElementById("previewModal");
+  const iframe = document.getElementById("previewFrame");
 
-  // Generate PDF
-  generateBtn?.addEventListener("click", () => {
-    SubmittedData.value = getAllData(); // save singleton
-    const html = makePrintableHTML(SubmittedData.value);
-    openPreview(html, true);
-  });
-
-  // Export JSON
-  exportBtn?.addEventListener("click", async () => {
-    SubmittedData.value = getAllData(); // save singleton
-    try {
-      await exportStoreToDataFolderFSAPI("application.json");
-    } catch (err) {
-      console.error(err);
-      downloadJSON("application.json");
-    }
+  btnPreview.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!iframe.src) iframe.src = PREVIEW_URL;
+    modal.showModal();
   });
 }
 
