@@ -450,3 +450,168 @@ select:focus {
   border: 0;
 }
 /* ===== End Preview modal ===== */
+
+
+/* Add these styles to your preview.css or include in preview.html */
+
+/* Better form element rendering for PDF */
+.a4-page input[type="text"],
+.a4-page input[type="email"],
+.a4-page input[type="tel"],
+.a4-page input[type="number"],
+.a4-page input[type="date"],
+.a4-page textarea,
+.a4-page select {
+  /* Prevent text overflow and ensure consistent rendering */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+  
+  /* Better font rendering */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: normal;
+  
+  /* Consistent box sizing */
+  box-sizing: border-box;
+  
+  /* Prevent line-height issues */
+  line-height: 1.4;
+  
+  /* Ensure text doesn't get cut */
+  text-overflow: clip;
+  
+  /* Better text rendering */
+  text-rendering: optimizeLegibility;
+}
+
+/* Ensure input content is visible in PDF */
+.a4-page input[readonly] {
+  color: #000 !important;
+  background: transparent !important;
+  opacity: 1 !important;
+}
+
+.a4-page textarea[readonly] {
+  color: #000 !important;
+  background: transparent !important;
+  opacity: 1 !important;
+  resize: none;
+}
+
+/* Better checkbox/radio rendering */
+.a4-page input[type="checkbox"],
+.a4-page input[type="radio"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #000;
+  background: white;
+  display: inline-block;
+  position: relative;
+  vertical-align: middle;
+}
+
+.a4-page input[type="checkbox"]:checked::after {
+  content: '✓';
+  position: absolute;
+  top: -2px;
+  left: 1px;
+  font-size: 12px;
+  font-weight: bold;
+  color: #000;
+}
+
+.a4-page input[type="radio"] {
+  border-radius: 50%;
+}
+
+.a4-page input[type="radio"]:checked::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #000;
+}
+
+/* Better select rendering */
+.a4-page select {
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='5'><path fill='%23000' d='M2 0L0 2h4zm0 5L0 3h4z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 8px;
+  padding-right: 24px;
+}
+
+/* Ensure tables render properly */
+.a4-page table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.a4-page table td,
+.a4-page table th {
+  border: 1px solid #000;
+  padding: 4px 8px;
+  text-align: left;
+  vertical-align: top;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Better button rendering (if any remain) */
+.a4-page button,
+.a4-page .btn {
+  background: #f0f0f0 !important;
+  border: 1px solid #ccc !important;
+  color: #000 !important;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+/* Ensure proper spacing and layout */
+.a4-page .field {
+  margin-bottom: 12px;
+  page-break-inside: avoid;
+}
+
+.a4-page .section {
+  page-break-inside: avoid;
+  orphans: 3;
+  widows: 3;
+}
+
+/* Better typography for PDF */
+.a4-page {
+  font-family: 'Arial', 'Helvetica', sans-serif;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #000;
+}
+
+.a4-page h1, .a4-page h2, .a4-page h3, .a4-page h4 {
+  page-break-after: avoid;
+  font-weight: bold;
+  margin: 0 0 8px 0;
+}
+
+/* Fix for potential transform issues */
+.a4-page * {
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  -webkit-transform: none !important;
+  transform: none !important;
+}
+
+/* Ensure consistent rendering across browsers */
+.a4-page *,
+.a4-page *::before,
+.a4-page *::after {
+  box-sizing: border-box;
+}
