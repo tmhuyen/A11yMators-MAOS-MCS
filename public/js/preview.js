@@ -1,4 +1,4 @@
-// js/preview.js — shared for both preview.html and step-9.html
+// js/preview.js – shared for both preview.html and step-9.html
 
 // Only mount when we are on preview.html (this page has #step-container)
 const mount = document.getElementById("step-container");
@@ -17,7 +17,7 @@ const FOOTER_LONG =
       width:210mm; min-height:297mm; margin:0 auto 16px; background:#fff; position:relative;
       box-shadow:0 2px 8px rgba(0,0,0,.08);
     }
-    .a4-inner { padding:10mm 12mm 22mm; } /* chừa đáy cho footer */
+    .a4-inner { padding:10mm 12mm 22mm; } /* chừa đây cho footer */
     .pdf-footer {
       position:absolute; left:12mm; right:12mm; bottom:10mm;
       border-top:none; padding-top:0;
@@ -45,20 +45,10 @@ async function fetchStep(n) {
   wrap.innerHTML = html;
   return wrap.querySelector(`#step-${n}`) || wrap.firstElementChild || wrap;
 }
+
 // ===== Modal + Preview button on steps/step-9.html =====
-(function () {
-  //const PREVIEW_URL = "../preview/preview.html";
-
+(function initModalPreview() {
   const DATA_KEY = "MAOS_DRAFT_V1";
-
-  const openBtn = document.getElementById("btnPreview");
-  const modal = document.getElementById("previewModal");
-  const closeBtn = document.getElementById("closePreview");
-  const iframe = document.getElementById("previewFrame");
-
-  // If any of these are missing (e.g., running on preview.html), do nothing.
-  if (!(openBtn && modal && closeBtn && iframe)) return;
-
   const FORM_SCOPE = document.getElementById("wizard") || document;
 
   function saveDraft() {
@@ -76,23 +66,110 @@ async function fetchStep(n) {
     localStorage.setItem(DATA_KEY, JSON.stringify(data));
   }
 
-  function openModal() {
-    saveDraft();
-    iframe.src = PREVIEW_URL;
-    modal.showModal();
-    document.body.style.overflow = "hidden";
-    closeBtn.focus();
-  }
+  // Function to wire modal events - can be called multiple times safely
+  window.wireModalEvents = function() {
+    const openBtn = document.getElementById("btnPreview");
+    const modal = document.getElementById("previewModal");
+    const closeBtn = document.getElementById("closePreview");
+    const iframe = document.getElementById("previewFrame");
+    const modalGen = document.getElementById("modalGenerate");
 
-  function closeModal() {
-    modal.close();
-    iframe.src = "";
-    document.body.style.overflow = "";
-  }
+    if (!modal || !iframe) return;
 
-  openBtn.addEventListener("click", openModal);
-  closeBtn.addEventListener("click", closeModal);
-  modal.addEventListener("close", closeModal);
+    function openModal() {
+      saveDraft();
+      iframe.src = PREVIEW_URL;
+      modal.showModal?.();
+      document.body.style.overflow = "hidden";
+      closeBtn?.focus?.();
+      
+      // Wire modalGenerate after iframe loads
+      setTimeout(() => {
+        wireModalGenerateButton();
+      }, 1000);
+    }
+
+    function closeModal() {
+      modal.close?.();
+      iframe.src = "";
+      document.body.style.overflow = "";
+    }
+
+    // Wire open button
+    if (openBtn && !openBtn.dataset.wired) {
+      openBtn.dataset.wired = "true";
+      openBtn.onclick = openModal;
+    }
+
+    // Wire close button
+    if (closeBtn && !closeBtn.dataset.wired) {
+      closeBtn.dataset.wired = "true";
+      closeBtn.onclick = closeModal;
+    }
+
+    // Wire modal close event
+    if (!modal.dataset.closeWired) {
+      modal.dataset.closeWired = "true";
+      modal.addEventListener("close", closeModal);
+    }
+
+    // Wire modalGenerate immediately if it exists
+    wireModalGenerateButton();
+  };
+
+  // Function to specifically wire the modalGenerate button
+  window.wireModalGenerateButton = function() {
+    const modalGen = document.getElementById("modalGenerate");
+    const iframe = document.getElementById("previewFrame");
+    
+    if (!modalGen || modalGen.dataset.wired === "true") return;
+    
+    modalGen.dataset.wired = "true";
+    modalGen.onclick = async function(e) {
+      e.preventDefault();
+      console.log("[modalGenerate] Button clicked");
+      
+      if (!iframe?.contentWindow) {
+        console.warn("[modalGenerate] No iframe contentWindow");
+        return;
+      }
+      
+      // Wait a bit for iframe to fully load
+      let attempts = 0;
+      const maxAttempts = 10;
+      
+      const tryGenerate = () => {
+        attempts++;
+        const contentWindow = iframe.contentWindow;
+        
+        if (typeof contentWindow.generatePDF === "function") {
+          console.log("[modalGenerate] Calling generatePDF");
+          contentWindow.generatePDF();
+        } else if (typeof contentWindow.window?.generatePDF === "function") {
+          console.log("[modalGenerate] Calling window.generatePDF");
+          contentWindow.window.generatePDF();
+        } else if (attempts < maxAttempts) {
+          console.log(`[modalGenerate] generatePDF not found, attempt ${attempts}/${maxAttempts}`);
+          setTimeout(tryGenerate, 500);
+        } else {
+          console.warn("[modalGenerate] generatePDF function not found after all attempts");
+          // Fallback: try to call step9.js generateFromIframe
+          if (window.generateFromIframe) {
+            window.generateFromIframe();
+          } else {
+            alert("Unable to generate PDF. Please try again.");
+          }
+        }
+      };
+      
+      tryGenerate();
+    };
+  };
+
+  // Initial wire attempt
+  document.addEventListener("DOMContentLoaded", () => {
+    setTimeout(() => window.wireModalEvents(), 100);
+  });
 })();
 
 function stripActions(root) {
@@ -129,7 +206,7 @@ async function loadAll() {
       console.error(e);
       const err = document.createElement("div");
       err.style.color = "#b91c1c";
-      err.textContent = `Không thể tải step-${n}.html — ${e.message}`;
+      err.textContent = `Không thể tải step-${n}.html – ${e.message}`;
       mount.appendChild(err);
     }
   }
@@ -205,7 +282,7 @@ window.addEventListener("DOMContentLoaded", loadAll);
           );
         });
 
-      // checkbox/radio/select -> KHÔNG disabled (khỏi xám), chỉ “niêm phong”
+      // checkbox/radio/select -> KHÔNG disabled (khỏi xám), chỉ "niêm phong"
       scope
         .querySelectorAll('input[type="checkbox"],input[type="radio"],select')
         .forEach((el) => {
@@ -224,49 +301,9 @@ window.addEventListener("DOMContentLoaded", loadAll);
   window.addEventListener("DOMContentLoaded", () => lockPreview());
 })();
 
-
 export function wirePreviewButtons() {
-  const openBtn = document.getElementById("btnPreview");
-  const modal = document.getElementById("previewModal");
-  const closeBtn = document.getElementById("closePreview");
-  const iframe = document.getElementById("previewFrame");
-  if (!(openBtn && modal && closeBtn && iframe)) return;
-
-  const FORM_SCOPE = document.getElementById("wizard") || document;
-  const DATA_KEY = "MAOS_DRAFT_V1";
-
-  function saveDraft() {
-    const data = {};
-    FORM_SCOPE.querySelectorAll("input, textarea, select").forEach((el) => {
-      if (!el.id && !(el.type === "radio" && el.name)) return;
-      if (el.type === "checkbox") {
-        if (el.id) data[el.id] = !!el.checked;
-      } else if (el.type === "radio") {
-        if (el.checked) data[el.name] = el.value;
-      } else {
-        if (el.id) data[el.id] = el.value ?? "";
-      }
-    });
-    localStorage.setItem(DATA_KEY, JSON.stringify(data));
+  // Use the global function
+  if (window.wireModalEvents) {
+    window.wireModalEvents();
   }
-
-  function openModal() {
-    saveDraft();
-    iframe.src = PREVIEW_URL;
-    modal.showModal?.();
-    document.body.style.overflow = "hidden";
-    closeBtn.focus?.();
-  }
-
-  function closeModal() {
-    modal.close?.();
-    iframe.src = "";
-    document.body.style.overflow = "";
-  }
-
-  // Tránh gắn lặp
-  openBtn.onclick = openModal;
-  closeBtn.onclick = closeModal;
-  modal.addEventListener("close", closeModal, { once: false });
 }
-

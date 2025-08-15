@@ -144,9 +144,36 @@ async function loadStep(n) {
     convertStatusesToTooltips(container);
     convertYesNoToButtonGroups(container);
     setStepIndicator(n);
+    
+    // Initialize step hook
     hooks[n]?.init?.(container, store);
+    
     updateButtons();
     console.log(`[router] loaded step ${n}`);
+    
+    // Special handling for step 9 - wire preview functionality
+    if (n === 9) {
+      try {
+        // Import and wire preview functionality
+        const previewMod = await import('./preview.js');
+        
+        // Give DOM time to settle
+        setTimeout(() => {
+          previewMod.wirePreviewButtons?.();
+          
+          // Also call step9's init if it wasn't called already
+          if (hooks[9]?.init && typeof hooks[9].init === 'function') {
+            hooks[9].init(container, store);
+          }
+          
+          console.log("[router] step 9 preview functionality wired");
+        }, 200);
+        
+      } catch (e) {
+        console.error("[router] wiring step 9 preview failed:", e);
+      }
+    }
+    
   } catch (e) {
     console.error(`[router] loadStep(${n}) error:`, e);
     container.innerHTML = `
@@ -154,17 +181,7 @@ async function loadStep(n) {
         Unable to load step ${n}. ${e?.message || ""}
       </div>`;
   }
-    
-  try {
-    // Wire Preview (nếu bạn đang tách bên preview.js)
-    const previewMod = await import('./preview.js');
-    previewMod.wirePreviewButtons?.();
-  } catch (e) {
-    console.error("[router] wiring step 9 failed:", e);
-  }
-
 }
-
 
 function updateButtons() {
   prevBtn.disabled = step === 1;
@@ -172,13 +189,13 @@ function updateButtons() {
 }
 
 function showErrors(messages) {
-  const summary = ensureErrorSummary(); // <— always exists now
+  const summary = ensureErrorSummary(); // <– always exists now
   if (!messages?.length) {
     summary.hidden = true;
     return;
   }
   summary.hidden = false;
-  summary.innerHTML = `<strong>There’s a problem</strong><ul style="margin:.5rem 0 0 1rem">
+  summary.innerHTML = `<strong>There's a problem</strong><ul style="margin:.5rem 0 0 1rem">
     ${messages.map((m) => `<li><a href="#${m.id}">${m.text}</a></li>`).join("")}
   </ul>`;
   summary.focus();
@@ -205,6 +222,9 @@ function updateStepUI(currentStep) {
     prevBtn.style.display = "none";
     nextBtn.style.display = "none";
   } else {
+    // Make sure buttons are visible for other steps
+    prevBtn.style.display = "inline-block";
+    nextBtn.style.display = "inline-block";
   }
 }
 

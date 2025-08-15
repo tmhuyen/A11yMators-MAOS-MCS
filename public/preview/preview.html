@@ -4,10 +4,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>MAOS — Master Account Opening Service</title>
+  <title>MAOS – Master Account Opening Service</title>
   <link rel="stylesheet" href="../css/preview.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 
 <body>
@@ -20,7 +18,104 @@
 
   <script type="module" src="../js/preview.js"></script>
   <script src="../js/load_json_to_forms.js"></script>
+  
+  <script>
+  // Load required libraries
+  function loadLibraries() {
+    return new Promise((resolve) => {
+      let loadedCount = 0;
+      const totalLibs = 2;
+      
+      function checkComplete() {
+        loadedCount++;
+        if (loadedCount === totalLibs) {
+          setTimeout(resolve, 100); // Give libs time to initialize
+        }
+      }
+      
+      // Load html2canvas
+      if (!window.html2canvas) {
+        const script1 = document.createElement('script');
+        script1.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+        script1.onload = checkComplete;
+        script1.onerror = checkComplete; // Continue even if one fails
+        document.head.appendChild(script1);
+      } else {
+        checkComplete();
+      }
+      
+      // Load jsPDF
+      if (!window.jspdf) {
+        const script2 = document.createElement('script');
+        script2.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+        script2.onload = checkComplete;
+        script2.onerror = checkComplete; // Continue even if one fails
+        document.head.appendChild(script2);
+      } else {
+        checkComplete();
+      }
+    });
+  }
+
+  // Initialize libraries when DOM loads
+  document.addEventListener('DOMContentLoaded', async () => {
+    await loadLibraries();
+    console.log('[Preview] Libraries loaded');
+  });
+
+  // Global generatePDF function that can be called from parent window
+  window.generatePDF = async function () {
+    try {
+      console.log('[Preview] generatePDF called');
+      
+      // Ensure libraries are loaded
+      if (!window.jspdf || !window.html2canvas) {
+        console.log('[Preview] Libraries not ready, loading...');
+        await loadLibraries();
+      }
+      
+      if (!window.jspdf) {
+        throw new Error('jsPDF library failed to load');
+      }
+      
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF({ unit: "mm", format: "a4", orientation: "portrait" });
+      const pages = Array.from(document.querySelectorAll(".a4-page"));
+      
+      console.log(`[Preview] Found ${pages.length} pages to convert`);
+      
+      if (!pages.length) {
+        throw new Error('No pages found to convert to PDF');
+      }
+
+      for (let i = 0; i < pages.length; i++) {
+        console.log(`[Preview] Converting page ${i + 1}/${pages.length}`);
+        
+        const canvas = await html2canvas(pages[i], { 
+          scale: 2, 
+          backgroundColor: "#fff",
+          useCORS: true,
+          logging: false
+        });
+        
+        const img = canvas.toDataURL("image/jpeg", 0.95);
+        if (i > 0) pdf.addPage();
+        pdf.addImage(img, "JPEG", 0, 0, 210, 297);
+      }
+      
+      console.log('[Preview] Saving PDF...');
+      pdf.save("Master-Customer-Summary.pdf");
+      console.log('[Preview] PDF generated successfully');
+      
+    } catch (error) {
+      console.error('[Preview] generatePDF error:', error);
+      alert(`Failed to generate PDF: ${error.message}`);
+    }
+  };
+
+  // Also expose generatePDF on window.window for double-nested access
+  window.window = window;
+  </script>
 </body>
 
 </html>
-

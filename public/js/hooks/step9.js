@@ -1,22 +1,11 @@
 const TOTAL = 4;
 const DATA_KEY = "MAOS_DRAFT_V1";
 
-// (tuỳ) cố gắng import store.js nếu có (để export JSON chuẩn)
+// (tùy) cố gắng import store.js nếu có (để export JSON chuẩn)
 let store = null;
 try {
   store = await import("../store.js");
 } catch { /* fallback localStorage */ }
-
-// ========= DOM =========
-const btnPreview   = document.getElementById("btnPreview");
-const btnGenerate  = document.getElementById("btnGenerate");
-const btnExport    = document.getElementById("btn-export");
-const modal        = document.getElementById("previewModal");
-const iframe       = document.getElementById("previewFrame");
-const modalGen     = document.getElementById("modalGenerate");
-const btnClose     = document.getElementById("closePreview");
-
-
 
 // ========= Helpers =========
 function setBusy(btns, busy, label = "Generating...") {
@@ -40,8 +29,12 @@ function waitFor(condition, { interval=100, timeout=10000 } = {}) {
 
 // đảm bảo modal mở và iframe đã có đủ .a4-page
 async function ensurePreviewReady() {
-  if (!modal.open) {
-    // phát sự kiện click vào nút Preview (đã được initPreview wire)
+  const modal = document.getElementById("previewModal");
+  const btnPreview = document.getElementById("btnPreview");
+  const iframe = document.getElementById("previewFrame");
+  
+  if (!modal?.open) {
+    // phát sự kiện click vào nút Preview
     btnPreview?.dispatchEvent(new MouseEvent("click", { bubbles:true, cancelable:true }));
   }
   // chờ iframe document sẵn sàng + có đủ số trang
@@ -54,15 +47,97 @@ async function ensurePreviewReady() {
   return iframe.contentDocument;
 }
 
+// ========= Load Required Libraries =========
+async function ensureLibrariesLoaded() {
+  // Check if jsPDF is already loaded
+  if (window.jspdf && window.html2canvas) {
+    console.log("[Libraries] Already loaded");
+    return;
+  }
+
+  console.log("[Libraries] Loading jsPDF and html2canvas...");
+
+  const promises = [];
+
+  // Load html2canvas if not present
+  if (!window.html2canvas) {
+    promises.push(new Promise((resolve, reject) => {
+      // Check if there's already a script loading this
+      if (document.querySelector('script[src*="html2canvas"]')) {
+        // Wait for existing script to load
+        const checkLoaded = () => {
+          if (window.html2canvas) {
+            resolve();
+          } else {
+            setTimeout(checkLoaded, 50);
+          }
+        };
+        checkLoaded();
+        return;
+      }
+      
+      const script = document.createElement('script');
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.appendChild(script);
+    }));
+  }
+
+  // Load jsPDF if not present
+  if (!window.jspdf) {
+    promises.push(new Promise((resolve, reject) => {
+      // Check if there's already a script loading this
+      if (document.querySelector('script[src*="jspdf"]')) {
+        // Wait for existing script to load
+        const checkLoaded = () => {
+          if (window.jspdf) {
+            resolve();
+          } else {
+            setTimeout(checkLoaded, 50);
+          }
+        };
+        checkLoaded();
+        return;
+      }
+      
+      const script = document.createElement('script');
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.appendChild(script);
+    }));
+  }
+
+  if (promises.length > 0) {
+    await Promise.all(promises);
+    // Wait a bit for libraries to initialize
+    await new Promise(resolve => setTimeout(resolve, 200));
+  }
+  
+  console.log("[Libraries] jsPDF and html2canvas loaded successfully");
+}
+
 // ========= Generate PDF =========
 async function generateFromIframe() {
-  const targets = [btnGenerate, modalGen];
+  const btnGenerate = document.getElementById("btnGenerate");
+  const modalGen = document.getElementById("modalGenerate");
+  const targets = [btnGenerate, modalGen].filter(Boolean);
+  
   setBusy(targets, true);
 
   try {
+    // Ensure libraries are loaded first
+    await ensureLibrariesLoaded();
+
     const doc = await ensurePreviewReady();
     const pages = Array.from(doc.querySelectorAll(".a4-page"));
     if (!pages.length) throw new Error("No pages in preview");
+
+    // Check if jsPDF is available
+    if (!window.jspdf) {
+      throw new Error("jsPDF library failed to load");
+    }
 
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF({ unit: "mm", format: "a4", orientation: "portrait", compress: true });
@@ -98,9 +173,12 @@ async function generateFromIframe() {
     console.error("[Generate] failed:", e);
     alert("Generate PDF failed. Vui lòng thử lại.");
   } finally {
-    setBusy([btnGenerate, modalGen], false);
+    setBusy(targets, false);
   }
 }
+
+// Make generateFromIframe available globally
+window.generateFromIframe = generateFromIframe;
 
 // ========= Export JSON =========
 function getAllData() {
@@ -122,22 +200,52 @@ function downloadJSON(data, filename = "application.json") {
   URL.revokeObjectURL(url);
 }
 
-// ========= Wire 3 nút =========
-btnGenerate?.addEventListener("click", (e) => { e.preventDefault(); generateFromIframe(); });
-modalGen?.addEventListener("click", (e) => { e.preventDefault(); generateFromIframe(); });
+// ========= Wire Events =========
+function wireStep9Events() {
+  const btnGenerate = document.getElementById("btnGenerate");
+  const btnExport = document.getElementById("btn-export");
+  
+  // Wire Generate button (main page)
+  if (btnGenerate && !btnGenerate.dataset.wired) {
+    btnGenerate.dataset.wired = "true";
+    btnGenerate.addEventListener("click", (e) => { 
+      e.preventDefault(); 
+      generateFromIframe(); 
+    });
+  }
 
-btnExport?.addEventListener("click", (e) => {
-  e.preventDefault();
-  const data = getAllData();
-  downloadJSON(data, "application.json");
+  // Wire Export button
+  if (btnExport && !btnExport.dataset.wired) {
+    btnExport.dataset.wired = "true";
+    btnExport.addEventListener("click", (e) => {
+      e.preventDefault();
+      const data = getAllData();
+      downloadJSON(data, "application.json");
+    });
+  }
+
+  // Wire modal events using global function from preview.js
+  if (window.wireModalEvents) {
+    window.wireModalEvents();
+  }
+}
+
+// Export function for app.js to call
+export function init(container, storeRef) {
+  if (storeRef) store = storeRef;
+  
+  // Wire events when step 9 is loaded
+  setTimeout(() => {
+    wireStep9Events();
+  }, 100);
+}
+
+// Also wire events immediately if script is loaded directly
+document.addEventListener("DOMContentLoaded", () => {
+  setTimeout(wireStep9Events, 100);
 });
 
-// (tùy chọn) đóng modal khi ESC/backdrop đã được preview.init() xử lý.
-// Nếu muốn chắc chắn:
-const closeBtn = btnClose;
-closeBtn?.addEventListener("click", (e) => { e.preventDefault(); /* preview.js đã close */ });
-
-
+// Legacy export for compatibility
 export function wireStep9Generate() {
   generateFromIframe();
 }
