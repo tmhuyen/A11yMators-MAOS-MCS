@@ -1,251 +1,169 @@
-const TOTAL = 4;
-const DATA_KEY = "MAOS_DRAFT_V1";
+import * as store from "../store.js";
 
-// (tùy) cố gắng import store.js nếu có (để export JSON chuẩn)
-let store = null;
-try {
-  store = await import("../store.js");
-} catch { /* fallback localStorage */ }
+const SEL = {
+  modal: "#previewModal",
+  iframe: "#previewFrame",
+  btnPreview: "#btnPreview",
+  btnModalGenerate: "#modalGenerate",
+  btnGenerate: "#btnGenerate",    // nếu bạn có nút này ngoài modal
+  btnExport: "#btn-export",
+  btnClose: "#closePreview",
+  statusLive: "#statusLive",
+};
 
-// ========= Helpers =========
-function setBusy(btns, busy, label = "Generating...") {
-  btns.forEach(b => {
-    if (!b) return;
-    if (busy) { b.dataset._txt = b.textContent; b.textContent = label; b.disabled = true; }
-    else { b.textContent = b.dataset._txt || b.textContent; b.disabled = false; }
-  });
+// Chạy UI bằng Live Server (5500) thì API ở 5173, còn lại dùng origin hiện tại
+function resolveApiOrigin() {
+  if (window.MAOS_API_ORIGIN) return String(window.MAOS_API_ORIGIN);
+  const isLive =
+    (location.hostname === "127.0.0.1" || location.hostname === "localhost") &&
+    location.port === "5500";
+  return isLive ? "http://localhost:5173" : location.origin;
 }
+const API_ORIGIN = resolveApiOrigin();
 
-function waitFor(condition, { interval=100, timeout=10000 } = {}) {
-  return new Promise((resolve, reject) => {
-    const t0 = Date.now();
-    (function tick(){
-      if (condition()) return resolve();
-      if (Date.now() - t0 > timeout) return reject(new Error("Timeout"));
-      setTimeout(tick, interval);
-    })();
-  });
+const API = {
+  postStash: () => `${API_ORIGIN}/api/stash`,
+  pdf: (id)    => `${API_ORIGIN}/api/pdf/${encodeURIComponent(id)}`,
+  previewUrl: (id, q = "") =>
+    `${API_ORIGIN}/public/preview/preview.html?k=${encodeURIComponent(id)}${q}`,
+};
+
+// Preview local khi không có server (cùng origin đang chạy file này)
+const LOCAL_PREVIEW = new URL("../../preview/preview.html", import.meta.url).href;
+
+const __store = store || window.store || { data: {}, toObject: () => ({}) };
+let lastStashId = null;
+
+function announce(msg){
+  const box = document.querySelector(SEL.statusLive);
+  if (box) box.textContent = msg;
+  console.log("[step9]", msg);
 }
-
-// đảm bảo modal mở và iframe đã có đủ .a4-page
-async function ensurePreviewReady() {
-  const modal = document.getElementById("previewModal");
-  const btnPreview = document.getElementById("btnPreview");
-  const iframe = document.getElementById("previewFrame");
-  
-  if (!modal?.open) {
-    // phát sự kiện click vào nút Preview
-    btnPreview?.dispatchEvent(new MouseEvent("click", { bubbles:true, cancelable:true }));
-  }
-  // chờ iframe document sẵn sàng + có đủ số trang
-  await waitFor(() => {
-    const doc = iframe?.contentDocument;
-    if (!doc) return false;
-    const pages = doc.querySelectorAll(".a4-page");
-    return pages.length >= (typeof TOTAL === "number" ? TOTAL : 4);
-  }, { interval: 120, timeout: 15000 });
-  return iframe.contentDocument;
-}
-
-// ========= Load Required Libraries =========
-async function ensureLibrariesLoaded() {
-  // Check if jsPDF is already loaded
-  if (window.jspdf && window.html2canvas) {
-    console.log("[Libraries] Already loaded");
-    return;
-  }
-
-  console.log("[Libraries] Loading jsPDF and html2canvas...");
-
-  const promises = [];
-
-  // Load html2canvas if not present
-  if (!window.html2canvas) {
-    promises.push(new Promise((resolve, reject) => {
-      // Check if there's already a script loading this
-      if (document.querySelector('script[src*="html2canvas"]')) {
-        // Wait for existing script to load
-        const checkLoaded = () => {
-          if (window.html2canvas) {
-            resolve();
-          } else {
-            setTimeout(checkLoaded, 50);
-          }
-        };
-        checkLoaded();
-        return;
-      }
-      
-      const script = document.createElement('script');
-      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
-      script.onload = resolve;
-      script.onerror = reject;
-      document.head.appendChild(script);
-    }));
-  }
-
-  // Load jsPDF if not present
-  if (!window.jspdf) {
-    promises.push(new Promise((resolve, reject) => {
-      // Check if there's already a script loading this
-      if (document.querySelector('script[src*="jspdf"]')) {
-        // Wait for existing script to load
-        const checkLoaded = () => {
-          if (window.jspdf) {
-            resolve();
-          } else {
-            setTimeout(checkLoaded, 50);
-          }
-        };
-        checkLoaded();
-        return;
-      }
-      
-      const script = document.createElement('script');
-      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
-      script.onload = resolve;
-      script.onerror = reject;
-      document.head.appendChild(script);
-    }));
-  }
-
-  if (promises.length > 0) {
-    await Promise.all(promises);
-    // Wait a bit for libraries to initialize
-    await new Promise(resolve => setTimeout(resolve, 200));
-  }
-  
-  console.log("[Libraries] jsPDF and html2canvas loaded successfully");
-}
-
-// ========= Generate PDF =========
-async function generateFromIframe() {
-  const btnGenerate = document.getElementById("btnGenerate");
-  const modalGen = document.getElementById("modalGenerate");
-  const targets = [btnGenerate, modalGen].filter(Boolean);
-  
-  setBusy(targets, true);
-
-  try {
-    // Ensure libraries are loaded first
-    await ensureLibrariesLoaded();
-
-    const doc = await ensurePreviewReady();
-    const pages = Array.from(doc.querySelectorAll(".a4-page"));
-    if (!pages.length) throw new Error("No pages in preview");
-
-    // Check if jsPDF is available
-    if (!window.jspdf) {
-      throw new Error("jsPDF library failed to load");
-    }
-
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF({ unit: "mm", format: "a4", orientation: "portrait", compress: true });
-
-    for (let i = 0; i < pages.length; i++) {
-      const el = pages[i];
-      // snapshot từng trang như ảnh để giữ y nguyên layout
-      const canvas = await html2canvas(el, {
-        scale: 2,
-        useCORS: true,
-        backgroundColor: "#ffffff",
-        scrollX: 0, scrollY: 0
-      });
-      const img = canvas.toDataURL("image/jpeg", 0.95);
-
-      // fit ảnh vào A4 full-bleed
-      const pageW = 210, pageH = 297;
-      const pxW = canvas.width, pxH = canvas.height;
-      const aspect = pxW / pxH;
-      let w = pageW, h = pageH, x = 0, y = 0;
-      if (aspect > pageW/pageH) { // ảnh "rộng" hơn
-        w = pageW; h = pageW / aspect; y = (pageH - h)/2;
-      } else {
-        h = pageH; w = pageH * aspect; x = (pageW - w)/2;
-      }
-
-      if (i > 0) pdf.addPage("a4", "portrait");
-      pdf.addImage(img, "JPEG", x, y, w, h);
-    }
-
-    pdf.save("Master-Customer-Summary.pdf");
-  } catch (e) {
-    console.error("[Generate] failed:", e);
-    alert("Generate PDF failed. Vui lòng thử lại.");
-  } finally {
-    setBusy(targets, false);
-  }
-}
-
-// Make generateFromIframe available globally
-window.generateFromIframe = generateFromIframe;
-
-// ========= Export JSON =========
-function getAllData() {
-  if (store && (typeof store.toObject === "function")) {
-    return store.toObject();
-  }
-  // fallback: lấy từ localStorage draft
-  try { return JSON.parse(localStorage.getItem(DATA_KEY) || "{}"); }
+function getAllData(){
+  try { return typeof __store.toObject === "function" ? __store.toObject() : {...(__store.data||{})}; }
   catch { return {}; }
 }
+async function safeText(res){ try { return await res.text(); } catch { return ""; } }
 
-function downloadJSON(data, filename = "application.json") {
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
+// ---- PREVIEW (mở modal & nạp iframe) ----
+async function openPreviewModal() {
+  const modal = document.querySelector(SEL.modal);
+  const frame = document.querySelector(SEL.iframe);
+  if (!frame) return alert("Missing #previewFrame");
+  announce("Preparing preview…");
+
+  // thử stash trước để có ?k=id
+  let id = null;
+  try {
+    const res = await fetch(API.postStash(), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(getAllData())
+    });
+    if (res.ok) {
+      const j = await res.json();
+      id = j?.id || null;
+      lastStashId = id;
+    }
+  } catch (e) {
+    console.warn("[step9] stash failed, fallback local:", e);
+  }
+
+  const url = id ? API.previewUrl(id) : LOCAL_PREVIEW;
+  frame.src = url;
+  if (modal?.showModal) modal.showModal(); else window.open(url, "_blank", "noopener,noreferrer");
+
+  // nếu không stash được (không có server) → bơm data qua postMessage cho preview
+  if (!id) {
+    frame.addEventListener("load", () => {
+      try {
+        frame.contentWindow?.postMessage(
+          { type: "MCS_DATA", payload: getAllData() },
+          window.location.origin
+        );
+        announce("Preview ready (local).");
+      } catch (e) {
+        console.error("[step9] postMessage failed:", e);
+      }
+    }, { once: true });
+  } else {
+    announce("Preview ready.");
+  }
+}
+
+// ---- GENERATE PDF (WCAG-friendly) ----
+// Ưu tiên: gọi Puppeteer (PDF từ DOM thật của preview model).
+// Fallback: gọi window.print() trên iframe preview hiện tại.
+async function generateAccessiblePdf() {
+  // 1) nếu đang có stash id → gọi PDF API
+  try {
+    const id = lastStashId || (await (async () => {
+      const r = await fetch(API.postStash(), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(getAllData())
+      });
+      if (!r.ok) throw new Error(`Stash failed (${r.status})`);
+      const j = await r.json();
+      lastStashId = j?.id || null;
+      return lastStashId;
+    })());
+
+    if (!id) throw new Error("No stash id");
+
+    announce("Generating PDF…");
+    const res = await fetch(API.pdf(id));
+    if (!res.ok) {
+      const t = await safeText(res);
+      throw new Error(`PDF failed (${res.status}): ${t || "server error"}`);
+    }
+
+    // tải file
+    const blob = await res.blob();
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "Master-Customer-Summary.pdf";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(a.href);
+    announce("PDF downloaded.");
+    return;
+  } catch (e) {
+    console.warn("[step9] Puppeteer PDF failed, try fallback print:", e);
+  }
+
+  // 2) fallback – in trực tiếp iframe preview hiện tại (vẫn là text thật)
+  const frame = document.querySelector(SEL.iframe);
+  if (frame?.contentWindow) {
+    try {
+      frame.contentWindow.focus();
+      frame.contentWindow.print();
+      announce("Printed from iframe.");
+    } catch (e) {
+      alert("Cannot print preview iframe. Open preview again and try.");
+    }
+  } else {
+    alert("Preview is not open. Please click Preview first.");
+  }
+}
+
+// ---- EXPORT JSON (nếu bạn đang dùng nút này) ----
+function exportJSONFile(filename="application.json"){
+  const blob = new Blob([JSON.stringify(getAllData(), null, 2)], { type:"application/json" });
   const a = document.createElement("a");
-  a.href = url; a.download = filename;
-  document.body.appendChild(a);
-  a.click(); a.remove();
-  URL.revokeObjectURL(url);
+  a.href = URL.createObjectURL(blob); a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(a.href);
+  announce("JSON exported.");
 }
 
-// ========= Wire Events =========
-function wireStep9Events() {
-  const btnGenerate = document.getElementById("btnGenerate");
-  const btnExport = document.getElementById("btn-export");
-  
-  // Wire Generate button (main page)
-  if (btnGenerate && !btnGenerate.dataset.wired) {
-    btnGenerate.dataset.wired = "true";
-    btnGenerate.addEventListener("click", (e) => { 
-      e.preventDefault(); 
-      generateFromIframe(); 
-    });
-  }
-
-  // Wire Export button
-  if (btnExport && !btnExport.dataset.wired) {
-    btnExport.dataset.wired = "true";
-    btnExport.addEventListener("click", (e) => {
-      e.preventDefault();
-      const data = getAllData();
-      downloadJSON(data, "application.json");
-    });
-  }
-
-  // Wire modal events using global function from preview.js
-  if (window.wireModalEvents) {
-    window.wireModalEvents();
-  }
+// ---- PUBLIC: gọi trong app.js sau khi render Step 9 ----
+export function init(){
+  document.querySelector(SEL.btnPreview)?.addEventListener("click", (e)=>{ e.preventDefault(); openPreviewModal(); });
+  document.querySelector(SEL.btnModalGenerate)?.addEventListener("click", (e)=>{ e.preventDefault(); generateAccessiblePdf(); });
+  document.querySelector(SEL.btnGenerate)?.addEventListener("click", (e)=>{ e.preventDefault(); generateAccessiblePdf(); });
+  document.querySelector(SEL.btnExport)?.addEventListener("click", (e)=>{ e.preventDefault(); exportJSONFile(); });
+  document.querySelector(SEL.btnClose)?.addEventListener("click", (e)=>{ e.preventDefault(); document.querySelector(SEL.modal)?.close?.(); });
+  console.log("[step9] init. API_ORIGIN =", API_ORIGIN);
 }
-
-// Export function for app.js to call
-export function init(container, storeRef) {
-  if (storeRef) store = storeRef;
-  
-  // Wire events when step 9 is loaded
-  setTimeout(() => {
-    wireStep9Events();
-  }, 100);
-}
-
-// Also wire events immediately if script is loaded directly
-document.addEventListener("DOMContentLoaded", () => {
-  setTimeout(wireStep9Events, 100);
-});
-
-// Legacy export for compatibility
-export function wireStep9Generate() {
-  generateFromIframe();
-}
+export const initStep9 = init;

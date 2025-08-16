@@ -1,37 +1,43 @@
-index.html
-css/
-|_ styles.css
-data/
-js/
-|_ app.js
-|_ store.js
-|_ preview.js
-|_ hooks/
-|  |_ step1.js
-|  |_ step2.js
-|  |_ step3.js
-|  |_ step4.js
-|  |_ step5.js
-|  |_ step6.js
-|  |_ step7.js
-|  |_ step8.js
-|_ utils/
-|  |_ a11y.js
-|  |_ dom.js
-|_ preview/
-    |_ application.json
-    |_ preview.html
-    |_ step-1.html
-    |_ step-2.html
-    |_ step-3.html
-    |_ step-4.html
-steps/
-|_ step-1.html
-|_ step-2.html
-|_ step-3.html
-|_ step-4.html
-|_ step-5.html
-|_ step-6.html
-|_ step-7.html
-|_ step-8.html
-|_ step-9.html
+public/
+  index.html
+  css/
+    preview.css
+    styles.css
+  data/
+    application.json
+  js/
+    abc.txt
+    app.js
+    load_json_to_forms.js
+    preview.js
+    store.js
+    hooks/
+      step1.js
+      step2.js
+      step3.js
+      step4.js
+      step5.js
+      step6.js
+      step7.js
+      step8.js
+      step9.js
+    utils/
+      a11y.js
+      dom.js
+      form.js
+  preview/
+    preview.html
+    step-1.html
+    step-2.html
+    step-3.html
+    step-4.html
+  steps/
+    step-1.html
+    step-2.html
+    step-3.html
+    step-4.html
+    step-5.html
+    step-6.html
+    step-7.html
+    step-8.html
+    step-9.html

@@ -9,13 +9,16 @@
   --font: "Arial", "Helvetica", sans-serif;
   --dark-bg: #374151;
   --black: #000;
+
+  /* preview A4 */
+  --page-width: 210mm;
+  --page-height: 297mm;
+  --page-pad: 10mm;
+  --thead: #f3f4f6;
 }
 
-* {
-  box-sizing: border-box;
-}
-html,
-body {
+* { box-sizing: border-box; }
+html, body {
   height: 100%;
   margin: 0;
   font-family: var(--font);
@@ -24,11 +27,7 @@ body {
   font-size: 13px;
 }
 
-.container {
-  max-width: 900px;
-  margin: 20px auto;
-  padding: 0 16px;
-}
+.container { max-width: 900px; margin: 20px auto; padding: 0 16px; }
 
 .header {
   background: var(--card);
@@ -39,16 +38,8 @@ body {
   position: relative;
   margin-bottom: 0;
 }
-.header h1 {
-  margin: 0;
-  font-size: 16px;
-  font-weight: bold;
-}
-.header .subtitle {
-  margin: 2px 0 0 0;
-  font-size: 14px;
-  font-weight: normal;
-}
+.header h1 { margin: 0; font-size: 16px; font-weight: bold; }
+.header .subtitle { margin: 2px 0 0 0; font-size: 14px; font-weight: normal; }
 
 .card {
   background: var(--card);
@@ -58,27 +49,11 @@ body {
   padding: 8px 16px 16px 16px;
 }
 
-.progress {
-  height: 8px;
-  background: #e5e7eb;
-  border-radius: 4px;
-  overflow: hidden;
-  margin: 8px 0;
-}
-.progress > span {
-  display: block;
-  height: 100%;
-  background: var(--red);
-  transition: width 0.3s ease;
-}
+.progress { height: 8px; background: #e5e7eb; border-radius: 4px; overflow: hidden; margin: 8px 0; }
+.progress > span { display: block; height: 100%; background: var(--red); transition: width 0.3s ease; }
 
-.small {
-  font-size: 10px;
-  color: var(--muted);
-}
-.error {
-  border-color: #ef4444 !important;
-}
+.small { font-size: 10px; color: var(--muted); }
+.error { border-color: #ef4444 !important; }
 
 .btn {
   padding: 6px 12px;
@@ -89,21 +64,12 @@ body {
   font-weight: bold;
   border-radius: 3px;
 }
-.btn.primary {
-  background: var(--blue);
-  color: #fff;
-  border-color: var(--blue);
-}
-.btn:hover {
-  background: #f8fafc;
-}
-.btn.primary:hover {
-  background: #0a56c4;
-}
+.btn.primary { background: var(--blue); color: #fff; border-color: var(--blue); }
+.btn:hover { background: #f8fafc; }
+.btn.primary:hover { background: #0a56c4; }
 
 /* Step layout */
-.section-header,
-h2 {
+.section-header, h2 {
   background: var(--dark-bg);
   color: #fff;
   padding: 4px 8px;
@@ -111,350 +77,134 @@ h2 {
   font-size: 12px;
   font-weight: bold;
 }
-h2.first {
-  margin-top: 0;
-}
+h2.first { margin-top: 0; }
 
-.field {
-  margin-bottom: 8px;
-}
-.field-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 8px;
-}
-.field-row.triple {
-  grid-template-columns: 1fr 1fr 1fr;
-}
+.field { margin-bottom: 8px; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 8px; }
+.field-row.triple { grid-template-columns: 1fr 1fr 1fr; }
 
-.label {
-  display: block;
-  font-weight: bold;
-  margin-bottom: 3px;
-  font-size: 11px;
-  color: #000;
+.label { display: block; font-weight: bold; margin-bottom: 3px; font-size: 11px; color: #000; }
+.input, textarea, select {
+  width: 100%; padding: 4px 6px; border: 1px solid var(--border);
+  background: #fff; font-size: 11px; font-family: var(--font);
 }
-.input,
-textarea,
-select {
-  width: 100%;
-  padding: 4px 6px;
-  border: 1px solid var(--border);
-  background: #fff;
-  font-size: 11px;
-  font-family: var(--font);
-}
-.input:focus,
-textarea:focus,
-select:focus {
-  outline: none;
-  border-color: var(--blue);
-}
+.input:focus, textarea:focus, select:focus { outline: none; border-color: var(--blue); }
 
-.checkbox-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  margin: 8px 0;
-}
-.checkbox-item {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 11px;
-}
+.checkbox-group { display: flex; flex-wrap: wrap; gap: 16px; margin: 8px 0; }
+.checkbox-item { display: flex; align-items: center; gap: 4px; font-size: 11px; }
 
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 8px 0;
-  font-size: 11px;
-}
+.table { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: 11px; }
 .table th {
-  background: var(--dark-bg);
-  color: #fff;
-  padding: 4px 6px;
-  text-align: left;
-  font-weight: bold;
-  border: 1px solid #333;
+  background: var(--dark-bg); color:#fff; padding: 4px 6px; text-align: left;
+  font-weight: bold; border: 1px solid #333;
 }
-.table td {
-  padding: 2px 4px;
-  border: 1px solid var(--border);
-  background: #fff;
-}
-.table input {
-  border: none;
-  padding: 2px 4px;
-  width: 100%;
-  font-size: 11px;
-}
+.table td { padding: 2px 4px; border: 1px solid var(--border); background: #fff; }
+.table input { border: none; padding: 2px 4px; width: 100%; font-size: 11px; }
 
-.controls {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 20px;
-  padding-top: 16px;
-  border-top: 1px solid var(--border);
-}
+.controls { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); }
 
 /* Special account grids */
-.account-grid {
-  display: grid;
-  grid-template-columns: 200px 1fr;
-  gap: 0;
-  border: 1px solid var(--border);
-  margin: 8px 0;
-}
-.account-type {
-  border-right: 1px solid var(--border);
-  padding: 6px 8px;
-  background: #f9fafb;
-  font-size: 11px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-.account-options {
-  padding: 6px 8px;
-  font-size: 10px;
-}
-.account-options .checkbox-group {
-  gap: 8px;
-  margin: 2px 0;
-}
+.account-grid { display: grid; grid-template-columns: 200px 1fr; gap: 0; border: 1px solid var(--border); margin: 8px 0; }
+.account-type { border-right: 1px solid var(--border); padding: 6px 8px; background: #f9fafb; font-size: 11px; display: flex; align-items: center; gap: 4px; }
+.account-options { padding: 6px 8px; font-size: 10px; }
+.account-options .checkbox-group { gap: 8px; margin: 2px 0; }
 
-.checktable {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 8px 0 12px 0;
-  font-size: 11px;
-}
-.checktable th,
-.checktable td {
-  border: 1px solid var(--border);
-  padding: 6px 8px;
-  vertical-align: top;
-  background: #fff;
-}
-.checktable td.slim {
-  width: 54px;
-  white-space: nowrap;
-  background: #f3f4f6;
-  text-align: center;
-  font-weight: bold;
-}
-.checktable .row-title {
-  font-weight: bold;
-}
-.checktable .muted {
-  color: #374151;
-}
-.checktable .section {
-  background: var(--dark-bg);
-  color: #fff;
-  font-weight: bold;
-  padding: 6px 8px;
-  border: 1px solid #333;
-}
-
-.preview-modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  z-index: 1000;
-}
-.preview-modal.open {
-  display: flex;
-}
-.preview-dialog {
-  background: #fff;
-  padding: 20px;
-  border-radius: var(--radius);
-  max-width: 800px;
-  width: 100%;
-  max-height: 90vh;
-  overflow: auto;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-}
-.json-box {
-  background: #1f2937;
-  color: #e5e7eb;
-  padding: 12px;
-  border-radius: var(--radius);
-  font-family: monospace;
-  font-size: 11px;
-  white-space: pre-wrap;
-  max-height: 400px;
-  overflow: auto;
-}
-
-@media (max-width: 768px) {
-  .field-row {
-    grid-template-columns: 1fr;
-  }
-  .field-row.triple {
-    grid-template-columns: 1fr;
-  }
-  .account-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media print {
-  /* Force backgrounds and colors where needed */
-  * {
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-
-  /* Avoid breaking rows across pages */
-  table,
-  tr,
-  td,
-  th {
-    page-break-inside: avoid;
-    break-inside: avoid;
-  }
-
-  /* Optional: tighten spacing for print */
-  .container {
-    max-width: none;
-    margin: 0;
-    padding: 0;
-  }
-  .card {
-    box-shadow: none;
-  }
-
-  /* You can set page breaks with classes in your HTML */
-  .page-break {
-    page-break-before: always;
-    break-before: page;
-  }
-}
-
-/*for step 3*/
-/* ==== Checkbox: thẳng hàng theo chiều dọc với text ==== */
-:root {
-  --check-size: 14px;
-  --check-gap: 8px;
-}
-
-.checkbox-item {
-  display: inline-flex; /* ô + chữ nằm cùng 1 hàng */
-  align-items: center; /* canh giữa theo trục dọc */
-  gap: var(--check-gap);
-  line-height: 1.25; /* ổn định baseline chữ */
-  vertical-align: middle;
-}
-
-.checkbox-item input[type="checkbox"] {
-  width: var(--check-size);
-  height: var(--check-size);
-  margin: 0; /* bỏ margin mặc định gây lệch */
-  flex: 0 0 auto;
-  position: relative;
-  top: -1.5px; /* nắn lên một chút cho ngang hẳn */
-}
-
-/* Dùng khi muốn ô nằm trên cùng (label dài > 1 dòng) */
-.checkbox-item.top {
-  align-items: flex-start;
-}
-
-/* Nhóm checkbox ngang (vd. Statement Cycle) */
-.checkbox-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 20px; /* khoảng cách giữa các mục */
-}
-
-/* Nhóm checkbox dọc (vd. danh sách lựa chọn nhiều dòng) */
-.checkbox-col {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
+.checktable { width: 100%; border-collapse: collapse; margin: 8px 0 12px 0; font-size: 11px; }
+.checktable th, .checktable td { border: 1px solid var(--border); padding: 6px 8px; vertical-align: top; background: #fff; }
+.checktable td.slim { width: 54px; white-space: nowrap; background: #f3f4f6; text-align: center; font-weight: bold; }
+.checktable .row-title { font-weight: bold; }
+.checktable .muted { color: #374151; }
+.checktable .section { background: var(--dark-bg); color:#fff; font-weight: bold; padding: 6px 8px; border: 1px solid #333; }
 
 /* ===== Preview modal ===== */
 #previewModal {
-  width: 92vw;
-  max-width: 1200px;
-  height: 92vh;
-  padding: 0;
-  border: 0;
-  background: #fff;
-  overflow: hidden;
-  border-radius: 12px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+  width: 92vw; max-width: 1200px; height: 92vh; padding: 0; border: 0; background: #fff;
+  overflow: hidden; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,.25);
 }
-#previewModal::backdrop {
-  background: rgba(0, 0, 0, 0.5);
-}
+#previewModal::backdrop { background: rgba(0,0,0,.5); }
 #previewModal .pv-header {
-  position: sticky;
-  top: 0;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 12px;
-  border-bottom: 1px solid #e5e7eb;
-  background: #fff;
+  position: sticky; top: 0; z-index: 2; display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 12px; border-bottom: 1px solid #e5e7eb; background: #fff;
 }
-#previewModal .pv-title {
-  font-weight: 700;
-  font-size: 14px;
-}
-#previewModal .pv-close {
-  border: 1px solid #e5e7eb;
-  background: #fff;
-  border-radius: 8px;
-  padding: 6px 10px;
-  cursor: pointer;
-}
-#previewFrame {
-  width: 100%;
-  height: calc(100% - 44px);
-  border: 0;
-  display: block;
-}
+#previewModal .pv-title { font-weight:700; font-size:14px; }
+#previewModal .pv-close { border:1px solid #e5e7eb; background:#fff; border-radius:8px; padding:6px 10px; cursor:pointer; }
+#previewFrame { width: 100%; height: calc(100% - 44px); border: 0; display: block; }
 
-/* nút nếu bạn chưa có */
-.btn {
-  padding: 8px 12px;
-  border: 1px solid #d1d5db;
-  background: #111;
-  color: #fff;
-  border-radius: 8px;
-  cursor: pointer;
-}
+/* nút default (nếu thiếu) */
+.btn { padding: 8px 12px; border: 1px solid #d1d5db; background: #111; color:#fff; border-radius: 8px; cursor:pointer; }
 
 .sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
+  position: absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden;
+  clip: rect(0,0,0,0); white-space:nowrap; border:0;
 }
 /* ===== End Preview modal ===== */
 
+/* Step 3 checkbox align helpers */
+:root { --check-size: 14px; --check-gap: 8px; }
+.checkbox-item { display: inline-flex; align-items: center; gap: var(--check-gap); line-height: 1.25; vertical-align: middle; }
+.checkbox-item input[type="checkbox"] { width: var(--check-size); height: var(--check-size); margin:0; flex:0 0 auto; position:relative; top:-1.5px; }
+.checkbox-item.top { align-items: flex-start; }
+.checkbox-row { display:flex; flex-wrap:wrap; align-items:center; gap:20px; }
+.checkbox-col { display:flex; flex-direction:column; gap:8px; }
 
-/* Add these styles to your preview.css or include in preview.html */
+@media (max-width: 768px) {
+  .field-row { grid-template-columns: 1fr; }
+  .field-row.triple { grid-template-columns: 1fr; }
+  .account-grid { grid-template-columns: 1fr; }
+}
 
-/* Better form element rendering for PDF */
+/* ====================== */
+/*   A4 PREVIEW & PRINT   */
+/* ====================== */
+
+/* layout for preview pages */
+.page-wrap {
+  max-width: calc(var(--page-width) + 24px);
+  margin: 16px auto 48px;
+  padding: 0 12px;
+}
+
+.a4-page {
+  width: var(--page-width);
+  min-height: var(--page-height);
+  padding: var(--page-pad);
+  margin: 0 auto 12px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+  box-sizing: border-box;
+  break-after: page;
+}
+.a4-page:last-of-type { break-after: auto; }
+
+.divider { height: 1px; background: #e5e7eb; margin: 8px 0 12px; }
+.a4-page h1, .a4-page h2, .a4-page h3, .a4-page h4 {
+  page-break-after: avoid;
+  font-weight: bold;
+  margin: 0 0 8px 0;
+}
+.a4-page { font-family: 'Arial','Helvetica',sans-serif; font-size: 12px; line-height: 1.4; color:#000; }
+
+/* table in preview pages */
+.a4-page table { border-collapse: collapse; width: 100%; table-layout: auto; }
+.a4-page thead { display: table-header-group; }
+.a4-page th, .a4-page td {
+  border: 1px solid var(--border);
+  padding: 6px 8px;
+  text-align: left;
+  vertical-align: top;
+  /* WRAPPING: đừng cắt chữ giữa chừng */
+  word-break: normal;
+  overflow-wrap: break-word;
+  hyphens: manual;
+  white-space: normal;
+  line-height: 1.35;
+}
+.a4-page thead th { background: var(--thead); color: #111; font-weight: 700; }
+.a4-page caption { text-align:left; font-weight:600; margin: 6px 0 6px; }
+
+.a4-page tr { break-inside: avoid; page-break-inside: avoid; }
+
+/* form controls inside preview (nếu có) */
 .a4-page input[type="text"],
 .a4-page input[type="email"],
 .a4-page input[type="tel"],
@@ -462,156 +212,48 @@ select:focus {
 .a4-page input[type="date"],
 .a4-page textarea,
 .a4-page select {
-  /* Prevent text overflow and ensure consistent rendering */
   word-wrap: break-word;
   overflow-wrap: break-word;
   white-space: normal;
-  
-  /* Better font rendering */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-feature-settings: normal;
-  
-  /* Consistent box sizing */
   box-sizing: border-box;
-  
-  /* Prevent line-height issues */
   line-height: 1.4;
-  
-  /* Ensure text doesn't get cut */
   text-overflow: clip;
-  
-  /* Better text rendering */
   text-rendering: optimizeLegibility;
 }
-
-/* Ensure input content is visible in PDF */
-.a4-page input[readonly] {
-  color: #000 !important;
-  background: transparent !important;
-  opacity: 1 !important;
-}
-
-.a4-page textarea[readonly] {
-  color: #000 !important;
-  background: transparent !important;
-  opacity: 1 !important;
+.a4-page input[readonly], .a4-page textarea[readonly] {
+  color:#000 !important; background: transparent !important; opacity:1 !important;
   resize: none;
 }
-
-/* Better checkbox/radio rendering */
-.a4-page input[type="checkbox"],
-.a4-page input[type="radio"] {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 16px;
-  height: 16px;
-  border: 2px solid #000;
-  background: white;
-  display: inline-block;
-  position: relative;
-  vertical-align: middle;
+.a4-page input[type="checkbox"], .a4-page input[type="radio"] {
+  -webkit-appearance: none; appearance: none; width: 16px; height: 16px;
+  border: 2px solid #000; background: #fff; display: inline-block; position:relative; vertical-align: middle;
 }
-
 .a4-page input[type="checkbox"]:checked::after {
-  content: '✓';
-  position: absolute;
-  top: -2px;
-  left: 1px;
-  font-size: 12px;
-  font-weight: bold;
-  color: #000;
+  content:'✓'; position:absolute; top:-2px; left:1px; font-size:12px; font-weight:bold; color:#000;
 }
-
-.a4-page input[type="radio"] {
-  border-radius: 50%;
-}
-
+.a4-page input[type="radio"] { border-radius: 50%; }
 .a4-page input[type="radio"]:checked::after {
-  content: '';
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #000;
+  content:''; position:absolute; top:2px; left:2px; width:8px; height:8px; border-radius:50%; background:#000;
 }
-
-/* Better select rendering */
 .a4-page select {
-  -webkit-appearance: none;
-  appearance: none;
+  -webkit-appearance: none; appearance: none;
   background-image: url("data:image/svg+xml;charset=US-ASCII,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='5'><path fill='%23000' d='M2 0L0 2h4zm0 5L0 3h4z'/></svg>");
-  background-repeat: no-repeat;
-  background-position: right 8px center;
-  background-size: 8px;
-  padding-right: 24px;
+  background-repeat: no-repeat; background-position: right 8px center; background-size: 8px; padding-right: 24px;
+}
+.a4-page button, .a4-page .btn {
+  background:#f0f0f0 !important; border:1px solid #ccc !important; color:#000 !important;
+  padding:4px 8px; border-radius:4px;
 }
 
-/* Ensure tables render properly */
-.a4-page table {
-  border-collapse: collapse;
-  width: 100%;
-}
-
-.a4-page table td,
-.a4-page table th {
-  border: 1px solid #000;
-  padding: 4px 8px;
-  text-align: left;
-  vertical-align: top;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
-
-/* Better button rendering (if any remain) */
-.a4-page button,
-.a4-page .btn {
-  background: #f0f0f0 !important;
-  border: 1px solid #ccc !important;
-  color: #000 !important;
-  padding: 4px 8px;
-  border-radius: 4px;
-}
-
-/* Ensure proper spacing and layout */
-.a4-page .field {
-  margin-bottom: 12px;
-  page-break-inside: avoid;
-}
-
-.a4-page .section {
-  page-break-inside: avoid;
-  orphans: 3;
-  widows: 3;
-}
-
-/* Better typography for PDF */
-.a4-page {
-  font-family: 'Arial', 'Helvetica', sans-serif;
-  font-size: 12px;
-  line-height: 1.4;
-  color: #000;
-}
-
-.a4-page h1, .a4-page h2, .a4-page h3, .a4-page h4 {
-  page-break-after: avoid;
-  font-weight: bold;
-  margin: 0 0 8px 0;
-}
-
-/* Fix for potential transform issues */
-.a4-page * {
-  -webkit-print-color-adjust: exact;
-  print-color-adjust: exact;
-  -webkit-transform: none !important;
-  transform: none !important;
-}
-
-/* Ensure consistent rendering across browsers */
-.a4-page *,
-.a4-page *::before,
-.a4-page *::after {
-  box-sizing: border-box;
+/* print */
+@page { size: A4; margin: 10mm; }
+@media print {
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { background: #fff; }
+  .page-wrap { margin: 0 auto; padding: 0; }
+  .a4-page { box-shadow: none; margin: 0 auto; }
+  table, tr, td, th { page-break-inside: avoid; break-inside: avoid; }
+  .page-break { page-break-before: always; break-before: page; }
 }
