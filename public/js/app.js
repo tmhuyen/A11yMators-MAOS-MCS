@@ -151,28 +151,6 @@ async function loadStep(n) {
     updateButtons();
     console.log(`[router] loaded step ${n}`);
     
-    // Special handling for step 9 - wire preview functionality
-    if (n === 9) {
-      try {
-        // Import and wire preview functionality
-        const previewMod = await import('./preview.js');
-        
-        // Give DOM time to settle
-        setTimeout(() => {
-          previewMod.wirePreviewButtons?.();
-          
-          // Also call step9's init if it wasn't called already
-          if (hooks[9]?.init && typeof hooks[9].init === 'function') {
-            hooks[9].init(container, store);
-          }
-          
-          console.log("[router] step 9 preview functionality wired");
-        }, 200);
-        
-      } catch (e) {
-        console.error("[router] wiring step 9 preview failed:", e);
-      }
-    }
     
   } catch (e) {
     console.error(`[router] loadStep(${n}) error:`, e);

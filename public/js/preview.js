@@ -122,8 +122,7 @@ async function fetchStep(n) {
     const modalGen = document.getElementById("modalGenerate");
     const iframe = document.getElementById("previewFrame");
     
-    if (!modalGen || modalGen.dataset.wired === "true") return;
-    
+    if (!modalGen || modalGen.dataset.wired === "true" || modalGen.dataset.owner === "step9") return;
     modalGen.dataset.wired = "true";
     modalGen.onclick = async function(e) {
       e.preventDefault();
@@ -157,7 +156,7 @@ async function fetchStep(n) {
           if (window.generateFromIframe) {
             window.generateFromIframe();
           } else {
-            alert("Unable to generate PDF. Please try again.");
+            console.warn("Unable to generate PDF. Please try again.");
           }
         }
       };
