@@ -1,3 +1,5 @@
+// public/js/hooks/step2.js
+
 function setError(root, fieldId, msg, control) {
   const wrap = root.querySelector(`#${fieldId}`);
   if (!wrap) return;
@@ -9,11 +11,13 @@ function setError(root, fieldId, msg, control) {
     const errId = wrap.querySelector(".error-text")?.id;
     if (errId) {
       const prev = (control.getAttribute("aria-describedby") || "").trim();
-      if (!prev.includes(errId))
+      if (!prev.includes(errId)) {
         control.setAttribute("aria-describedby", `${prev} ${errId}`.trim());
+      }
     }
   }
 }
+
 function clearError(root, fieldId, control) {
   const wrap = root.querySelector(`#${fieldId}`);
   if (!wrap) return;
@@ -23,106 +27,102 @@ function clearError(root, fieldId, control) {
   if (control) control.setAttribute("aria-invalid", "false");
 }
 
+// ⚠️ Adjust these IDs to match the `id` attributes in step-2.html
+const FIELD_MAP = {
+  some_radio: "f-someRadio",
+  another_radio: "f-anotherRadio",
+  checklist_one: "f-checklistOne",
+  checklist_two: "f-checklistTwo",
+};
+
 export function init(root, store) {
-  const saved = store.get("step2");
-  const names = [
-    "maa_current",
-    "maa_mandatory",
-    "maa_min_auth",
-    "maa_ebobs",
-    "maa_sections",
-    "maa_signed",
-    "maa_callback",
-  ];
-  names.forEach((n) => {
-    const v = saved?.[n];
+  const saved = store.get("step2") || {};
+
+  // Prefill radios
+  ["some_radio", "another_radio"].forEach((name) => {
+    const v = saved[name];
     if (!v) return;
-    const el = root.querySelector(`input[name="${n}"][value="${v}"]`);
+    const el = root.querySelector(`input[name="${name}"][value="${v}"]`);
     if (el) el.checked = true;
-    // clear on change
-    root
-      .querySelectorAll(`input[name="${n}"]`)
-      .forEach((r) =>
-        r.addEventListener("change", () => clearError(root, map[n], r))
-      );
   });
-  var map = {
-    maa_current: "f-maa-current",
-    maa_mandatory: "f-maa-mandatory",
-    maa_min_auth: "f-maa-min-auth",
-    maa_ebobs: "f-maa-ebobs",
-    maa_sections: "f-maa-sections",
-    maa_signed: "f-maa-signed",
-    maa_callback: "f-maa-callback",
-  };
+
+  // Prefill checkboxes
+  function prefillChecks(fieldId, vals) {
+    const values = Array.isArray(vals) ? vals : vals ? [vals] : [];
+    root
+      .querySelectorAll(`#${fieldId} input[type="checkbox"]`)
+      .forEach((cb) => {
+        cb.checked = values.includes(cb.value);
+      });
+  }
+  prefillChecks(FIELD_MAP.checklist_one, saved.checklist_one);
+  prefillChecks(FIELD_MAP.checklist_two, saved.checklist_two);
+
+  // Clear error on change
+  ["some_radio", "another_radio"].forEach((name) => {
+    root.querySelectorAll(`input[name="${name}"]`).forEach((radio) => {
+      radio.addEventListener("change", () =>
+        clearError(root, FIELD_MAP[name], radio)
+      );
+    });
+  });
+  [FIELD_MAP.checklist_one, FIELD_MAP.checklist_two].forEach((fid) => {
+    root.querySelectorAll(`#${fid} input[type="checkbox"]`).forEach((cb) => {
+      cb.addEventListener("change", () => clearError(root, fid, cb));
+    });
+  });
 }
 
-// export function validate(root) {
-//   const fields = [
-//     [
-//       "maa_current",
-//       "f-maa-current",
-//       "Confirm the current MAA is completed and submitted",
-//     ],
-//     [
-//       "maa_mandatory",
-//       "f-maa-mandatory",
-//       "Confirm mandatory details are completed and match eBOS",
-//     ],
-//     [
-//       "maa_min_auth",
-//       "f-maa-min-auth",
-//       "Confirm minimum authorised persons with correct authority",
-//     ],
-//     [
-//       "maa_ebobs",
-//       "f-maa-ebobs",
-//       "Confirm signatories have eBOS profiles and KYC/AML completed",
-//     ],
-//     [
-//       "maa_sections",
-//       "f-maa-sections",
-//       "Confirm Authorisations & Declarations sections are completed",
-//     ],
-//     [
-//       "maa_signed",
-//       "f-maa-signed",
-//       "Confirm MAA is dated and signed per AAC policy",
-//     ],
-//     [
-//       "maa_callback",
-//       "f-maa-callback",
-//       "Confirm callback verification of signatories",
-//     ],
-//   ];
-//   const errs = [];
-//   fields.forEach(([name, fieldId, msg]) => {
-//     const checked = root.querySelector(`input[name="${name}"]:checked`);
-//     if (!checked) {
-//       const first = root.querySelector(`input[name="${name}"]`);
-//       setError(root, fieldId, msg, first);
-//       errs.push({ id: fieldId, text: msg });
-//     } else {
-//       clearError(root, fieldId, checked);
-//     }
-//   });
-//   return errs;
-// }
+export function validate(root) {
+  const errs = [];
+
+  // Radios required
+  const radioRequired = [
+    ["some_radio", "Select an option for Some Radio"],
+    ["another_radio", "Select an option for Another Radio"],
+  ];
+  radioRequired.forEach(([name, message]) => {
+    const checked = root.querySelector(`input[name="${name}"]:checked`);
+    if (!checked) {
+      const first = root.querySelector(`input[name="${name}"]`);
+      setError(root, FIELD_MAP[name], message, first || undefined);
+      errs.push({ id: FIELD_MAP[name], text: message });
+    } else {
+      clearError(root, FIELD_MAP[name], checked);
+    }
+  });
+
+  // Checkbox groups required
+  [FIELD_MAP.checklist_one, FIELD_MAP.checklist_two].forEach((fid) => {
+    const checked = [
+      ...root.querySelectorAll(`#${fid} input[type="checkbox"]:checked`),
+    ];
+    if (checked.length === 0) {
+      const first = root.querySelector(`#${fid} input[type="checkbox"]`);
+      setError(root, fid, "Select at least one option", first || undefined);
+      errs.push({ id: fid, text: "Select at least one option" });
+    } else {
+      clearError(root, fid, checked[0]);
+    }
+  });
+
+  return errs;
+}
 
 export function collect(root, store) {
-  const names = [
-    "maa_current",
-    "maa_mandatory",
-    "maa_min_auth",
-    "maa_ebobs",
-    "maa_sections",
-    "maa_signed",
-    "maa_callback",
-  ];
-  const payload = {};
-  names.forEach((n) => {
-    payload[n] = root.querySelector(`input[name="${n}"]:checked`)?.value || "";
-  });
-  store.set("step2", payload);
+  const toArray = (fid) =>
+    [...root.querySelectorAll(`#${fid} input[type="checkbox"]:checked`)].map(
+      (el) => el.value
+    );
 
+  const payload = {
+    some_radio:
+      root.querySelector('input[name="some_radio"]:checked')?.value || "",
+    another_radio:
+      root.querySelector('input[name="another_radio"]:checked')?.value || "",
+    checklist_one: toArray(FIELD_MAP.checklist_one),
+    checklist_two: toArray(FIELD_MAP.checklist_two),
+  };
+
+  store.set("step2", payload);
 }

@@ -1,313 +1,233 @@
-// js/preview.js – shared for both preview.html and step-9.html
+/* preview.js — scope all "freeze" behavior to preview.html only
+   - Prevents editing of inputs *only* on preview.html
+   - Leaves all step pages fully interactive
+   - Works even if preview content is injected dynamically (MutationObserver)
+   - Allows explicit opt-in interactivity via [data-allow-interaction]
+*/
 
-// Only mount when we are on preview.html (this page has #step-container)
-const mount = document.getElementById("step-container");
-const BASE = new URL(".", document.baseURI);
-const PREVIEW_URL = new URL("../preview/preview.html", import.meta.url).href;
-const TOTAL = 4;
-const FOOTER_SHORT = "7641EA1019-0325";
-const FOOTER_LONG =
-  "©2025 National Australia Bank Limited ABN 12 004 044 937 AFSL and Australian Credit Licence 230686. 7641EA1019-0325";
+(() => {
+  "use strict";
 
-// Inject minimal page styles for A4 pages (used only on preview.html)
-(function ensurePageStyles() {
-  if (document.getElementById("__page_styles")) return;
-  const css = `
-    .a4-page {
-      width:210mm; min-height:297mm; margin:0 auto 16px; background:#fff; position:relative;
-      box-shadow:0 2px 8px rgba(0,0,0,.08);
-    }
-    .a4-inner { padding:10mm 12mm 22mm; } /* chừa đây cho footer */
-    .pdf-footer {
-      position:absolute; left:24mm; right:24mm; bottom:0mm;
-      border-top:none; padding-top:0;
-      display:flex; justify-content:space-between; font-size:10px; color:#111;
-    }
-    @media print {
-      body { background:#fff; }
-      .a4-page { box-shadow:none; page-break-after:always; margin:0; }
-    }
-  `;
-  const tag = document.createElement("style");
-  tag.id = "__page_styles";
-  tag.textContent = css;
-  document.head.appendChild(tag);
-})();
+  // --- Detect preview page ---------------------------------------------------
+  // Works whether preview.html is top-level or loaded in an <iframe>.
+  const isPreviewPage = /(^|\/)preview\.html(\?|#|$)/i.test(
+    window.location.pathname
+  );
 
-// Load step-N only when on preview.html
-async function fetchStep(n) {
-  const url = new URL(`step-${n}.html`, BASE);
-  const res = await fetch(url, { cache: "no-store" });
-  if (!res.ok)
-    throw new Error(`HTTP ${res.status} when loading ${url.pathname}`);
-  const html = await res.text();
-  const wrap = document.createElement("div");
-  wrap.innerHTML = html;
-  return wrap.querySelector(`#step-${n}`) || wrap.firstElementChild || wrap;
-}
-
-// ===== Modal + Preview button on steps/step-9.html =====
-(function initModalPreview() {
-  const DATA_KEY = "MAOS_DRAFT_V1";
-  const FORM_SCOPE = document.getElementById("wizard") || document;
-
-  function saveDraft() {
-    const data = {};
-    FORM_SCOPE.querySelectorAll("input, textarea, select").forEach((el) => {
-      if (!el.id && !(el.type === "radio" && el.name)) return;
-      if (el.type === "checkbox") {
-        if (el.id) data[el.id] = !!el.checked;
-      } else if (el.type === "radio") {
-        if (el.checked) data[el.name] = el.value;
-      } else {
-        if (el.id) data[el.id] = el.value ?? "";
-      }
-    });
-    localStorage.setItem(DATA_KEY, JSON.stringify(data));
+  if (!isPreviewPage) {
+    // If this file is included on other pages by mistake, it won’t do anything.
+    console.debug("[preview] Not on preview.html — skipping freeze logic.");
+    return;
   }
 
-  // Function to wire modal events - can be called multiple times safely
-  window.wireModalEvents = function () {
-    const openBtn = document.getElementById("btnPreview");
-    const modal = document.getElementById("previewModal");
-    const closeBtn = document.getElementById("closePreview");
-    const iframe = document.getElementById("previewFrame");
-    const modalGen = document.getElementById("modalGenerate");
+  // --- Config: where to apply the freeze inside preview.html -----------------
+  // Put your primary preview root first for best accuracy.
+  const PREVIEW_SCOPE_SELECTORS = [
+    "#previewRoot", // preferred: an explicit wrapper you control
+    ".a4-page", // typical page block used for A4 previews
+    ".page-wrap", // common outer wrapper
+    "main", // last-resort semantic container
+    "body", // absolute fallback
+  ];
 
-    if (!modal || !iframe) return;
-
-    function openModal() {
-      saveDraft();
-      iframe.src = PREVIEW_URL;
-      modal.showModal?.();
-      document.body.style.overflow = "hidden";
-      closeBtn?.focus?.();
-
-      // Wire modalGenerate after iframe loads
-      setTimeout(() => {
-        wireModalGenerateButton();
-      }, 1000);
+  function pickScope() {
+    for (const sel of PREVIEW_SCOPE_SELECTORS) {
+      const el = document.querySelector(sel);
+      if (el) return el;
     }
-
-    function closeModal() {
-      modal.close?.();
-      iframe.src = "";
-      document.body.style.overflow = "";
-    }
-
-    // Wire open button
-    if (openBtn && !openBtn.dataset.wired) {
-      openBtn.dataset.wired = "true";
-      openBtn.onclick = openModal;
-    }
-
-    // Wire close button
-    if (closeBtn && !closeBtn.dataset.wired) {
-      closeBtn.dataset.wired = "true";
-      closeBtn.onclick = closeModal;
-    }
-
-    // Wire modal close event
-    if (!modal.dataset.closeWired) {
-      modal.dataset.closeWired = "true";
-      modal.addEventListener("close", closeModal);
-    }
-
-    // Wire modalGenerate immediately if it exists
-    wireModalGenerateButton();
-  };
-
-  // Function to specifically wire the modalGenerate button
-  window.wireModalGenerateButton = function () {
-    const modalGen = document.getElementById("modalGenerate");
-    const iframe = document.getElementById("previewFrame");
-
-    if (!modalGen || modalGen.dataset.wired === "true") return;
-
-    modalGen.dataset.wired = "true";
-    modalGen.onclick = async function (e) {
-      e.preventDefault();
-      console.log("[modalGenerate] Button clicked");
-
-      if (!iframe?.contentWindow) {
-        console.warn("[modalGenerate] No iframe contentWindow");
-        return;
-      }
-
-      // Wait a bit for iframe to fully load
-      let attempts = 0;
-      const maxAttempts = 10;
-
-      const tryGenerate = () => {
-        attempts++;
-        const contentWindow = iframe.contentWindow;
-
-        if (typeof contentWindow.generatePDF === "function") {
-          console.log("[modalGenerate] Calling generatePDF");
-          contentWindow.generatePDF();
-        } else if (typeof contentWindow.window?.generatePDF === "function") {
-          console.log("[modalGenerate] Calling window.generatePDF");
-          contentWindow.window.generatePDF();
-        } else if (attempts < maxAttempts) {
-          console.log(
-            `[modalGenerate] generatePDF not found, attempt ${attempts}/${maxAttempts}`
-          );
-          setTimeout(tryGenerate, 500);
-        } else {
-          console.warn(
-            "[modalGenerate] generatePDF function not found after all attempts"
-          );
-          // Fallback: try to call step9.js generateFromIframe
-          if (window.generateFromIframe) {
-            window.generateFromIframe();
-          } else {
-            alert("Unable to generate PDF. Please try again.");
-          }
-        }
-      };
-
-      tryGenerate();
-    };
-  };
-
-  // Initial wire attempt
-  document.addEventListener("DOMContentLoaded", () => {
-    setTimeout(() => window.wireModalEvents(), 100);
-  });
-})();
-
-function stripActions(root) {
-  root
-    .querySelectorAll("button,.actions,[data-action]")
-    .forEach((el) => el.remove());
-  return root;
-}
-
-function withFooter(node, pageNo) {
-  const shell = document.createElement("section");
-  shell.className = "a4-page";
-  const inner = document.createElement("div");
-  inner.className = "a4-inner";
-  inner.appendChild(node);
-  const footer = document.createElement("div");
-  footer.className = "pdf-footer";
-  const legal = pageNo === TOTAL ? FOOTER_LONG : FOOTER_SHORT;
-  footer.innerHTML = `<span>${legal}</span><span>Page ${pageNo} of ${TOTAL}</span>`;
-  shell.appendChild(inner);
-  shell.appendChild(footer);
-  return shell;
-}
-
-async function loadAll() {
-  if (!mount) return; // only do this on preview.html
-  mount.innerHTML = "";
-  for (let n = 1; n <= TOTAL; n++) {
-    try {
-      const stepNode = await fetchStep(n);
-      stripActions(stepNode);
-      mount.appendChild(withFooter(stepNode, n));
-    } catch (e) {
-      console.error(e);
-      const err = document.createElement("div");
-      err.style.color = "#b91c1c";
-      err.textContent = `Không thể tải step-${n}.html – ${e.message}`;
-      mount.appendChild(err);
-    }
+    return document.body || document.documentElement;
   }
-}
-window.addEventListener("DOMContentLoaded", loadAll);
 
-/* Lock all form controls in preview without graying them out */
-(function () {
-  function lockPreview(container) {
-    const root =
-      container ||
-      document.querySelector("#step-container") || // preview.html dùng id này
-      document.querySelector("main") ||
-      document.body;
+  // --- Core: make controls non-editable within the preview scope -------------
+  function freezeControl(el) {
+    if (!el || el.dataset._previewFrozen === "1") return;
 
-    if (!root || root.dataset.previewLocked === "1") return;
-    root.dataset.previewLocked = "1";
-    root.classList.add("keep-colors"); // CSS giữ nguyên màu
+    const tag = el.tagName.toLowerCase();
+    const type = (el.getAttribute("type") || "").toLowerCase();
 
-    // 1) Khóa control hiện có
-    freeze(root);
+    // Remember original state so we never leak effects across navigations.
+    if (el.disabled) el.dataset._wasDisabled = "1";
+    if (el.readOnly) el.dataset._wasReadonly = "1";
+    if (el.hasAttribute("contenteditable") && el.isContentEditable) {
+      el.dataset._wasContentEditable = "1";
+    }
+    if (el.hasAttribute("tabindex")) {
+      el.dataset._wasTabindex = el.getAttribute("tabindex") || "";
+    }
 
-    // 2) Chặn mọi thao tác thay đổi (cho Tab/Ctrl+C/Ctrl+A)
-    const blocker = (e) => {
-      const t = e.target;
-      if (!t || !root.contains(t) || !t.matches?.("input,textarea,select"))
-        return;
+    // Text-like fields → readonly (keeps value/selectable text, blocks edits)
+    if (
+      tag === "input" &&
+      ![
+        "checkbox",
+        "radio",
+        "button",
+        "submit",
+        "reset",
+        "file",
+        "image",
+      ].includes(type)
+    ) {
+      el.readOnly = true;
+      el.setAttribute("aria-readonly", "true");
+    } else if (tag === "textarea") {
+      el.readOnly = true;
+      el.setAttribute("aria-readonly", "true");
+    }
+    // Choice widgets → disabled (prevents toggling)
+    else if (tag === "select" || type === "checkbox" || type === "radio") {
+      el.disabled = true;
+      el.setAttribute("aria-disabled", "true");
+    }
 
-      if (e.type === "keydown") {
-        const k = e.key;
-        if (k === "Tab" || k === "Shift") return;
-        if ((e.ctrlKey || e.metaKey) && ["a", "c", "A", "C"].includes(k))
-          return;
-      }
-      e.preventDefault();
-      e.stopImmediatePropagation();
-    };
-    [
-      "beforeinput",
-      "input",
-      "change",
-      "click",
-      "mousedown",
-      "pointerdown",
-      "keydown",
-    ].forEach((type) =>
-      document.addEventListener(type, blocker, { capture: true })
+    // Contenteditable regions → turn off editing
+    if (el.hasAttribute("contenteditable")) {
+      el.setAttribute("contenteditable", "false");
+      el.setAttribute("aria-readonly", "true");
+    }
+
+    // Avoid keyboard focus inside preview (except explicitly allowed areas)
+    el.setAttribute("tabindex", "-1");
+
+    // Mark as handled
+    el.dataset._previewFrozen = "1";
+  }
+
+  function freezeWithin(scope) {
+    if (!scope) return;
+
+    scope.classList.add("preview-frozen");
+
+    // Everything users could interact with
+    const controls = scope.querySelectorAll(
+      [
+        'input:not([type="hidden"])',
+        "textarea",
+        "select",
+        "[contenteditable]",
+        "button",
+        "a[href]",
+        "[role='button']",
+      ].join(",")
     );
 
-    // 3) Theo dõi nội dung merge động (steps 1–4 chèn vào sau)
-    const mo = new MutationObserver((muts) => {
-      muts.forEach((m) =>
-        m.addedNodes?.forEach((n) => {
-          if (n.nodeType === 1 && root.contains(n)) freeze(n);
-        })
-      );
+    controls.forEach((el) => {
+      // Allow elements to opt-out of freezing if needed
+      if (el.closest("[data-allow-interaction]")) return;
+      // Don’t freeze controls used for explicit actions like print if they’re outside preview content
+      freezeControl(el);
     });
-    mo.observe(root, { childList: true, subtree: true });
 
-    function freeze(scope) {
-      // text-like -> readOnly (giữ style)
-      scope
-        .querySelectorAll(
-          'input:not([type]),input[type="text"],input[type="email"],input[type="tel"],input[type="number"],input[type="date"],textarea'
-        )
-        .forEach((el) => {
-          el.readOnly = true;
-          el.setAttribute("aria-readonly", "true");
-          ["beforeinput", "paste", "drop"].forEach((ev) =>
-            el.addEventListener(ev, (e) => e.preventDefault(), {
-              capture: true,
-            })
-          );
-        });
+    // Block clicks and key events that could mutate UI/state inside preview
+    const onClickCapture = (e) => {
+      // Permit clicks in explicitly allowed islands
+      if (e.target && e.target.closest("[data-allow-interaction]")) return;
 
-      // checkbox/radio/select -> KHÔNG disabled (khỏi xám), chỉ "niêm phong"
-      scope
-        .querySelectorAll('input[type="checkbox"],input[type="radio"],select')
-        .forEach((el) => {
-          el.setAttribute("data-locked", "1");
-          el.setAttribute("aria-disabled", "true");
-        });
+      const interactive = e.target?.closest?.(
+        "button, a, input, select, textarea, label, [role='button']"
+      );
+      if (interactive) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    };
 
-      // tắt contenteditable nếu có
-      scope
-        .querySelectorAll('[contenteditable=""],[contenteditable="true"]')
-        .forEach((el) => el.setAttribute("contenteditable", "false"));
+    const onKeydownCapture = (e) => {
+      // Block any key that might change values (typing, space/enter on controls, etc.)
+      const target = e.target;
+      if (!target || target.closest("[data-allow-interaction]")) return;
+
+      const tag = target.tagName?.toLowerCase?.() || "";
+      const type = (target.getAttribute?.("type") || "").toLowerCase();
+
+      const isFormField =
+        tag === "textarea" ||
+        tag === "select" ||
+        (tag === "input" && !["button", "submit", "reset"].includes(type));
+
+      // If it’s a form field or clickable control, block editing keys
+      if (isFormField || target.closest("button, [role='button'], a[href]")) {
+        // Allow Tab to navigate out of the preview area if needed
+        if (e.key !== "Tab") {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      }
+    };
+
+    // Attach listeners in capture phase so we stop before app handlers
+    scope.addEventListener("click", onClickCapture, true);
+    scope.addEventListener("keydown", onKeydownCapture, true);
+
+    // Keep freezing any content that gets injected later (e.g., async rendering)
+    const mo = new MutationObserver((mutations) => {
+      for (const m of mutations) {
+        if (m.type === "childList") {
+          m.addedNodes.forEach((node) => {
+            if (!(node instanceof Element)) return;
+            // Freeze the node itself if it’s interactive
+            if (
+              node.matches?.(
+                'input:not([type="hidden"]), textarea, select, [contenteditable], button, a[href], [role="button"]'
+              ) &&
+              !node.closest("[data-allow-interaction]")
+            ) {
+              freezeControl(node);
+            }
+            // Freeze any interactive descendants
+            node
+              .querySelectorAll?.(
+                'input:not([type="hidden"]), textarea, select, [contenteditable], button, a[href], [role="button"]'
+              )
+              .forEach((el) => {
+                if (!el.closest("[data-allow-interaction]")) {
+                  freezeControl(el);
+                }
+              });
+          });
+        }
+      }
+    });
+
+    mo.observe(scope, { childList: true, subtree: true });
+  }
+
+  // --- Optional helpers: print/close buttons on preview page -----------------
+  function wirePreviewActions() {
+    const printBtn = document.querySelector("[data-action='print']");
+    if (printBtn) {
+      printBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        window.print();
+      });
+    }
+
+    const closeBtn = document.querySelector("[data-action='close-preview']");
+    if (closeBtn) {
+      closeBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        // Navigate back or close modal/iframe if that’s how preview is shown
+        if (window.top === window.self && document.referrer) {
+          window.history.back();
+        } else {
+          // If embedded, try to postMessage or just hide the frame (no-op by default)
+          console.debug("[preview] Close requested (implement as needed).");
+        }
+      });
     }
   }
 
-  // Khóa ngay khi DOM sẵn sàng; MO sẽ bắt phần nội dung merge sau đó
-  window.addEventListener("DOMContentLoaded", () => lockPreview());
-})();
-
-export function wirePreviewButtons() {
-  // Use the global function
-  if (window.wireModalEvents) {
-    window.wireModalEvents();
+  // --- Boot ------------------------------------------------------------------
+  function init() {
+    const scope = pickScope();
+    freezeWithin(scope);
+    wirePreviewActions();
+    console.debug("[preview] Frozen UI inside scope:", scope);
   }
-}
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();
