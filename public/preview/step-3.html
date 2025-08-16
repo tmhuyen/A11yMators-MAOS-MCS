@@ -18,209 +18,62 @@
     }
   </style>
 
-  <h2 class="first">Account Details/Pricing</h2>
-  <p>Please select the account type(s) applicable for the client and complete all required details for each account type selected.</p>
+  <div class="secbar">Authorised Person Details</div>
+  <p class="hint" style="margin-top:6px">Insert details of those persons authorised to <strong>Open/Close/Amend</strong> and/or <strong>Transact</strong> on accounts, as listed on the MAA.</p>
 
-  <!-- Header hàng 1 -->
-  <div class="section-grid" style="grid-template-columns:250px 1fr 1fr; margin-top:8px">
-    <div class="section-head">Account Type</div>
-    <div class="section-head" style="grid-column:2/4;">
-      <strong>Fees and Interest rates to apply</strong>
-      <p style="margin:2px 0 0">(Please select only ONE option for each section as applicable)</p>
+  <table class="auth" aria-label="Authorised persons">
+    <thead>
+      <tr><th class="num"></th><th>Name of the authorised person</th><th style="width:220px">Customer Number</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="num">1.</td><td><input /></td><td><input /></td></tr>
+      <tr><td class="num">2.</td><td><input /></td><td><input /></td></tr>
+      <tr><td class="num">3.</td><td><input /></td><td><input /></td></tr>
+      <tr><td class="num">4.</td><td><input /></td><td><input /></td></tr>
+      <tr><td class="num">5.</td><td><input /></td><td><input /></td></tr>
+      <tr><td class="num">6.</td><td><input /></td><td><input /></td></tr>
+      <tr><td class="num">7.</td><td><input /></td><td><input /></td></tr>
+      <tr><td class="num">8.</td><td><input /></td><td><input /></td></tr>
+      <tr><td class="num">9.</td><td><input /></td><td><input /></td></tr>
+      <tr><td class="num">10.</td><td><input /></td><td><input /></td></tr>
+      <tr><td class="num">11.</td><td><input /></td><td><input /></td></tr>
+      <tr><td class="num">12.</td><td><input /></td><td><input /></td></tr>
+      <tr><td class="num">13.</td><td><input /></td><td><input /></td></tr>
+      <tr><td class="num">14.</td><td><input /></td><td><input /></td></tr>
+      <tr><td class="num">15.</td><td><input /></td><td><input /></td></tr>
+    </tbody>
+  </table>
+
+  <div class="secbar" style="margin-top:12px">KYC Details</div>
+
+  <div class="row-2" style="margin:8px 0">
+    <div class="field">
+      <label class="label">APRA Code<span class="required-star"> *</span></label>
+      <input id="apra" class="input" placeholder="">
+    </div>
+    <div class="field">
+      <label class="label">Industry Class Code<span class="required-star"> *</span></label>
+      <input id="industryCode" class="input" placeholder="">
     </div>
   </div>
 
-  <!-- CCA: 3 cột -->
-  <div class="section-grid" style="grid-template-columns:250px 1fr 1fr; border-top:none">
-    <div class="left-col">
-      <label class="checkbox-item"><input type="checkbox" /> <strong>Corporate Cheque Account (CCA)**</strong></label>
-      <div style="margin-top:4px">** Product only available to wholesale investors confirmed by bankers. Please refer to Product House for Opening Corporate Cheque Account (CCA)</div>
-      <div style="margin-top:4px"><a href="#" target="_blank" rel="noopener">NAB Corporate Cheque Account (sharepoint.com)</a></div>
-    </div>
-    <div style="border-right:1px solid var(--border); font-size:11px;">
-      <div><strong>Fee code options</strong></div>
-      <div class="checkbox-group" style="gap:8px;margin:4px 0;">
-        <label class="checkbox-item"><input type="checkbox" /> Standard fees (H)</label>
-        <label class="checkbox-item"><input type="checkbox" /> All fees exempted (E)</label>
-        <label class="checkbox-item"><input type="checkbox" /> Only ASF fee exempted</label>
-        <label class="checkbox-item"><input type="checkbox" /> Fee code (U)</label>
-        <label class="checkbox-item"><input type="checkbox" /> Fee code (S)</label>
-      </div>
-      <div>Product Pricing Application (PPA) confirmation must be provided</div>
-    </div>
-    <div style="font-size:11px;">
-      <div><strong>Interest rate code to apply</strong></div>
-      <div class="checkbox-group" style="gap:8px;margin:4px 0;">
-        <label class="checkbox-item"><input type="checkbox" /> <strong>KA</strong> – Deposit reference rate*</label>
-        <label class="checkbox-item"><input type="checkbox" /> <strong>CN</strong> – RBA cash rate – Negotiated**</label>
-        <label class="checkbox-item"><input type="checkbox" /> <strong>CC</strong> – RBA cash rate – Standard.</label>
-      </div>
-      <div style="margin:6px 0 2px 0;"><strong>** Rate Margins</strong> to apply:</div>
-      <textarea class="input" rows="4" id="cca_margin"></textarea>
-    </div>
+  <div class="field" style="margin-bottom:8px">
+    <label class="label">Organisation Type<span class="required-star"> *</span></label>
+    <input id="orgType" class="input" placeholder="">
   </div>
 
-  <!-- BIA -->
-  <div class="section-grid" style="grid-template-columns:250px 1fr; border-top:none">
-    <div class="left-col">
-      <label class="checkbox-item"><input type="checkbox" /> <strong>Business Interest Account (BIA)</strong></label>
-    </div>
-    <div style="font-size:11px;">
-      <div><strong>Fee code options</strong></div>
-      <div class="checkbox-group" style="gap:8px;margin:4px 0;">
-        <label class="checkbox-item"><input type="checkbox" /> Standard fees</label>
-        <label class="checkbox-item"><input type="checkbox" /> All fees exempted</label>
-      </div>
-    </div>
+  <div class="field" style="margin-top:6px">
+    <label class="checkbox-item">
+      <input type="checkbox" id="kyc_confirmation" />
+      <span><span class="required-star"> *</span> I confirm all customer identification requirements have been completed in accordance with General Manual Policy for both the Business Profile and associated individuals and that Business search documents have been attached in Siebel under the business' main profile.</span>
+    </label>
   </div>
 
-  <!-- BCA -->
-  <div class="section-grid" style="grid-template-columns:250px 1fr; border-top:none">
-    <div class="left-col">
-      <label class="checkbox-item"><input type="checkbox" /> <strong>Business Everyday Account (BCA)</strong></label>
-    </div>
-    <div style="font-size:11px;">
-      <div><strong>Fee code options</strong></div>
-      <div class="checkbox-group" style="gap:8px;margin:4px 0;">
-        <label class="checkbox-item"><input type="checkbox" /> $0 monthly fee</label>
-        <label class="checkbox-item"><input type="checkbox" /> $10 monthly fee</label>
-        <label class="checkbox-item"><input type="checkbox" /> All fees exempted</label>
-      </div>
-    </div>
-  </div>
-
-  <!-- BCM -->
-  <div class="section-grid" style="grid-template-columns:250px 1fr; border-top:none">
-    <div class="left-col">
-      <label class="checkbox-item"><input type="checkbox" /> <strong>Business Cash Maximiser (BCM)**</strong></label>
-      <div style="margin-top:4px">** BCM only pays Interest on balances &gt;$10k.</div>
-    </div>
-    <div style="font-size:11px;">
-      <div><strong>Interest Rate/codes to apply</strong></div>
-      <div class="checkbox-group" style="gap:8px;margin:4px 0;">
-        <label class="checkbox-item"><input type="checkbox" /> Standard BCM rates</label>
-        <label class="checkbox-item"><input type="checkbox" /> Negotiated BCM pricing</label>
-      </div>
-      <div style="margin:6px 0 2px 0;">Rate Margins to apply (for Negotiated pricing only)</div>
-      <textarea class="input" rows="2" id="bcm_margin"></textarea>
-      <div style="margin-top:4px">Negotiated BCM pricing is available subject to the current negotiated BCM pricing framework. Product Pricing Application (PPA) confirmation must be provided for this option.</div>
-    </div>
-  </div>
-
-  <!-- TD -->
-  <div class="section-grid" style="grid-template-columns:250px 1fr; border-top:none">
-    <div class="left-col">
-      <label class="checkbox-item"><input type="checkbox" /> <strong>Term Deposit (TD)</strong></label>
-    </div>
-    <div style="font-size:11px;">
-      <div><strong>Interest Rate/codes to apply</strong></div>
-      <div class="checkbox-group" style="gap:8px;margin:4px 0;">
-        <label class="checkbox-item"><input type="checkbox" /> MAOS Weekly TD Rates</label>
-      </div>
-      <div>MAOS weekly TD rates are published each Monday. Please contact <a href="mailto:maos@nab.com.au">maos@nab.com.au</a> if you wish to be added to the distribution list or if you have any questions.</div>
-      <div class="checkbox-group" style="gap:8px;margin:10px 0;">
-        <label class="checkbox-item"><input type="checkbox" /> Negotiated TD Rates (rates and PPA approval code are to be provided by bankers)</label>
-      </div>
-    </div>
-  </div>
-
-  <div style="margin:16px 0 6px 0;">
-    <div><strong>Statement Cycle <span style="color:#b91c1c;font-weight:700">*</span></strong></div>
-    <div class="checkbox-group" style="gap:16px;margin:4px 0;">
-      <label class="checkbox-item"><input type="checkbox" /> Monthly</label>
-      <label class="checkbox-item"><input type="checkbox" /> Quarterly</label>
-      <label class="checkbox-item"><input type="checkbox" /> Half yearly</label>
-    </div>
-  </div>
-
-  <h2>Electronic Access</h2>
-  <p>Does the customer require Electronic Banking Access for their accounts? Please complete below table accordingly.</p>
-
-  <!-- E-access header -->
-  <div class="section-grid" style="grid-template-columns:180px 1fr 1fr">
-    <div class="section-head">Electronics Banking Platform</div>
-    <div class="section-head" style="grid-column:2/4;">
-      <strong>Special Instructions</strong>
-      <p style="margin:2px 0 0">(Please complete details Users/services to be added, Mailbox names as applicable)</p>
-    </div>
-  </div>
-
-  <!-- NAB Connect -->
-  <div class="section-grid" style="grid-template-columns:180px 1fr 1fr; border-top:none; font-size:11px;">
-    <div class="left-col"><label class="checkbox-item"><input type="checkbox" /> <strong>NAB Connect</strong></label></div>
-    <div style="border-right:1px solid var(--border);">
-      <div><strong>NAB Connect MEID/Site ID:</strong></div>
-      <input class="input" style="margin:4px 0;" id="nabc_meid">
-      <div style="margin-top:6px;">Users to be added</div>
-      <div class="checkbox-group" style="gap:12px;margin:4px 0;">
-        <label class="checkbox-item"><input type="checkbox" id="nabc_user_all" /> All Users</label><strong> OR </strong>
-        <label class="checkbox-item"><input type="checkbox" id="nabc_user_nominated"/> Nominated users</label>
-      </div>
-      <div>(Please list below)</div>
-      <textarea class="input" rows="3" id="nabc_users_list"></textarea>
-    </div>
-    <div>
-      <div class="checkbox-group" style="flex-direction:column;gap:6px;margin:2px 0;">
-        <strong> Services to be added:</strong>
-        <div class="checkbox-group" style="gap:12px;margin:4px 0;">
-          <label class="checkbox-item"><input type="checkbox" id="nabc_service_all"/> All Users</label><strong> OR </strong>
-          <label class="checkbox-item"><input type="checkbox" id="nabc_service_nominated"/> Nominated users</label>
-        </div>
-      </div>
-      <div>- Please specify below</div>
-      <textarea class="input" rows="4" id="nabc_services_list"></textarea>
-    </div>
-  </div>
-
-  <!-- Internet Banking -->
-  <div class="section-grid" style="grid-template-columns:180px 1fr 1fr; border-top:none; font-size:11px;">
-    <div class="left-col"><label class="checkbox-item"><input type="checkbox" /> <p style="margin:0"><strong>Internet Banking</strong></p></label></div>
-    <div style="grid-column:2/4;">
-      <div><strong>Provide NAB ID/Name of user(s) to be added with Access Level (Full/View only)</strong></div>
-      <textarea class="input" rows="3" id="ib-users"></textarea>
-    </div>
-  </div>
-
-  <!-- Direct Link Reporting (TX) -->
-  <div class="section-grid" style="grid-template-columns:180px 1fr 1fr; border-top:none; font-size:11px;">
-    <div class="left-col"><label class="checkbox-item"><input type="checkbox" /> <p style="margin:0"><strong>Direct Link Reporting</strong> for Transaction accounts</p></label></div>
-    <div style="border-right:1px solid var(--border);">
-      <div><strong>Mailbox Name</strong></div>
-      <input class="input" id="dlr_tx_mailbox">
-    </div>
-    <div>
-      <div><strong>Services to be added:</strong></div>
-      <input class="input" id="dlr_tx_services">
-    </div>
-  </div>
-
-  <!-- Direct Link Reporting (TD) -->
-  <div class="section-grid" style="grid-template-columns:180px 1fr 1fr; border-top:none; font-size:11px;">
-    <div class="left-col"><label class="checkbox-item"><input type="checkbox" /> <p style="margin:0"><strong>Direct Link reporting</strong> for Term Deposits</p></label></div>
-    <div style="grid-column:2/4;">
-      <div><strong>Mailbox Name</strong></div>
-      <textarea class="input" rows="3" id="dlr_td_mailbox"></textarea>
-    </div>
-  </div>
-
-  <!-- Data Share -->
-  <div class="section-grid" style="grid-template-columns:180px 1fr 1fr; border-top:none; font-size:11px;">
-    <div class="left-col"><label class="checkbox-item"><input type="checkbox" /> <strong>Data Share Integration</strong></label></div>
-    <div style="grid-column:2/4;">
-      If your customer wishes to implement Data Share Integration, please ensure you engage the Direct Link team, who will provide the required details directly to MAOS Operations team.
-    </div>
-  </div>
-
-  <!-- Re-adding -->
-  <div class="section-grid" style="grid-template-columns:180px 1fr 1fr; border-top:none; font-size:11px;">
-    <div class="left-col"><label class="checkbox-item"><input type="checkbox" /> <p style="margin:0"><strong>Re-adding closed accounts to NAB Connect</strong> (Online statements only)</p></label></div>
-    <div style="grid-column:2/4;">
-      <div><strong>Users to be re-added:</strong></div>
-      <div class="checkbox-group" style="gap:12px;margin:4px 0;">
-        <label class="checkbox-item"><input type="checkbox" id="readd_users_all" /> All users to be added</label><strong> OR </strong>
-        <label class="checkbox-item"><input type="checkbox" id="readd_users_nominated"/> Nominated users – Please specify names or user IDs</label>
-      </div>
-      <textarea class="input" rows="3" id="readd_users_list"></textarea>
-    </div>
+  <div class="field" style="margin-top:8px">
+    <label class="label">Date<span class="required-star"> *</span></label>
+    <input type="date" id="kycDate" class="input" style="width:160px">
   </div>
 </div>
+
+
+  

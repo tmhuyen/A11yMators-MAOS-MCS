@@ -1,0 +1,112 @@
+<div class="page" id="step-5">
+  <style>
+    :root{ --border:#d1d5db; --dark-bg:#1f2937; }
+    h2.first{ margin-top:0; }
+    .checkbox-item{ display:flex; align-items:flex-start; gap:8px; }
+    .input{ width:100%; border:1px solid var(--border); padding:6px 8px; font-size:12px; background:#fff; }
+
+    /* Grid section wrapper để set anti-break đồng loạt */
+    .section-grid{ display:grid; border:1px solid var(--border); }
+    .section-grid > div{ padding:8px; }
+    .section-head{ background:var(--dark-bg); color:#fff; padding:6px 8px; font-weight:700; border-right:1px solid #2c3340; }
+    .left-col{ border-right:1px solid var(--border); background:#f9fafb; }
+    .muted{ color:#374151; }
+
+    /* Anti page-break */
+    @media print, screen {
+      .section-grid, .section-grid > div, .checkbox-item, textarea, .input { break-inside:avoid; page-break-inside:avoid; }
+    }
+  </style>
+
+
+  <div class="secbar">Electronic Access</div>
+  <p>Does the customer require Electronic Banking Access for their accounts? Please complete below table accordingly.</p>
+
+  <!-- E-access header -->
+  <div class="section-grid" style="grid-template-columns:180px 1fr 1fr">
+    <div class="section-head">Electronics Banking Platform</div>
+    <div class="section-head" style="grid-column:2/4;">
+      <strong>Special Instructions</strong>
+      <p style="margin:2px 0 0">(Please complete details Users/services to be added, Mailbox names as applicable)</p>
+    </div>
+  </div>
+
+  <!-- NAB Connect -->
+  <div class="section-grid" style="grid-template-columns:180px 1fr 1fr; border-top:none; font-size:11px;">
+    <div class="left-col"><label class="checkbox-item"><input type="checkbox" /> <strong>NAB Connect</strong></label></div>
+    <div style="border-right:1px solid var(--border);">
+      <div><strong>NAB Connect MEID/Site ID:</strong></div>
+      <input class="input" style="margin:4px 0;" id="nabc_meid">
+      <div style="margin-top:6px;">Users to be added</div>
+      <div class="checkbox-group" style="gap:12px;margin:4px 0;">
+        <label class="checkbox-item"><input type="checkbox" id="nabc_user_all" /> All Users</label><strong> OR </strong>
+        <label class="checkbox-item"><input type="checkbox" id="nabc_user_nominated"/> Nominated users</label>
+      </div>
+      <div>(Please list below)</div>
+      <textarea class="input" rows="3" id="nabc_users_list"></textarea>
+    </div>
+    <div>
+      <div class="checkbox-group" style="flex-direction:column;gap:6px;margin:2px 0;">
+        <strong> Services to be added:</strong>
+        <div class="checkbox-group" style="gap:12px;margin:4px 0;">
+          <label class="checkbox-item"><input type="checkbox" id="nabc_service_all"/> All Users</label><strong> OR </strong>
+          <label class="checkbox-item"><input type="checkbox" id="nabc_service_nominated"/> Nominated users</label>
+        </div>
+      </div>
+      <div>- Please specify below</div>
+      <textarea class="input" rows="4" id="nabc_services_list"></textarea>
+    </div>
+  </div>
+
+  <!-- Internet Banking -->
+  <div class="section-grid" style="grid-template-columns:180px 1fr 1fr; border-top:none; font-size:11px;">
+    <div class="left-col"><label class="checkbox-item"><input type="checkbox" /> <p style="margin:0"><strong>Internet Banking</strong></p></label></div>
+    <div style="grid-column:2/4;">
+      <div><strong>Provide NAB ID/Name of user(s) to be added with Access Level (Full/View only)</strong></div>
+      <textarea class="input" rows="3" id="ib-users"></textarea>
+    </div>
+  </div>
+
+  <!-- Direct Link Reporting (TX) -->
+  <div class="section-grid" style="grid-template-columns:180px 1fr 1fr; border-top:none; font-size:11px;">
+    <div class="left-col"><label class="checkbox-item"><input type="checkbox" /> <p style="margin:0"><strong>Direct Link Reporting</strong> for Transaction accounts</p></label></div>
+    <div style="border-right:1px solid var(--border);">
+      <div><strong>Mailbox Name</strong></div>
+      <input class="input" id="dlr_tx_mailbox">
+    </div>
+    <div>
+      <div><strong>Services to be added:</strong></div>
+      <input class="input" id="dlr_tx_services">
+    </div>
+  </div>
+
+  <!-- Direct Link Reporting (TD) -->
+  <div class="section-grid" style="grid-template-columns:180px 1fr 1fr; border-top:none; font-size:11px;">
+    <div class="left-col"><label class="checkbox-item"><input type="checkbox" /> <p style="margin:0"><strong>Direct Link reporting</strong> for Term Deposits</p></label></div>
+    <div style="grid-column:2/4;">
+      <div><strong>Mailbox Name</strong></div>
+      <textarea class="input" rows="3" id="dlr_td_mailbox"></textarea>
+    </div>
+  </div>
+
+  <!-- Data Share -->
+  <div class="section-grid" style="grid-template-columns:180px 1fr 1fr; border-top:none; font-size:11px;">
+    <div class="left-col"><label class="checkbox-item"><input type="checkbox" /> <strong>Data Share Integration</strong></label></div>
+    <div style="grid-column:2/4;">
+      If your customer wishes to implement Data Share Integration, please ensure you engage the Direct Link team, who will provide the required details directly to MAOS Operations team.
+    </div>
+  </div>
+
+  <!-- Re-adding -->
+  <div class="section-grid" style="grid-template-columns:180px 1fr 1fr; border-top:none; font-size:11px;">
+    <div class="left-col"><label class="checkbox-item"><input type="checkbox" /> <p style="margin:0"><strong>Re-adding closed accounts to NAB Connect</strong> (Online statements only)</p></label></div>
+    <div style="grid-column:2/4;">
+      <div><strong>Users to be re-added:</strong></div>
+      <div class="checkbox-group" style="gap:12px;margin:4px 0;">
+        <label class="checkbox-item"><input type="checkbox" id="readd_users_all" /> All users to be added</label><strong> OR </strong>
+        <label class="checkbox-item"><input type="checkbox" id="readd_users_nominated"/> Nominated users – Please specify names or user IDs</label>
+      </div>
+      <textarea class="input" rows="3" id="readd_users_list"></textarea>
+    </div>
+  </div>
+</div>

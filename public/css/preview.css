@@ -46,7 +46,7 @@ html, body {
   border: 2px solid var(--border);
   border-top: none;
   border-radius: 0 0 var(--radius) var(--radius);
-  padding: 8px 16px 16px 16px;
+  padding: 4px 12px 12px 12px;
 }
 
 .progress { height: 8px; background: #e5e7eb; border-radius: 4px; overflow: hidden; margin: 8px 0; }
@@ -79,7 +79,7 @@ html, body {
 }
 h2.first { margin-top: 0; }
 
-.field { margin-bottom: 8px; }
+.field { margin-bottom: 3px; }
 .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 8px; }
 .field-row.triple { grid-template-columns: 1fr 1fr 1fr; }
 
@@ -90,10 +90,10 @@ h2.first { margin-top: 0; }
 }
 .input:focus, textarea:focus, select:focus { outline: none; border-color: var(--blue); }
 
-.checkbox-group { display: flex; flex-wrap: wrap; gap: 16px; margin: 8px 0; }
+.checkbox-group { display: flex; flex-wrap: wrap; gap: 16px; margin: 3px 0; }
 .checkbox-item { display: flex; align-items: center; gap: 4px; font-size: 11px; }
 
-.table { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: 11px; }
+.table { width: 100%; border-collapse: collapse; margin: 3px 0; font-size: 11px; }
 .table th {
   background: var(--dark-bg); color:#fff; padding: 4px 6px; text-align: left;
   font-weight: bold; border: 1px solid #333;
@@ -101,7 +101,7 @@ h2.first { margin-top: 0; }
 .table td { padding: 2px 4px; border: 1px solid var(--border); background: #fff; }
 .table input { border: none; padding: 2px 4px; width: 100%; font-size: 11px; }
 
-.controls { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); }
+.controls { display: flex; justify-content: space-between; align-items: center; margin-top:3px; padding-top: 16px; border-top: 1px solid var(--border); }
 
 /* Special account grids */
 .account-grid { display: grid; grid-template-columns: 200px 1fr; gap: 0; border: 1px solid var(--border); margin: 8px 0; }
@@ -313,4 +313,122 @@ h2.first { margin-top: 0; }
   -webkit-region-break-inside: avoid;
 }
 
+
+/* ===========================
+   KILL GREY BAND UNDER FOOTER
+   =========================== */
+
+/* 1) Đảm bảo trang A4 luôn trắng */
+.a4-page{ background:#fff !important; position:relative; }
+
+/* 2) Footer của trang: trắng tuyệt đối */
+.a4-page .footer,
+.a4-page .page-footer,
+.a4-page .doc-footer,
+.a4-page .pv-footer{
+  background:#fff !important;
+  box-shadow:none !important;
+  border:0;                 /* nếu bạn cần vạch mảnh thì thêm: border-top:1px solid #e5e7eb */
+}
+
+/* 3) Xóa mọi “tail/band/spacer” sau footer (thường gây dải nền) */
+.a4-page .footer-band,
+.a4-page .footer-row,
+.a4-page .footer-spacer,
+.a4-page .bottom-band,
+.a4-page .preview-tail,
+.a4-page .page-bottom,
+.a4-page .actions,          /* nút prev/next của UI */
+.a4-page .rule + .actions,
+.a4-page .spacer,
+.a4-page [class*="footer"]:not(.doc-footer):not(.page-footer){
+  background:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
+}
+
+/* 4) Chặn mọi nền “được set inline” cho band xám */
+.a4-page [style*="background: #f9fafb"],
+.a4-page [style*="background:#f9fafb"],
+.a4-page [style*="background: var(--surface-alt)"],
+.a4-page [style*="background:var(--surface-alt)"]{
+  background:transparent !important;
+}
+
+/* 5) Không dùng pseudo-element để phủ nền ở đáy trang */
+.a4-page::after,
+.a4-page::before{
+  content:none !important;
+  display:none !important;
+  background:transparent !important;
+}
+
+/* 6) Ngoài trang A4 cũng trắng khi in/xuất PDF */
+@media print{
+  html, body,
+  .page-wrap,
+  .container,
+  .preview-root,
+  .preview-shell{
+    background:#fff !important;
+  }
+  .a4-page{ box-shadow:none; margin:0 auto; }
+}
+
+/* ===== G I A M  G U T T E R  T R A I / P H A I  ===== */
+
+/* 1) Thu padding trong khung A4 */
+:root{
+  /* thử 6mm; nếu muốn nữa dùng 4–5mm */
+  --page-pad-x: 0mm;
+  --page-pad-y: 0mm;  /* trên/dưới giữ vừa phải */
+}
+.a4-page{
+  padding: var(--page-pad-y) var(--page-pad-x) !important;
+}
+
+/* 2) Thu margin máy in (ảnh hưởng khi export PDF) */
+@page{
+  /* top/bottom 8mm, left/right 6mm */
+  margin: 1mm 1mm;
+}
+
+/* 3) Xóa padding phụ của wrapper để không cộng dồn */
+.page-wrap,
+.container,
+.preview-root{
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  max-width: none !important;
+}
+
+/* 4) Bảo đảm các block bám full bề ngang khung nội dung */
+.a4-page > .secbar,
+.a4-page > .checktable,
+.a4-page > .grid-head,
+.a4-page > .grid-row{
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  width: 100% !important;
+}
+
+/* 5) Step 1 – cột YES gọn lại để nhường chỗ cho nội dung */
+.checktable td.slim{
+  width: auto !important;
+  max-width: 58px;        /* 58–64 đều OK */
+  white-space: nowrap;
+}
+
+/* 6) Step 3/4 – tỉ lệ cột: trái hẹp, 2 cột phải rộng hơn (đỡ rớt dòng) */
+.grid-head,
+.grid-row{ grid-template-columns: 26% 37% 37% !important; }
+.grid-head-2,
+.grid-row-2{ grid-template-columns: 26% 74% !important; }
+
+/* 7) Cho phép wrap mạnh tay để không bị đội chiều ngang */
+.a4-page th, .a4-page td, .a4-page p, .a4-page li, .a4-page a{
+  overflow-wrap: anywhere;
+  word-break: normal;
+  hyphens: auto;
+}
 

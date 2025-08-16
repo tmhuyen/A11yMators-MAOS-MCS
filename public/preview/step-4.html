@@ -1,90 +1,136 @@
-<div id="step-4" class="step" style="padding-top:8px">
+<div class="page" id="step-4">
   <style>
-    :root{ --border:#cbd5e1; --dark-bg:#1f2937; }
-    .secbar{ margin:12px 0 6px;background:#1f2937;color:#fff;font-weight:700;padding:6px 10px;font-size:12px; }
-    .row-2{ display:grid; grid-template-columns:1fr 1fr; gap:10px 14px; margin-bottom:8px; }
-    .label{ font-weight:700;font-size:12px;display:block;margin-bottom:4px; }
-    .input{ width:100%; border:1px solid var(--border); min-height:28px; padding:6px 8px; font-size:12px; background:#fff; }
-    .checkbox-item{ display:flex; gap:8px; align-items:flex-start; font-size:12px; }
+    :root{ --border:#d1d5db; --dark-bg:#1f2937; }
+    h2.first{ margin-top:0; }
+    .checkbox-item{ display:flex; align-items:flex-start; gap:8px; }
+    .input{ width:100%; border:1px solid var(--border); padding:6px 8px; font-size:12px; background:#fff; }
 
-    /* Callout 2 cột */
-    .callout{
-      border:1px solid #9ca3af;background:#f3f4f6;padding:8px 10px;margin-bottom:10px;
-      display:grid;grid-template-columns:1fr 1fr;gap:8px 14px;font-size:12px
-    }
-    .callout .full{ grid-column:1/-1; }
+    /* Grid section wrapper để set anti-break đồng loạt */
+    .section-grid{ display:grid; border:1px solid var(--border); }
+    .section-grid > div{ padding:8px; }
+    .section-head{ background:var(--dark-bg); color:#fff; padding:6px 8px; font-weight:700; border-right:1px solid #2c3340; }
+    .left-col{ border-right:1px solid var(--border); background:#f9fafb; }
+    .muted{ color:#374151; }
 
     /* Anti page-break */
     @media print, screen {
-      .secbar, .row-2, .callout, .callout > * { break-inside:avoid; page-break-inside:avoid; }
+      .section-grid, .section-grid > div, .checkbox-item, textarea, .input { break-inside:avoid; page-break-inside:avoid; }
     }
   </style>
 
-  <div class="secbar">Banker Details</div>
-  <div class="row-2">
-    <div>
-      <label class="label">Banker Name <span style="color:#b91c1c;font-weight:700">*</span></label>
-      <input class="input" id="bankerName">
-    </div>
-    <div>
-      <label class="label">Banker Position Title <span style="color:#b91c1c;font-weight:700">*</span></label>
-      <input class="input" id="bankerPosition">
+  <div class="secbar">Account Details/Pricing</div>
+  <p>Please select the account type(s) applicable for the client and complete all required details for each account type selected.</p>
+
+  <!-- Header hàng 1 -->
+  <div class="section-grid" style="grid-template-columns:230px 1fr 1fr; margin-top:8px">
+    <div class="section-head">Account Type</div>
+    <div class="section-head" style="grid-column:2/4;">
+      <strong>Fees and Interest rates to apply</strong>
+      <p style="margin:2px 0 0">(Please select only ONE option for each section as applicable)</p>
     </div>
   </div>
 
-  <div class="row-2">
-    <div>
-      <label class="label">Banker Email <span style="color:#b91c1c;font-weight:700">*</span></label>
-      <input class="input" id="bankerEmail" type="email">
+  <!-- CCA: 3 cột -->
+  <div class="section-grid" style="grid-template-columns:230px 1fr 1fr; border-top:none">
+    <div class="left-col">
+      <label class="checkbox-item"><input type="checkbox" /> <strong>Corporate Cheque Account (CCA)**</strong></label>
+      <div style="margin-top:4px">** Product only available to wholesale investors confirmed by bankers. Please refer to Product House for Opening Corporate Cheque Account (CCA)</div>
+      <div style="margin-top:4px"><a href="#" target="_blank" rel="noopener">NAB Corporate Cheque Account (sharepoint.com)</a></div>
     </div>
-    <div>
-      <label class="label">Contact Phone Number <span style="color:#b91c1c;font-weight:700">*</span></label>
-      <input class="input" id="bankerPhone">
+    <div style="border-right:1px solid var(--border); font-size:11px;">
+      <div><strong>Fee code options</strong></div>
+      <div class="checkbox-group" style="gap:8px;margin:4px 0;">
+        <label class="checkbox-item"><input type="checkbox" /> Standard fees (H)</label>
+        <label class="checkbox-item"><input type="checkbox" /> All fees exempted (E)</label>
+        <label class="checkbox-item"><input type="checkbox" /> Only ASF fee exempted</label>
+        <label class="checkbox-item"><input type="checkbox" /> Fee code (U)</label>
+        <label class="checkbox-item"><input type="checkbox" /> Fee code (S)</label>
+      </div>
+      <div>Product Pricing Application (PPA) confirmation must be provided</div>
     </div>
-  </div>
-
-  <div class="row-2">
-    <div>
-      <label class="label">Banker BUID <span style="color:#b91c1c;font-weight:700">*</span></label>
-      <input class="input" id="bankerBuid">
-    </div>
-    <div>
-      <label class="label">BSB to be setup accounts under <span style="color:#b91c1c;font-weight:700">*</span></label>
-      <input class="input" id="bankerBsb">
-    </div>
-  </div>
-
-  <div class="row-2">
-    <div>
-      <label class="label">Banker OSA <span style="color:#b91c1c;font-weight:700">*</span></label>
-      <input class="input" id="bankerOsa">
-    </div>
-    <div>
-      <label class="label">TD Disposals Account Number <span style="color:#b91c1c;font-weight:700">*</span></label>
-      <input class="input" id="tdDisposalsAcct">
+    <div style="font-size:11px;">
+      <div><strong>Interest rate code to apply</strong></div>
+      <div class="checkbox-group" style="gap:8px;margin:4px 0;">
+        <label class="checkbox-item"><input type="checkbox" /> <strong>KA</strong> – Deposit reference rate*</label>
+        <label class="checkbox-item"><input type="checkbox" /> <strong>CN</strong> – RBA cash rate – Negotiated**</label>
+        <label class="checkbox-item"><input type="checkbox" /> <strong>CC</strong> – RBA cash rate – Standard.</label>
+      </div>
+      <div style="margin:6px 0 2px 0;"><strong>** Rate Margins</strong> to apply:</div>
+      <textarea class="input" rows="4" id="cca_margin"></textarea>
     </div>
   </div>
 
-  <div class="secbar">Secondary Banker Contact Details</div>
-  <div class="row-2">
-    <div>
-      <label class="label">Banker Name</label>
-      <input class="input" id="secBankerName">
+  <!-- BIA -->
+  <div class="section-grid" style="grid-template-columns:230px 1fr; border-top:none">
+    <div class="left-col">
+      <label class="checkbox-item"><input type="checkbox" /> <strong>Business Interest Account (BIA)</strong></label>
     </div>
-    <div>
-      <label class="label">Banker Position Title</label>
-      <input class="input" id="secBankerPosition">
+    <div style="font-size:11px;">
+      <div><strong>Fee code options</strong></div>
+      <div class="checkbox-group" style="gap:8px;margin:4px 0;">
+        <label class="checkbox-item"><input type="checkbox" /> Standard fees</label>
+        <label class="checkbox-item"><input type="checkbox" /> All fees exempted</label>
+      </div>
     </div>
   </div>
 
-  <div class="row-2">
-    <div>
-      <label class="label">Banker Email</label>
-      <input class="input" id="secBankerEmail" type="email">
+  <!-- BCA -->
+  <div class="section-grid" style="grid-template-columns:230px 1fr; border-top:none">
+    <div class="left-col">
+      <label class="checkbox-item"><input type="checkbox" /> <strong>Business Everyday Account (BCA)</strong></label>
     </div>
-    <div>
-      <label class="label">Contact Phone Number</label>
-      <input class="input" id="secBankerPhone">
+    <div style="font-size:11px;">
+      <div><strong>Fee code options</strong></div>
+      <div class="checkbox-group" style="gap:8px;margin:4px 0;">
+        <label class="checkbox-item"><input type="checkbox" /> $0 monthly fee</label>
+        <label class="checkbox-item"><input type="checkbox" /> $10 monthly fee</label>
+        <label class="checkbox-item"><input type="checkbox" /> All fees exempted</label>
+      </div>
     </div>
   </div>
-</div>
+
+  <!-- BCM -->
+  <div class="section-grid" style="grid-template-columns:230px 1fr; border-top:none">
+    <div class="left-col">
+      <label class="checkbox-item"><input type="checkbox" /> <strong>Business Cash Maximiser (BCM)**</strong></label>
+      <div style="margin-top:4px">** BCM only pays Interest on balances &gt;$10k.</div>
+    </div>
+    <div style="font-size:11px;">
+      <div><strong>Interest Rate/codes to apply</strong></div>
+      <div class="checkbox-group" style="gap:8px;margin:4px 0;">
+        <label class="checkbox-item"><input type="checkbox" /> Standard BCM rates</label>
+        <label class="checkbox-item"><input type="checkbox" /> Negotiated BCM pricing</label>
+      </div>
+      <div style="margin:6px 0 2px 0;">Rate Margins to apply (for Negotiated pricing only)</div>
+      <textarea class="input" rows="2" id="bcm_margin"></textarea>
+      <div style="margin-top:4px">Negotiated BCM pricing is available subject to the current negotiated BCM pricing framework. Product Pricing Application (PPA) confirmation must be provided for this option.</div>
+    </div>
+  </div>
+
+  <!-- TD -->
+  <div class="section-grid" style="grid-template-columns:230px 1fr; border-top:none">
+    <div class="left-col">
+      <label class="checkbox-item"><input type="checkbox" /> <strong>Term Deposit (TD)</strong></label>
+    </div>
+    <div style="font-size:11px;">
+      <div><strong>Interest Rate/codes to apply</strong></div>
+      <div class="checkbox-group" style="gap:8px;margin:4px 0;">
+        <label class="checkbox-item"><input type="checkbox" /> MAOS Weekly TD Rates</label>
+      </div>
+      <div>MAOS weekly TD rates are published each Monday. Please contact <a href="mailto:maos@nab.com.au">maos@nab.com.au</a> if you wish to be added to the distribution list or if you have any questions.</div>
+      <div class="checkbox-group" style="gap:8px;margin:10px 0;">
+        <label class="checkbox-item"><input type="checkbox" /> Negotiated TD Rates (rates and PPA approval code are to be provided by bankers)</label>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin:16px 0 6px 0;">
+    <div><strong>Statement Cycle <span style="color:#b91c1c;font-weight:700">*</span></strong></div>
+    <div class="checkbox-group" style="gap:16px;margin:4px 0;">
+      <label class="checkbox-item"><input type="checkbox" /> Monthly</label>
+      <label class="checkbox-item"><input type="checkbox" /> Quarterly</label>
+      <label class="checkbox-item"><input type="checkbox" /> Half yearly</label>
+    </div>
+  </div>
+
+  

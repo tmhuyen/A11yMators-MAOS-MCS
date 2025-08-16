@@ -4,7 +4,7 @@
 const mount = document.getElementById("step-container");
 const BASE = new URL(".", document.baseURI);
 const PREVIEW_URL = (new URL("../preview/preview.html", import.meta.url)).href;
-const TOTAL = 4;
+const TOTAL = 6;
 const FOOTER_SHORT = "7641EA1019-0325";
 const FOOTER_LONG =
   "©2025 National Australia Bank Limited ABN 12 004 044 937 AFSL and Australian Credit Licence 230686. 7641EA1019-0325";
@@ -19,7 +19,7 @@ const FOOTER_LONG =
     }
     .a4-inner { padding:10mm 12mm 22mm; } /* chừa đây cho footer */
     .pdf-footer {
-      position:absolute; left:24mm; right:24mm; bottom:0mm;
+      position:absolute; left:12mm; right:12mm; bottom:10mm;
       border-top:none; padding-top:0;
       display:flex; justify-content:space-between; font-size:10px; color:#111;
     }
