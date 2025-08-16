@@ -257,3 +257,60 @@ h2.first { margin-top: 0; }
   table, tr, td, th { page-break-inside: avoid; break-inside: avoid; }
   .page-break { page-break-before: always; break-before: page; }
 }
+
+
+/* ==== NGĂN CẮT DÒNG KHI PHÂN TRANG (A4 preview/print) ==== */
+@media print, screen {
+  /* Các khối cần giữ nguyên 1 trang */
+  .a4-page .field,
+  .a4-page .row,
+  .a4-page .checkbox,        /* card checkbox */
+  .a4-page .choice,          /* card radio */
+  .a4-page .status,
+  .a4-page .account-grid,
+  .a4-page .account-grid > *,
+  .a4-page .section-header,
+  .a4-page .divider {
+    break-inside: avoid;
+    break-inside: avoid-page;          /* spec mới */
+    page-break-inside: avoid;          /* tương thích cũ */
+    -webkit-column-break-inside: avoid;
+    -webkit-region-break-inside: avoid;
+  }
+
+  /* Bảng: đừng tách từng hàng */
+  .a4-page table,
+  .a4-page .table,
+  .a4-page .checktable { page-break-inside: auto; }
+  .a4-page tr,
+  .a4-page .checktable tr { 
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  .a4-page thead { display: table-header-group; }
+
+  /* Tránh flex/grid bị tách: đổi về block khi in/preview A4 */
+  .a4-page .choice,
+  .a4-page .row,
+  .a4-page .account-grid,
+  .a4-page .field-row {
+    display: block !important;   /* in/preview A4 */
+  }
+
+  /* Giữ tiêu đề đi kèm nội dung ngay sau nó */
+  .a4-page h2,
+  .a4-page .section-header { page-break-after: avoid; }
+
+  /* Đoạn văn dài: hạn chế lẻ dòng đầu/cuối */
+  .a4-page p, 
+  .a4-page li { orphans: 3; widows: 3; }
+}
+
+/* Tuỳ chọn: gắn class .keep vào phần tử nào tuyệt đối không muốn tách */
+.keep {
+  break-inside: avoid;
+  page-break-inside: avoid;
+  -webkit-region-break-inside: avoid;
+}
+
+

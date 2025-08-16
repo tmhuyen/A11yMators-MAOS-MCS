@@ -1,37 +1,32 @@
-// server.js
-import express from "express";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-import cors from "cors";
-import crypto from "node:crypto";
-import puppeteer from "puppeteer";
+// server.js (CommonJS)
+const express = require("express");
+const path = require("path");
+const cors = require("cors");
+const crypto = require("crypto");
+const puppeteer = require("puppeteer");
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname  = path.dirname(__filename);
-
-// ✅ static root: ./public (đúng theo cấu trúc của bạn)
-const STATIC_ROOT = path.join(__dirname, "public");
 const PORT = process.env.PORT || 5173;
+const STATIC_ROOT = path.join(__dirname, "public");
 
+// ===== app & middlewares =====
 const app = express();
-
-// CORS cho dev khi mở UI ở 127.0.0.1:5500
 app.use(cors({
-  origin: ["http://127.0.0.1:5500","http://localhost:5500","http://localhost:5173","http://127.0.0.1:5173"],
-  methods: ["GET","POST"]
+  origin: [
+    "http://127.0.0.1:5500",
+    "http://localhost:5500",
+    "http://127.0.0.1:5173",
+    "http://localhost:5173",
+  ],
+  methods: ["GET","POST"],
 }));
-
 app.use(express.json({ limit: "2mb" }));
 
-// ✅ phục vụ tĩnh tại /public/* (giữ nguyên URL như Live Server)
+// static
 app.use("/public", express.static(STATIC_ROOT, { extensions: ["html"] }));
-// (tùy chọn) cũng cho phép truy cập không có prefix nếu cần
 app.use(express.static(STATIC_ROOT, { extensions: ["html"] }));
-
-// "/" → chuyển về /public/index.html
 app.get("/", (req, res) => res.redirect("/public/index.html"));
 
-// ====== STASH API ======
+// ===== STASH =====
 const STASH = new Map();
 const newId = () => crypto.randomBytes(8).toString("hex");
 
@@ -40,21 +35,22 @@ app.post("/api/stash", (req, res) => {
   STASH.set(id, { json: req.body ?? {}, t: Date.now() });
   res.json({ id });
 });
-
 app.get("/api/stash/:id", (req, res) => {
   const row = STASH.get(req.params.id);
   if (!row) return res.status(404).json({ error: "not found" });
   res.json(row.json);
 });
 
-// ====== PDF API (Puppeteer in từ preview model) ======
+// ===== PDF (A4/portrait by default) =====
 app.get("/api/pdf/:id", async (req, res) => {
   const id = req.params.id;
   if (!STASH.has(id)) return res.status(404).json({ error: "stash not found" });
 
   const origin = `http://localhost:${PORT}`;
-  // ✅ preview.html nằm ở /public/preview/preview.html
   const url = `${origin}/public/preview/preview.html?k=${encodeURIComponent(id)}&print=1`;
+
+  const format = (req.query.format || "A4").toString();           // A4
+  const orientation = (req.query.orientation || "portrait").toString();
 
   let browser;
   try {
@@ -64,13 +60,16 @@ app.get("/api/pdf/:id", async (req, res) => {
     await page.emulateMediaType("print");
 
     const pdf = await page.pdf({
-      format: "A4",
+      format,                                 // A4
+      landscape: orientation === "landscape",
       printBackground: true,
+      preferCSSPageSize: true,                // tôn trọng @page trong CSS
+      scale: 1,                               // không thu/phóng
       margin: { top: "12mm", right: "12mm", bottom: "12mm", left: "12mm" },
     });
 
     res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", 'attachment; filename="Master-Customer-Summary.pdf"');
+    res.setHeader("Content-Disposition", `attachment; filename="Master-Customer-Summary.pdf"`);
     res.send(pdf);
   } catch (e) {
     console.error("[/api/pdf] error:", e);
@@ -80,10 +79,11 @@ app.get("/api/pdf/:id", async (req, res) => {
   }
 });
 
-// fallback 404 cho API
+// fallback
 app.use((req, res) => res.status(404).json({ error: "Not Found" }));
 
 app.listen(PORT, () => {
+  console.log("== MAOS dev server ==");
   console.log(`Open UI:   http://localhost:${PORT}/public/index.html`);
   console.log(`Preview :  http://localhost:${PORT}/public/preview/preview.html`);
 });

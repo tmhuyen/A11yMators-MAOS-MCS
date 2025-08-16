@@ -1,64 +1,172 @@
 <div id="step-2" class="step" style="padding-top:8px">
-
-  <!-- ====== STYLES CHO PAGE 2 (riêng) ====== -->
   <style>
-    /* thanh tiêu đề đen như PDF */
-    .secbar {
-      margin: 12px 0 6px;
-      background: #1f2937; /* gần với pdf */
-      color: #fff;
-      font-weight: 700;
-      padding: 6px 10px;
-      font-size: 12px;
-    }
-    .hint { font-size: 12px; color: #111; margin: 4px 0 8px; }
-    .label { font-weight: 700; font-size: 12px; display: block; margin-bottom: 4px; }
-    .required-star { color:#b91c1c; font-weight:700; }
+    :root{ --border:#cbd5e1; --dark-bg:#1f2937; }
 
-    /* grid 2 cột */
-    .row-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px 14px;
-      margin-bottom: 8px;
-    }
-    .field { display:block; }
-    .input, textarea.input {
-      width: 100%; border: 1px solid #cbd5e1; min-height: 28px; padding: 6px 8px; font-size: 12px;
-      background:#fff;
-    }
+    .secbar{ margin:12px 0 6px;background:#1f2937;color:#fff;font-weight:700;padding:6px 10px;font-size:12px; }
+    .hint{ font-size:12px;color:#111;margin:4px 0 8px; }
+    .label{ font-weight:700;font-size:12px;display:block;margin-bottom:4px; }
+    .required-star{ color:#b91c1c;font-weight:700; }
 
-    /* bảng Authorised Person như PDF */
-    table.auth {
-      width: 100%; border-collapse: collapse; background:#fff; font-size:12px;
-      border:1px solid #cbd5e1;
-    }
-    table.auth thead th {
-      background:#1f2937; color:#fff; font-weight:700; text-align:left; padding:6px 8px;
-      border-right:1px solid #1f2937;
-    }
-    table.auth thead th.num { width: 30px; padding:0; }
-    table.auth tbody td {
-      border-top:1px solid #e5e7eb; border-right:1px solid #e5e7eb; padding:0;
-    }
-    table.auth tbody td.num {
-      width:30px; text-align:center;  padding:4px 0; border-right:1px solid #e5e7eb;
-    }
-    table.auth tbody td > input {
-      width:100%; border:0; padding:6px 8px; font-size:12px;
-    }
+    .row-2{ display:grid; grid-template-columns:1fr 1fr; gap:10px 14px; margin-bottom:8px; }
+    .input, textarea.input{ width:100%; border:1px solid var(--border); min-height:28px; padding:6px 8px; font-size:12px; background:#fff; }
+    .checkbox-item{ display:flex; gap:8px; align-items:flex-start; font-size:12px; }
 
-    /* block KYC */
-    .kyc-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
-    .checkbox-item { display:flex; gap:8px; align-items:flex-start; font-size:12px; }
+    /* Authorised table */
+    table.auth{ width:100%; border-collapse:collapse; background:#fff; font-size:12px; border:1px solid var(--border); }
+    table.auth thead th{ background:#1f2937;color:#fff;font-weight:700;text-align:left;padding:6px 8px;border-right:1px solid #1f2937; }
+    table.auth thead th.num{ width:30px; padding:0; }
+    table.auth tbody td{ border-top:1px solid #e5e7eb; border-right:1px solid #e5e7eb; padding:0; }
+    table.auth tbody td.num{ width:30px;text-align:center;padding:4px 0;border-right:1px solid #e5e7eb; }
+    table.auth tbody td > input{ width:100%; border:0; padding:6px 8px; font-size:12px; }
+
+    /* Anti page-break */
+    @media print, screen {
+      .secbar, .row-2, .checkbox-item, table.auth, table.auth tr { break-inside:avoid; page-break-inside:avoid; }
+      table.auth thead{ display:table-header-group; }
+      table.auth tfoot{ display:table-footer-group; }
+    }
+    
   </style>
 
-  <!-- ====== MASTER CUSTOMER DETAILS ====== -->
+  <style>
+    /* ====== Tokens (tối thiểu, độc lập) ====== */
+    :root{ --border:#d1d5db; --dark-bg:#1f2937; --thead:#f3f4f6; --ink:#000; }
+
+    /* ====== Section bar (đồng bộ toàn site) ====== */
+    .section-header{
+      background:var(--dark-bg); color:#fff; font-weight:700;
+      padding:6px 10px; font-size:12px; margin:12px 0 6px;
+    }
+
+    /* ====== Group chọn Industry ====== */
+    #industryCheckboxGroup{
+      display:flex; flex-wrap:wrap; gap:6px 18px; margin-top:4px;
+    }
+    #industryCheckboxGroup .checkbox-item{
+      display:inline-flex; align-items:center; gap:8px; line-height:1.25;
+    }
+    #industryCheckboxGroup input[type="checkbox"]{
+      width:14px; height:14px; margin:0; flex:0 0 auto;
+    }
+
+    /* ====== Bảng checklist (YES | nội dung) ====== */
+    .checktable{ width:100%; border-collapse:collapse; font-size:12px; background:#fff; }
+    .checktable td{ border:1px solid var(--border); padding:8px 10px; }
+    .checktable td.slim{
+      width:70px; text-align:center; vertical-align:top; white-space:nowrap; background:#f3f4f6; font-weight:700;
+    }
+    /* Label YES: chữ trước, ô tick sau để giống PDF */
+    .checktable td.slim label.checkbox-item,
+    .checktable td:first-child label.checkbox-item{
+      display:flex; align-items:center; justify-content:center; gap:6px; margin:2px 0; flex-direction:row-reverse;
+    }
+    .checktable td.slim label.checkbox-item input{ margin:0; width:14px; height:14px; }
+
+    .checktable .section{ background:var(--dark-bg); color:#fff; font-weight:700; padding:6px 8px; border-color:var(--dark-bg); text-align:left; }
+
+    /* ====== Anti page-break cho preview/in ====== */
+    @media print, screen {
+      .checktable tr,
+      .section-header,
+      #industryCheckboxGroup,
+      .checkbox-item { break-inside:avoid; page-break-inside:avoid; -webkit-region-break-inside:avoid; }
+      .checktable thead{ display:table-header-group; }
+      .checktable tfoot{ display:table-footer-group; }
+    }
+  </style>
+  <table class="checktable" aria-label="Customer Summary Checklist">
+    <tbody>
+      <tr><td colspan="2" class="section">Customer Summary</td></tr>
+
+      <tr>
+        <td class="slim">
+          <label class="checkbox-item">
+            <input type="checkbox" id="cs_business_name" /> Yes
+          </label>
+        </td>
+        <td><strong>Business full legal name</strong> provided includes any trading names and matches the MAA and the MCN</td>
+      </tr>
+
+      <tr>
+        <td class="slim">
+          <label class="checkbox-item">
+            <input type="checkbox" id="cs_rg_provided" /> Yes
+          </label>
+        </td>
+        <td><strong>Relationship Group Name and Number</strong> provided, valid and belongs to the client being onboarded</td>
+      </tr>
+
+      <tr>
+        <td class="slim">
+          <label class="checkbox-item">
+            <input type="checkbox" id="cs_cust_numbers" /> Yes
+          </label>
+        </td>
+        <td>
+          <strong>Customer number(s) of all the signatories listed on MAA</strong> (Open & Close, Amend, transact access) is provided, correct, and belongs to the nominated signatories as per ebobs?
+          <div style="font-style:italic;font-size:11px;line-height:1.35;margin-top:4px">
+            ** For Corporate & Institutional clients, check the power BI (IDV) report and ensure all signatories are listed
+          </div>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="slim">
+          <label class="checkbox-item">
+            <input type="checkbox" id="cs_account_details" /> Yes
+          </label>
+        </td>
+        <td>All mandatory details of <strong>Account Details/Pricing</strong> table such as fees, interest rates/margins are provided for each account nominated and <strong>pricing documents</strong> provided where applicable</td>
+      </tr>
+
+      <tr>
+        <td class="slim">
+          <label class="checkbox-item">
+            <input type="checkbox" id="cs_eb_services" /> Yes
+          </label>
+        </td>
+        <td>
+          Understand all the <strong>Electronic Banking Services</strong> available to MAOS clients and complete the section accordingly
+          <div style="font-style:italic;font-size:11px;line-height:1.35;margin-top:4px">
+            Engage with the relevant teams such as NAB Connect amendments, direct link team where necessary, to set up MEIDs, Mailboxes, user ID(s), and services by submitting required applications/documentation
+          </div>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="slim">
+          <label class="checkbox-item">
+            <input type="checkbox" id="cs_bsb_provided" /> Yes
+          </label>
+        </td>
+        <td>Ensure <strong>BSB for Account to be setup</strong> is provided and eligible to open accounts</td>
+      </tr>
+
+      <tr>
+        <td class="slim">
+          <label class="checkbox-item">
+            <input type="checkbox" id="cs_kyc_done" /> Yes
+          </label>
+        </td>
+        <td><strong>KYC details</strong> section of the Master customer summary, is completed and dated</td>
+      </tr>
+
+      <tr>
+        <td class="slim">
+          <label class="checkbox-item">
+            <input type="checkbox" id="cs_final_followup" /> Yes
+          </label>
+        </td>
+        <td>Final follow up call to ensure that customer is comfortable to use the service</td>
+      </tr>
+    </tbody>
+  </table>
+
   <div class="secbar">Master Customer Details</div>
   <div class="hint">Business full legal name (include any trading names and matches both the MAA and Master Customer profile)<span class="required-star"> *</span></div>
   <input id="businessName" class="input" placeholder="">
 
-  <div class="row-2" style="margin-top: 10px;">
+  <div class="row-2" style="margin-top:10px">
     <div class="field">
       <label class="label">Master Customer Number (MCN)<span class="required-star"> *</span></label>
       <input id="mcn" class="input" placeholder="">
@@ -96,23 +204,14 @@
     <textarea id="emails" class="input" rows="3" placeholder=""></textarea>
   </div>
 
-  <!-- ====== AUTHORISED PERSON DETAILS ====== -->
   <div class="secbar">Authorised Person Details</div>
-  <p class="hint" style="margin-top:6px">
-    Insert details of those persons authorised to <strong>Open/Close/Amend</strong> and/or <strong>Transact</strong> on accounts, as listed on the MAA.
-  </p>
+  <p class="hint" style="margin-top:6px">Insert details of those persons authorised to <strong>Open/Close/Amend</strong> and/or <strong>Transact</strong> on accounts, as listed on the MAA.</p>
 
   <table class="auth" aria-label="Authorised persons">
     <thead>
-      <tr>
-        <th class="num"></th>
-        <th>Name of the authorised person</th>
-        <th style="width:220px">Customer Number</th>
-      </tr>
+      <tr><th class="num"></th><th>Name of the authorised person</th><th style="width:220px">Customer Number</th></tr>
     </thead>
     <tbody>
-      <!-- 15 dòng trống đánh số 1..15 -->
-      <!-- dùng HTML thuần để canh đúng như mẫu PDF -->
       <tr><td class="num">1.</td><td><input /></td><td><input /></td></tr>
       <tr><td class="num">2.</td><td><input /></td><td><input /></td></tr>
       <tr><td class="num">3.</td><td><input /></td><td><input /></td></tr>
@@ -131,10 +230,9 @@
     </tbody>
   </table>
 
-  <!-- ====== KYC DETAILS ====== -->
   <div class="secbar" style="margin-top:12px">KYC Details</div>
 
-  <div class="kyc-row" style="margin:8px 0">
+  <div class="row-2" style="margin:8px 0">
     <div class="field">
       <label class="label">APRA Code<span class="required-star"> *</span></label>
       <input id="apra" class="input" placeholder="">
@@ -153,10 +251,7 @@
   <div class="field" style="margin-top:6px">
     <label class="checkbox-item">
       <input type="checkbox" id="kyc_confirmation" />
-      <span>
-        <span class="required-star"> *</span>
-        I confirm all customer identification requirements have been completed in accordance with General Manual Policy for both the Business Profile and associated individuals and that Business search documents have been attached in Siebel under the business' main profile.
-      </span>
+      <span><span class="required-star"> *</span> I confirm all customer identification requirements have been completed in accordance with General Manual Policy for both the Business Profile and associated individuals and that Business search documents have been attached in Siebel under the business' main profile.</span>
     </label>
   </div>
 
@@ -164,5 +259,4 @@
     <label class="label">Date<span class="required-star"> *</span></label>
     <input type="date" id="kycDate" class="input" style="width:160px">
   </div>
-
 </div>

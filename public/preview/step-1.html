@@ -1,169 +1,80 @@
-<div id="step-1" class="step active" style="padding-top: 10px">
+<div id="step-1" class="step active" style="padding-top:10px">
   <style>
-    /* Đảo thứ tự: text trước, ô tick sau, chỉ áp cho cột trái của bảng checklist */
-    #step-1 .checktable td:first-child .checkbox-item,
-    #step-1 .checktable td.slim .checkbox-item {
-      display: flex; /* đề phòng nơi nào chưa set */
-      align-items: center;
-      gap: 6px;
-      flex-direction: row-reverse; /* <-- text -> checkbox */
-    }
-    /* canh lại khoảng cách của input */
-    #step-1 .checktable td:first-child .checkbox-item input,
-    #step-1 .checktable td.slim .checkbox-item input {
-      margin: 0; /* tránh lệch trái/phải */
+    /* ====== Tokens (tối thiểu, độc lập) ====== */
+    :root{ --border:#d1d5db; --dark-bg:#1f2937; --thead:#f3f4f6; --ink:#000; }
+
+    /* ====== Section bar (đồng bộ toàn site) ====== */
+    .section-header{
+      background:var(--dark-bg); color:#fff; font-weight:700;
+      padding:6px 10px; font-size:12px; margin:12px 0 6px;
     }
 
-    /* nhóm tick industry – căn đều & xuống dòng đẹp */
-    #industryCheckboxGroup {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px 18px; /* hàng, cột */
-      margin-top: 4px;
+    /* ====== Group chọn Industry ====== */
+    #industryCheckboxGroup{
+      display:flex; flex-wrap:wrap; gap:6px 18px; margin-top:4px;
     }
-    #industryCheckboxGroup .checkbox-item {
-      display: inline-flex; /* để căn theo trục dọc */
-      align-items: center; /* checkbox & text giữa nhau */
-      gap: 8px;
-      line-height: 1.25;
-      white-space: nowrap; /* bỏ nếu muốn label được xuống dòng */
+    #industryCheckboxGroup .checkbox-item{
+      display:inline-flex; align-items:center; gap:8px; line-height:1.25;
     }
-    #industryCheckboxGroup .checkbox-item input[type="checkbox"] {
-      width: 14px;
-      height: 14px;
-      margin: 0;
-      flex: 0 0 auto;
-      vertical-align: middle;
+    #industryCheckboxGroup input[type="checkbox"]{
+      width:14px; height:14px; margin:0; flex:0 0 auto;
     }
 
-    /* ===== Check table layout ===== */
-    #step-1 .checktable {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 12px;
+    /* ====== Bảng checklist (YES | nội dung) ====== */
+    .checktable{ width:100%; border-collapse:collapse; font-size:12px; background:#fff; }
+    .checktable td{ border:1px solid var(--border); padding:8px 10px; }
+    .checktable td.slim{
+      width:70px; text-align:center; vertical-align:top; white-space:nowrap; background:#f3f4f6; font-weight:700;
     }
-    #step-1 .checktable td {
-      border: 1px solid #cbd5e1;
-      padding: 8px 10px;
+    /* Label YES: chữ trước, ô tick sau để giống PDF */
+    .checktable td.slim label.checkbox-item,
+    .checktable td:first-child label.checkbox-item{
+      display:flex; align-items:center; justify-content:center; gap:6px; margin:2px 0; flex-direction:row-reverse;
     }
+    .checktable td.slim label.checkbox-item input{ margin:0; width:14px; height:14px; }
 
-    /* Cột YES/N/A: canh giữa ngang, TOP dọc; stack Yes và N/A theo cột */
-    #step-1 .checktable td.slim {
-      width: 70px; /* chỉnh theo mắt */
-      text-align: center; /* giữa ngang */
-      vertical-align: top; /* top dọc */
-      white-space: nowrap;
-    }
-    /* Mỗi nhãn là 1 dòng, chữ trước ô tick */
-    #step-1 .checktable td.slim label.checkbox-item {
-      display: flex; /* block-level -> xuống dòng */
-      align-items: center;
-      justify-content: center; /* giữa ngang bên trong */
-      gap: 6px;
-      margin: 2px 0;
-      flex-direction: row-reverse; /* text -> checkbox */
-    }
-    #step-1 .checktable td.slim label.checkbox-item input {
-      margin: 0;
-      width: 14px;
-      height: 14px;
-    }
+    .checktable .section{ background:var(--dark-bg); color:#fff; font-weight:700; padding:6px 8px; border-color:var(--dark-bg); text-align:left; }
 
-    /* Cột mô tả: trái & giữa dọc */
-    #step-1 .checktable td:not(.slim) {
-      text-align: left; /* trái ngang */
-      vertical-align: middle; /* giữa dọc */
-    }
-
-    /* Header nhóm (thanh đen) giữ nguyên nếu bạn đã có .section */
-    #step-1 .checktable .section {
-      background: #1f2937;
-      color: #fff;
-      font-weight: 700;
-      padding: 6px 8px;
-      border-color: #1f2937;
-      text-align: left;
-    }
-
-    /* Ghi chú/diễn giải in nghiêng, xám, cỡ nhỏ như PDF */
-    #step-1 .ilatic {
-      font-style: italic;
-      font-size: 11px;
-      line-height: 1.35;
-      margin-top: 4px;
+    /* ====== Anti page-break cho preview/in ====== */
+    @media print, screen {
+      .checktable tr,
+      .section-header,
+      #industryCheckboxGroup,
+      .checkbox-item { break-inside:avoid; page-break-inside:avoid; -webkit-region-break-inside:avoid; }
+      .checktable thead{ display:table-header-group; }
+      .checktable tfoot{ display:table-footer-group; }
     }
   </style>
 
-  <!-- Title -->
-  <header
-    class="topHeader"
-    style="display: flex; align-items: center; justify-content: space-between"
-  >
-    <img
-      src="https://i.pinimg.com/736x/a7/48/7d/a7487dbcec852452f54363c5d1f16807.jpg"
-      alt="NAB Logo"
-      style="height: 32px"
-    />
-    <div style="text-align: right">
-      <h1 style="margin: 0; font-size: 16px; font-weight: 700; color: #000">
-        Master Account Opening Service (MAOS)
-      </h1>
-      <div class="subtitle" style="margin-top: 2px; color: #000">
-        Master Customer Summary
-      </div>
+  <!-- Header -->
+  <header class="topHeader" style="display:flex;align-items:center;justify-content:space-between;margin-top: 0px;">
+    <img src="https://i.pinimg.com/736x/a7/48/7d/a7487dbcec852452f54363c5d1f16807.jpg" alt="NAB Logo" style="height:32px;margin-top: 0px;" />
+    <div style="text-align:right">
+      <h1 style="margin:0;font-size:16px;font-weight:700;color:#000;margin-top: 0px;">Master Account Opening Service (MAOS)</h1>
+      <div class="subtitle" style="margin-top:2px;color:#000">Master Customer Summary</div>
     </div>
   </header>
 
-  <!-- Red notice -->
-  <div class="note-strip" style="color: #b91c1c; margin-top: 10px">
-    <strong
-      >Please complete all mandatory sections (marked
-      <span style="font-weight: 700">*</span>) and tick ✓ where
-      appropriate.</strong
-    >
+  <div class="note-strip" style="color:#b91c1c;margin-top:10px">
+    <strong>Please complete all mandatory sections (marked <span style="font-weight:700">*</span>) and tick ✓ where appropriate.</strong>
   </div>
 
-  <p class="intro-copy" style="margin: 6px 0 10px">
-    Please follow and complete the checklist below to ensure all mandatory steps
-    in onboarding a new client to NAB is completed before commencing to onboard
-    a client to MAOS. Once completed submit this Master Customer Summary along
-    with the Master Account Authority (MAA).
+  <p class="intro-copy" style="margin:6px 0 10px">
+    Please follow and complete the checklist below to ensure all mandatory steps in onboarding a new client to NAB is completed before commencing to onboard a client to MAOS. Once completed submit this Master Customer Summary along with the Master Account Authority (MAA).
   </p>
 
-  <!-- ================== MCN ================== -->
   <div class="section-header first">Master Customer Number (MCN)</div>
 
-  <div style="margin: 8px 0">
-    <label style="font-weight: 700">
-      What is the industry classification of the new client being on-boarded to
-      MAOS?
-      <span style="color: #b91c1c; font-weight: 700">*</span>
-    </label>
+  <div style="margin:8px 0">
+    <label style="font-weight:700">What is the industry classification of the new client being on-boarded to MAOS?
+      <span style="color:#b91c1c;font-weight:700">*</span></label>
 
-    <div
-      class="checkbox-group"
-      style="margin-top: 4px"
-      id="industryCheckboxGroup"
-    >
-      <label class="checkbox-item"
-        ><input type="checkbox" id="ind_legal" /> <strong>Legal</strong></label
-      >
-      <label class="checkbox-item"
-        ><input type="checkbox" id="ind_external" />
-        <strong>External Administration</strong></label
-      >
-      <label class="checkbox-item"
-        ><input type="checkbox" id="ind_realestate" />
-        <strong>Real Estate/Settlement Agents</strong></label
-      >
-      <label class="checkbox-item"
-        ><input type="checkbox" id="ind_strata" />
-        <strong>Strata</strong></label
-      >
-      <label class="checkbox-item"
-        ><input type="checkbox" id="ind_accounting" />
-        <strong>Accounting</strong></label
-      >
+    <div class="checkbox-group" id="industryCheckboxGroup">
+      <label class="checkbox-item"><input type="checkbox" id="ind_legal" /> <strong>Legal</strong></label>
+      <label class="checkbox-item"><input type="checkbox" id="ind_external" /> <strong>External Administration</strong></label>
+      <label class="checkbox-item"><input type="checkbox" id="ind_realestate" /> <strong>Real Estate/Settlement Agents</strong></label>
+      <label class="checkbox-item"><input type="checkbox" id="ind_strata" /> <strong>Strata</strong></label>
+      <label class="checkbox-item"><input type="checkbox" id="ind_accounting" /> <strong>Accounting</strong></label>
     </div>
   </div>
 
@@ -171,338 +82,83 @@
     <tbody>
       <tr>
         <td class="slim">
-          <label class="checkbox-item" style="justify-content: center; gap: 6px"
-            ><input type="checkbox" id="kyc_compliant" /> Yes</label
-          >
+          <label class="checkbox-item"><input type="checkbox" id="kyc_compliant" /> Yes</label>
         </td>
-        <td>
-          <strong>Master customer is KYC/AML compliant</strong> – All KYC/AML
-          requirements are completed for the Master Customer with all
-          information attached in Siebel and
-          <strong>KYC status of Master Customer Number</strong> is up-to-date in
-          ebobs.
+        <td><strong>Master customer is KYC/AML compliant</strong> – All KYC/AML requirements are completed for the Master Customer with all information attached in Siebel and <strong>KYC status of Master Customer Number</strong> is up-to-date in ebobs.</td>
+      </tr>
+
+      <tr>
+        <td class="slim"><label class="checkbox-item"><input type="checkbox" id="industry_classification" /> Yes</label></td>
+        <td><strong>Industry classification of MCN in ebobs</strong> correctly reflects the industry of the client being onboarded and falls under one of the following industries <strong>– External Administration, Real Estate, Legal, Strata Settlement Agents (WA only) and Accounting.</strong></td>
+      </tr>
+
+      <tr>
+        <td class="slim"><label class="checkbox-item"><input type="checkbox" id="company_details_ok" /> Yes</label></td>
+        <td><strong>Company/Business name, Registered address, ABN/ACN</strong> of the <strong>MCN</strong> is correct and up-to-date in ebobs and matches details provided on the MAA/MAOS customer summary</td>
+      </tr>
+
+      <tr>
+        <td class="slim"><label class="checkbox-item"><input type="checkbox" id="banker_buid_ok" /> Yes</label></td>
+        <td>Are <strong>Banker</strong> details and <strong>BUIDS</strong> correct in ebobs?
+          <div class="muted"><strong>**</strong> If the <strong>BUID falls under Small Business,</strong> please contact <a href="mailto:maos.product.enquiries@nab.com.au">maos.product.enquiries@nab.com.au</a> to check if the client is eligible to be onboarded to MAOS, before you proceed further.</div>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="slim"><label class="checkbox-item"><input type="checkbox" id="kyc_entities_updated" /> Yes</label></td>
+        <td><strong>KYC related entities</strong> is updated, and all beneficial owners were added on the MCN in ebobs</td>
+      </tr>
+
+      <tr>
+        <td class="slim">
+          <label class="checkbox-item"><input type="checkbox" id="trust_letter_yes" /> Yes</label>
+          <label class="checkbox-item" style="margin-top:10px"><input type="checkbox" id="trust_letter_na" /> N/A</label>
+        </td>
+        <td><strong>'Letter requesting to open a Trust Account'</strong> has been uploaded under the MCN in Siebel <strong>(This requirement is applicable for clients in the Accounting industry.)</strong></td>
+      </tr>
+
+      <!-- ====== MAA ====== -->
+      <tr><td colspan="2" class="section">Master Account Authority (MAA)</td></tr>
+
+      <tr>
+        <td class="slim"><label class="checkbox-item"><input type="checkbox" id="maa_current_version" /> Yes</label></td>
+        <td>The current version of MAA is completed by client and submitted with MAOS customer summary</td>
+      </tr>
+
+      <tr>
+        <td class="slim"><label class="checkbox-item"><input type="checkbox" id="maa_mandatory_details" /> Yes</label></td>
+        <td>All mandatory details – <strong>Company / Business Legal name, Address, Contact Name(s) / Number(s)</strong> completed and matches ebobs</td>
+      </tr>
+
+      <tr>
+        <td class="slim"><label class="checkbox-item"><input type="checkbox" id="maa_min_auth_persons" /> Yes</label></td>
+        <td>Ensure at least the minimum number of Authorised persons (anyone / any two) has appropriate authority from the MAA</td>
+      </tr>
+
+      <tr>
+        <td class="slim"><label class="checkbox-item"><input type="checkbox" id="signatories_profiles_kyc" /> Yes</label></td>
+        <td>All <strong>signatories have an eBobs profile set up</strong> and all KYC/AML requiremnts are completed. Please ensure new signatory profile(s) are created where required and completed Specimen Signature Cards are sent to Signature Verification (SVS) team</td>
+      </tr>
+
+      <tr>
+        <td class="slim"><label class="checkbox-item"><input type="checkbox" id="authorisations_done" /> Yes</label></td>
+        <td><strong>Authorisations</strong> and <strong>Customer Declaration and Signature</strong> sections of the MAA are duly completed, with the relevant tick boxes completed as applicable</td>
+      </tr>
+
+      <tr>
+        <td class="slim"><label class="checkbox-item"><input type="checkbox" id="maa_dated_signed" /> Yes</label></td>
+        <td>Verify/confirm <strong>MAA is dated & signed by 'Authorised Persons'</strong> as per the AAC (Account Authority Card) Policy, in accordance with the requirements of section 127 of the Corporations Act 2001 summarised as below (AAC Policy, see GAC 930).
+          <div style="font-style:italic;font-size:11px;line-height:1.35;margin-top:4px">- If Company or Trustee has 2 or more Directors at least 2 Directors must sign. Where Company or Trustee has 1 Director and 1 Company Secretary, both must sign.</div>
+          <div style="font-style:italic;font-size:11px;line-height:1.35;margin-top:4px">- Where Company or Trustee has a Sole Director without Company Secretary, such Sole Director must sign.</div>
         </td>
       </tr>
 
       <tr>
         <td class="slim">
-          <label class="checkbox-item" style="justify-content: center; gap: 6px"
-            ><input type="checkbox" id="industry_classification" /> Yes</label
-          >
+          <label class="checkbox-item"><input type="checkbox" id="callback_followed" /> Yes</label>
+          <label class="checkbox-item" style="margin-top:10px"><input type="checkbox" id="callback_letter_na" /> N/A</label>
         </td>
-        <td>
-          <strong>Industry classification of MCN in ebobs</strong> correctly
-          reflects the industry of the client being onboarded and falls under
-          one of the following industries
-          <strong
-            >– External Administration, Real Estate, Legal, Strata Settlement
-            Agents (WA only) and Accounting.</strong
-          >
-        </td>
-      </tr>
-
-      <tr>
-        <td class="slim">
-          <label class="checkbox-item" style="justify-content: center; gap: 6px"
-            ><input type="checkbox" id="company_details_ok" /> Yes</label
-          >
-        </td>
-        <td>
-          <strong>Company/Business name, Registered address, ABN/ACN</strong> of
-          the <strong>MCN</strong> is correct and up-to-date in ebobs and
-          matches details provided on the MAA/MAOS customer summary
-        </td>
-      </tr>
-
-      <tr>
-        <td class="slim">
-          <label class="checkbox-item" style="justify-content: center; gap: 6px"
-            ><input type="checkbox" id="banker_buid_ok" /> Yes</label
-          >
-        </td>
-        <td>
-          Are <strong>Banker</strong> details and <strong>BUIDS</strong> correct
-          in ebobs?
-          <div class="muted">
-            <strong>**</strong> If the
-            <strong>BUID falls under Small Business,</strong> please contact
-            <a href="mailto:maos.product.enquiries@nab.com.au"
-              >maos.product.enquiries@nab.com.au</a
-            >
-            to check if the client is eligible to be onboarded to MAOS, before
-            you proceed further.
-          </div>
-        </td>
-      </tr>
-
-      <tr>
-        <td class="slim">
-          <label class="checkbox-item" style="justify-content: center; gap: 6px"
-            ><input type="checkbox" id="kyc_entities_updated" /> Yes</label
-          >
-        </td>
-        <td>
-          <strong>KYC related entities</strong> is updated, and all beneficial
-          owners were added on the MCN in ebobs
-        </td>
-      </tr>
-
-      <tr>
-        <td class="slim">
-          <label class="checkbox-item" style="justify-content: center; gap: 6px"
-            ><input type="checkbox" id="trust_letter_yes" /> Yes</label
-          >
-          <label class="checkbox-item" style="justify-content: center; gap: 6px"
-            ><input
-              type="checkbox"
-              id="trust_letter_na"
-              style="margin-top: 10px"
-            />
-            N/A</label
-          >
-        </td>
-        <td>
-          <strong>'Letter requesting to open a Trust Account'</strong> has been
-          uploaded under the MCN in Siebel
-          <strong
-            >(This requirement is applicable for clients in the Accounting
-            industry.)</strong
-          >
-        </td>
-      </tr>
-
-      <!-- ================== MAA ================== -->
-      <tr>
-        <td colspan="2" class="section">Master Account Authority (MAA)</td>
-      </tr>
-
-      <tr>
-        <td class="slim">
-          <label class="checkbox-item" style="justify-content: center; gap: 6px"
-            ><input type="checkbox" id="maa_current_version" /> Yes</label
-          >
-        </td>
-        <td>
-          The current version of MAA is completed by client and submitted with
-          MAOS customer summary
-        </td>
-      </tr>
-
-      <tr>
-        <td class="slim">
-          <label class="checkbox-item" style="justify-content: center; gap: 6px"
-            ><input type="checkbox" id="maa_mandatory_details" /> Yes</label
-          >
-        </td>
-        <td>
-          All mandatory details –
-          <strong
-            >Company / Business Legal name, Address, Contact Name(s) /
-            Number(s)</strong
-          >
-          completed and matches ebobs
-        </td>
-      </tr>
-
-      <tr>
-        <td class="slim">
-          <label class="checkbox-item" style="justify-content: center; gap: 6px"
-            ><input type="checkbox" id="maa_min_auth_persons" /> Yes</label
-          >
-        </td>
-        <td>
-          Ensure at least the minimum number of Authorised persons (anyone / any
-          two) has appropriate authority from the MAA
-        </td>
-      </tr>
-
-      <tr>
-        <td class="slim">
-          <label class="checkbox-item" style="justify-content: center; gap: 6px"
-            ><input type="checkbox" id="signatories_profiles_kyc" /> Yes</label
-          >
-        </td>
-        <td>
-          All <strong>signatories have an eBobs profile set up</strong> and all
-          KYC/AML requiremnts are completed. Please ensure new signatory
-          profile(s) are created where required and completed Specimen Signature
-          Cards are sent to Signature Verification (SVS) team
-        </td>
-      </tr>
-
-      <tr>
-        <td class="slim">
-          <label class="checkbox-item" style="justify-content: center; gap: 6px"
-            ><input type="checkbox" id="authorisations_done" /> Yes</label
-          >
-        </td>
-        <td>
-          <strong>Authorisations</strong> and
-          <strong>Customer Declaration and Signature</strong> sections of the
-          MAA are duly completed, with the relevant tick boxes completed as
-          applicable
-        </td>
-      </tr>
-
-      <tr>
-        <td class="slim">
-          <label class="checkbox-item" style="justify-content: center; gap: 6px"
-            ><input type="checkbox" id="maa_dated_signed" /> Yes</label
-          >
-        </td>
-        <td>
-          Verify/confirm
-          <strong>MAA is dated & signed by 'Authorised Persons'</strong> as per
-          the AAC (Account Authority Card) Policy, in accordance with the
-          requirements of section 127 of the Corporations Act 2001 summarised as
-          below (AAC Policy, see GAC 930).
-          <div class="ilatic">
-            - If Company or Trustee has 2 or more Directors at least 2 Directors
-            must sign. Where Company or Trustee has 1 Director and 1 Company
-            Secretary, both must sign.
-          </div>
-          <div class="ilatic">
-            - Where Company or Trustee has a Sole Director without Company
-            Secretary, such Sole Director must sign.
-          </div>
-        </td>
-      </tr>
-
-      <tr>
-        <td class="slim">
-          <label class="checkbox-item" style="justify-content: center; gap: 6px"
-            ><input type="checkbox" id="callback_followed" /> Yes</label
-          >
-          <label class="checkbox-item" style="justify-content: center; gap: 6px"
-            ><input
-              type="checkbox"
-              id="callback_letter_na"
-              style="margin-top: 10px"
-            />
-            N/A</label
-          >
-        </td>
-        <td>
-          Call back process has been followed to verify the signatories, where
-          the signature is digitally inserted/copy pasted
-        </td>
-      </tr>
-
-      <!-- ================== CUSTOMER SUMMARY ================== -->
-      <tr>
-        <td colspan="2" class="section">Customer Summary</td>
-      </tr>
-
-      <tr>
-        <td class="slim">
-          <label class="checkbox-item" style="justify-content: center; gap: 6px"
-            ><input type="checkbox" id="cs_business_name" /> Yes</label
-          >
-        </td>
-        <td>
-          <strong>Business full legal name</strong> provided includes any
-          trading names and matches the MAA and the MCN
-        </td>
-      </tr>
-
-      <tr>
-        <td class="slim">
-          <label class="checkbox-item" style="justify-content: center; gap: 6px"
-            ><input type="checkbox" id="cs_rg_provided" /> Yes</label
-          >
-        </td>
-        <td>
-          <strong>Relationship Group Name and Number</strong> provided, valid
-          and belongs to the client being onboarded
-        </td>
-      </tr>
-
-      <tr>
-        <td class="slim">
-          <label class="checkbox-item" style="justify-content: center; gap: 6px"
-            ><input type="checkbox" id="cs_cust_numbers" /> Yes</label
-          >
-        </td>
-        <td>
-          <strong
-            >Customer number(s) of all the signatories listed on MAA</strong
-          >
-          (Open & Close, Amend, transact access) is provided, correct, and
-          belongs to the nominated signatories as per ebobs?
-          <div class="ilatic">
-            ** For Corporate & Institutional clients, check the power BI (IDV)
-            report and ensure all signatories are listed
-          </div>
-        </td>
-      </tr>
-
-      <tr>
-        <td class="slim">
-          <label class="checkbox-item" style="justify-content: center; gap: 6px"
-            ><input type="checkbox" id="cs_account_details" /> Yes</label
-          >
-        </td>
-        <td>
-          All mandatory details of
-          <strong>Account Details/Pricing</strong> table such as fees, interest
-          rates/margins are provided for each account nominated and
-          <strong>pricing documents</strong> provided where applicable
-        </td>
-      </tr>
-
-      <tr>
-        <td class="slim">
-          <label class="checkbox-item" style="justify-content: center; gap: 6px"
-            ><input type="checkbox" id="cs_eb_services" /> Yes</label
-          >
-        </td>
-        <td>
-          Understand all the
-          <strong>Electronic Banking Services</strong> available to MAOS clients
-          and complete the section accordingly
-          <div class="ilatic">
-            Engage with the relevant teams such as NAB Connect amendments,
-            direct link team where necessary, to set up MEIDs, Mailboxes, user
-            ID(s), and services by submitting required
-            applications/documentation
-          </div>
-        </td>
-      </tr>
-
-      <tr>
-        <td class="slim">
-          <label class="checkbox-item" style="justify-content: center; gap: 6px"
-            ><input type="checkbox" id="cs_bsb_provided" /> Yes</label
-          >
-        </td>
-        <td>
-          Ensure <strong>BSB for Account to be setup</strong> is provided and
-          eligible to open accounts
-        </td>
-      </tr>
-
-      <tr>
-        <td class="slim">
-          <label class="checkbox-item" style="justify-content: center; gap: 6px"
-            ><input type="checkbox" id="cs_kyc_done" /> Yes</label
-          >
-        </td>
-        <td>
-          <strong>KYC details</strong> section of the Master customer summary,
-          is completed and dated
-        </td>
-      </tr>
-
-      <tr>
-        <td class="slim">
-          <label class="checkbox-item" style="justify-content: center; gap: 6px"
-            ><input type="checkbox" id="cs_final_followup" /> Yes</label
-          >
-        </td>
-        <td>
-          Final follow up call to ensure that customer is comfortable to use the
-          service
-        </td>
+        <td>Call back process has been followed to verify the signatories, where the signature is digitally inserted/copy pasted</td>
       </tr>
     </tbody>
   </table>

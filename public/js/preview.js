@@ -19,7 +19,7 @@ const FOOTER_LONG =
     }
     .a4-inner { padding:10mm 12mm 22mm; } /* chừa đây cho footer */
     .pdf-footer {
-      position:absolute; left:12mm; right:12mm; bottom:10mm;
+      position:absolute; left:24mm; right:24mm; bottom:0mm;
       border-top:none; padding-top:0;
       display:flex; justify-content:space-between; font-size:10px; color:#111;
     }
