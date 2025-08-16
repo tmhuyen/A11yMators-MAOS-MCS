@@ -3,7 +3,7 @@
 // Only mount when we are on preview.html (this page has #step-container)
 const mount = document.getElementById("step-container");
 const BASE = new URL(".", document.baseURI);
-const PREVIEW_URL = (new URL("../preview/preview.html", import.meta.url)).href;
+const PREVIEW_URL = new URL("../preview/preview.html", import.meta.url).href;
 const TOTAL = 4;
 const FOOTER_SHORT = "7641EA1019-0325";
 const FOOTER_LONG =
@@ -67,7 +67,7 @@ async function fetchStep(n) {
   }
 
   // Function to wire modal events - can be called multiple times safely
-  window.wireModalEvents = function() {
+  window.wireModalEvents = function () {
     const openBtn = document.getElementById("btnPreview");
     const modal = document.getElementById("previewModal");
     const closeBtn = document.getElementById("closePreview");
@@ -82,7 +82,7 @@ async function fetchStep(n) {
       modal.showModal?.();
       document.body.style.overflow = "hidden";
       closeBtn?.focus?.();
-      
+
       // Wire modalGenerate after iframe loads
       setTimeout(() => {
         wireModalGenerateButton();
@@ -118,30 +118,30 @@ async function fetchStep(n) {
   };
 
   // Function to specifically wire the modalGenerate button
-  window.wireModalGenerateButton = function() {
+  window.wireModalGenerateButton = function () {
     const modalGen = document.getElementById("modalGenerate");
     const iframe = document.getElementById("previewFrame");
-    
+
     if (!modalGen || modalGen.dataset.wired === "true") return;
-    
+
     modalGen.dataset.wired = "true";
-    modalGen.onclick = async function(e) {
+    modalGen.onclick = async function (e) {
       e.preventDefault();
       console.log("[modalGenerate] Button clicked");
-      
+
       if (!iframe?.contentWindow) {
         console.warn("[modalGenerate] No iframe contentWindow");
         return;
       }
-      
+
       // Wait a bit for iframe to fully load
       let attempts = 0;
       const maxAttempts = 10;
-      
+
       const tryGenerate = () => {
         attempts++;
         const contentWindow = iframe.contentWindow;
-        
+
         if (typeof contentWindow.generatePDF === "function") {
           console.log("[modalGenerate] Calling generatePDF");
           contentWindow.generatePDF();
@@ -149,10 +149,14 @@ async function fetchStep(n) {
           console.log("[modalGenerate] Calling window.generatePDF");
           contentWindow.window.generatePDF();
         } else if (attempts < maxAttempts) {
-          console.log(`[modalGenerate] generatePDF not found, attempt ${attempts}/${maxAttempts}`);
+          console.log(
+            `[modalGenerate] generatePDF not found, attempt ${attempts}/${maxAttempts}`
+          );
           setTimeout(tryGenerate, 500);
         } else {
-          console.warn("[modalGenerate] generatePDF function not found after all attempts");
+          console.warn(
+            "[modalGenerate] generatePDF function not found after all attempts"
+          );
           // Fallback: try to call step9.js generateFromIframe
           if (window.generateFromIframe) {
             window.generateFromIframe();
@@ -161,7 +165,7 @@ async function fetchStep(n) {
           }
         }
       };
-      
+
       tryGenerate();
     };
   };
